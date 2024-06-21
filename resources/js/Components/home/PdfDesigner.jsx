@@ -63,9 +63,8 @@ const PDFDesigner = () => {
         }
     };
 
-    const onSaveTemplate = async (template) => {
+    const onSaveTemplate = async (title) => {
         if (designer.current) {
-            console.log("HERE");
             const template_json = JSON.stringify(
                 designer.current.getTemplate()
             );
@@ -73,6 +72,7 @@ const PDFDesigner = () => {
             const data = {
                 template_json,
                 templated_pdf_link: pdf_link,
+                title,
             };
             router.post("/pdf-templates", data, {
                 onSuccess: (res) => {
@@ -81,21 +81,6 @@ const PDFDesigner = () => {
                     }
                 },
             });
-            // console.log("Data", data);
-            // transform((data) => {
-            //     console.log("Data", data);
-            // });
-            // // post(route("template.store"), {
-            // //     data: {
-            // //         template_json,
-            // //         templated_pdf_link: pdf_link,
-            // //     },
-            // //     onSuccess: (res) => {
-            // //         if (res.props.users) {
-            // //             setOpen(false);
-            // //         }
-            // //     },
-            // // });
         }
     };
 

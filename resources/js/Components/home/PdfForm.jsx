@@ -46,7 +46,17 @@ const PdfForm = ({ template: dbTemplate }) => {
                 const blob = new Blob([pdf.buffer], {
                     type: "application/pdf",
                 });
-                window.open(URL.createObjectURL(blob));
+                const formData = new FormData();
+                formData.append("file", blob);
+                formData.append("template_id", dbTemplate?.id);
+                router.post("/upload-template", formData, {
+                    onSuccess: (res) => {
+                        if (res?.props?.submitted_template?.id) {
+                            router.replace("/dashboard");
+                        }
+                    },
+                });
+                // window.open(URL.createObjectURL(blob));
             });
         }
     };

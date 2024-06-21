@@ -4,8 +4,6 @@ import { PdfTemplateContextProvider } from "../context/PdfTemplateContext";
 import PdfForm from "../Components/home/PdfForm";
 
 const TemplateFillup = ({ user, template }) => {
-    console.log("Templated", template);
-
     return (
         <AuthenticatedLayout user={user}>
             <Head title="Dashboard" />
