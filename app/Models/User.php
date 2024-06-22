@@ -45,8 +45,13 @@ class User extends Authenticatable
     ];
 
 
-      public function submittedTemplate()
+    public function submittedTemplate()
     {
         return $this->hasMany(SubmittedTemplate::class);
+    }
+
+    public function pdfTemplate()
+    {
+        return $this->hasMany(PdfTemplate::class);
     }
 }

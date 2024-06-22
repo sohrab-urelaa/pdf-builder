@@ -11,4 +11,13 @@ class PdfTemplate extends Model
     use HasFactory;
 
     protected $table = 'pdf_template';
+
+    public function submittedTemplate()
+    {
+        return $this->hasMany(SubmittedTemplate::class);
+    }
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

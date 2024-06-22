@@ -1,32 +1,21 @@
 import { useRef, useState } from "react";
 import { Designer } from "../../pdf-ui/src/index";
 import { getFontsData, getPlugins, readFile } from "../../lib/pdf-helper";
-import { usePdfTemplates } from "../../context/PdfTemplateContext";
 import Navbar from "./Navbar";
-import UploadedDocuments from "./LeftSidebar";
 import { cloneDeep } from "../../pdf-ui/src/helper";
-import { useForm } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
+import UploadedDocuments from "./LeftSidebar";
 const headerHeight = 65;
 
-const PDFDesigner = () => {
-    const { data, setData, post, processing, errors, reset, transform } =
-        useForm({
-            template_json: "",
-            templated_pdf_link: "",
-        });
-
+const PDFDesigner = ({ template: dbTemplate }) => {
     const designerRef = useRef(null);
     const [basePdf, setBasePdf] = useState(null);
     const [prevDesignerRef, setPrevDesignerRef] = useState(null);
     const designer = useRef(null);
-    const {
-        data: { templates, currentTemplate },
-    } = usePdfTemplates();
-
     const buildForm = () => {
-        let template = templates[currentTemplate].template;
-
+        const template_string = dbTemplate?.template_json;
+        let template = JSON.parse(template_string);
+        setBasePdf(template?.basePdf);
         if (template) {
             getFontsData().then(() => {
                 if (designerRef.current) {
@@ -72,12 +61,16 @@ const PDFDesigner = () => {
             const data = {
                 template_json,
                 templated_pdf_link: pdf_link,
-                title,
+                title: dbTemplate?.title,
+                description: dbTemplate?.description,
+                templated_pdf_link: dbTemplate?.templated_pdf_link,
+                id: dbTemplate?.id,
             };
-            router.post("/pdf-templates", data, {
+            router.put(`/pdf-templates/${dbTemplate?.id}`, data, {
                 onSuccess: (res) => {
+                    console.log("Response", res);
                     if (res?.props?.template?.id) {
-                        router.replace("/dashboard");
+                        // router.replace("/dashboard");
                     }
                 },
             });
@@ -97,18 +90,19 @@ const PDFDesigner = () => {
     return (
         <div className="px-5 md:px-36 h-screen">
             <Navbar
+                template={dbTemplate}
                 onChangePdf={onChangeBasePDF}
                 onSaveTemplate={onSaveTemplate}
             />
             <main className="mt-3 flex w-full gap-3">
-                {/* <aside className=" flex-[2]">
+                <aside className="w-[18%]">
                     <UploadedDocuments
                         onChangePdf={onChangeBasePDF}
                         base64Pdf={basePdf}
                     />
-                </aside> */}
-                <div className=" flex-[8]">
-                    <div>
+                </aside>
+                <div className="w-[80%]">
+                    <div className="w-full">
                         <div
                             ref={designerRef}
                             style={{

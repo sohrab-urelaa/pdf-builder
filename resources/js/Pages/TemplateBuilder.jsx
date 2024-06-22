@@ -1,24 +1,19 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import PDFDesigner from "../Components/home/PdfDesigner";
-import { PdfTemplateContextProvider } from "../context/PdfTemplateContext";
 
-const TemplateBuilder = ({ user }) => {
+const TemplateBuilder = ({ user, template }) => {
     return (
-        <AuthenticatedLayout user={user}>
+        <>
             <Head title="Dashboard" />
-            <div className="py-12">
-                <div className="max-w-1xl mx-auto sm:px-6 lg:px-8">
-                    <PdfTemplateContextProvider>
-                        <PDFDesigner />
-                    </PdfTemplateContextProvider>
+            <div className="max-w-1xl mx-auto sm:px-6 lg:px-8">
+                <PDFDesigner template={template} />
 
-                    <br />
-                    <hr />
-                    <br />
-                </div>
+                <br />
+                <hr />
+                <br />
             </div>
-        </AuthenticatedLayout>
+        </>
     );
 };
 

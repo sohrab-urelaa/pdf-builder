@@ -1,6 +1,14 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-
+import DashboardSubHeading from "../Layouts/DashboardSubHeading";
+import { CiCalendar } from "react-icons/ci";
+import { FaRegUser } from "react-icons/fa";
+import { FaRegCopy } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import { GrClone } from "react-icons/gr";
+import { FaEdit } from "react-icons/fa";
+import { useState } from "react";
+import formatDateString from "../lib/date-formate";
 export default function Dashboard({ auth, templates }) {
     const handleCopyLink = (template) => {
         const link = `${window.origin}/submit-templates/${template.id}`;
@@ -14,92 +22,77 @@ export default function Dashboard({ auth, templates }) {
             });
     };
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Pdf Templates
-                </h2>
-            }
-        >
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="my-4 flex items-center justify-between">
-                        <h1 className="font-bold text-xl">Templates</h1>
-                        <Link
-                            href={route("template-builder")}
-                            className="btn btn-primary"
-                        >
-                            New Template
-                        </Link>
-                    </div>
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <DashboardSubHeading title={"Templates"} />
 
-                    <br />
-                    <hr />
-                    <br />
-                    <div className="overflow-x-auto">
-                        <table className="table">
-                            {/* head */}
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                className="checkbox"
-                                            />
-                                        </label>
-                                    </th>
-                                    <th>Title</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* row 1 */}
-                                {templates?.map((item) => (
-                                    <tr>
-                                        <th>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox"
-                                                />
-                                            </label>
-                                        </th>
-                                        <td>{item.title}</td>
-
-                                        <th>
-                                            <button
-                                                onClick={() =>
-                                                    handleCopyLink(item)
-                                                }
-                                                className="btn btn-primary btn-xs"
-                                            >
-                                                Copy Link
-                                            </button>
-                                            <Link
-                                                href={`/submitted-templates/${item.id}`}
-                                            >
-                                                <button className="btn btn-primary btn-outline btn-xs">
-                                                    Details
-                                                </button>
-                                            </Link>
-                                        </th>
-                                    </tr>
-                                ))}
-                            </tbody>
-                            {/* foot */}
-                            <tfoot>
-                                <tr>
-                                    <th></th>
-                                    <th>Title</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                <div className="flex items-center gap-4 flex-wrap mt-4">
+                    {templates.map((item) => (
+                        <div className="basis-[300px] grow bg-base-200 p-6 rounded-lg">
+                            <div className="flex justify-between gap-2">
+                                <div>
+                                    <Link
+                                        href={`/submitted-templates/${item.id}`}
+                                    >
+                                        <h1 className="text-xl text-secondary-content font-extrabold">
+                                            {item?.title}
+                                        </h1>
+                                    </Link>
+                                    <div className="mt-4">
+                                        <p
+                                            className="flex items-center gap-2 text-[14px] tooltip"
+                                            data-tip="Author"
+                                        >
+                                            <span>
+                                                <FaRegUser color="text-base-content" />
+                                            </span>
+                                            {item?.owner?.name}
+                                        </p>
+                                        <p
+                                            className="flex items-center gap-2 text-[14px] tooltip"
+                                            data-tip="Created At"
+                                        >
+                                            <span>
+                                                <CiCalendar color="text-base-content" />
+                                            </span>
+                                            {formatDateString(item?.created_at)}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col">
+                                    <button
+                                        onClick={() => handleCopyLink(item)}
+                                        className="btn btn-ghost btn-sm tooltip"
+                                        data-tip="Copy Link"
+                                    >
+                                        <FaRegCopy />
+                                    </button>
+                                    <button
+                                        className="btn btn-ghost btn-sm tooltip"
+                                        data-tip="Delete"
+                                    >
+                                        <MdDeleteOutline />
+                                    </button>
+                                    <button
+                                        className="btn  btn-ghost btn-sm tooltip"
+                                        data-tip="Clone"
+                                    >
+                                        <GrClone />
+                                    </button>
+                                    <Link href={`/template-builder/${item.id}`}>
+                                        <button
+                                            className="btn btn-ghost btn-sm tooltip"
+                                            data-tip="Edit"
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </AuthenticatedLayout>

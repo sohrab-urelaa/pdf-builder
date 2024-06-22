@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Viewer } from "../../pdf-ui/src";
 import { getFontsData } from "../../lib/pdf-helper";
-
+import { MdOutlineFileUpload } from "react-icons/md";
 const UploadedDocuments = ({ onChangePdf, base64Pdf }) => {
     const designerRef = useRef(null);
     const [prevDesignerRef, setPrevDesignerRef] = useState(null);
@@ -40,10 +40,14 @@ const UploadedDocuments = ({ onChangePdf, base64Pdf }) => {
     }
     return (
         <div className="border-r-2 border-slate-200 flex flex-col">
-            <div className="h-[400px]">
-                <div className="h-full" ref={designerRef} />
-            </div>
-            <label className="btn btn-primary self-center">
+            {base64Pdf && (
+                <div className="h-[400px]">
+                    <div className="h-full" ref={designerRef} />
+                </div>
+            )}
+
+            <label className="btn btn-outline px-5 text-[20px] self-center mt-4">
+                <MdOutlineFileUpload size={22} />
                 Add Document
                 <input
                     type="file"

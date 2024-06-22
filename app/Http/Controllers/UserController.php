@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -40,5 +41,30 @@ class UserController extends Controller
             'role'=>"user"
         ]);
         redirect("users");
+    }
+    public function getRegisterUser()
+    {
+        return Inertia::render('Auth/RegisterUser');
+    }
+     public function registerUser(LoginRequest $request)
+     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role'=>"user"
+        ]);
+
+        // http://127.0.0.1:8000/submit-templates/13
+        $value = $request->session()->get('previous_url', 'submit-templates/10');
+        $request->authenticate();
+        $request->session()->regenerate();
+        redirect($value);
     }
 }
