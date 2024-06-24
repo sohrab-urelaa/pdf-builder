@@ -6,6 +6,7 @@ import AskedQuestion from "../Components/welcome/AskedQuestion";
 import GetStarted from "../Components/welcome/GetStarted";
 import PublicNavbar from "../Components/layout/PublicNavbar";
 import ESigning from "../Components/welcome/ESigning";
+import Footer from "../Components/layout/Footer";
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
         <div className=" max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -17,6 +18,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
             <AskedQuestion />
             <GetStarted />
+            <Footer />
         </div>
     );
 }

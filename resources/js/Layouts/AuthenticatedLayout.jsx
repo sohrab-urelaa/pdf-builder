@@ -1,3 +1,4 @@
+import Footer from "../Components/layout/Footer";
 import PublicNavbar from "../Components/layout/PublicNavbar";
 
 export default function Authenticated({ user, header, children, headerTitle }) {
@@ -5,6 +6,7 @@ export default function Authenticated({ user, header, children, headerTitle }) {
         <div className="min-h-screen">
             <PublicNavbar user={user} />
             <main>{children}</main>
+            <Footer />
         </div>
     );
 }
