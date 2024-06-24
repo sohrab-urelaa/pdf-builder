@@ -30,6 +30,7 @@ const PdfForm = ({ template: dbTemplate }) => {
                             theme: {},
                         },
                         inputs,
+                        plugins: getPlugins(),
                     });
                 }
             });
