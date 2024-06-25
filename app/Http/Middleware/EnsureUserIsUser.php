@@ -16,9 +16,13 @@ class EnsureUserIsUser
      */
   public function handle(Request $request, Closure $next)
     {
-        $role=auth()->user()->role;
-        if (auth()->check() && ($role === 'user' || $role==='admin')) {
-            return $next($request);
+      
+        if (auth()->check()) {
+              $role=auth()->user()->role;
+              if ($role === 'user' || $role==='admin'){
+                return $next($request);
+              }
+              
         }
           return Inertia::render('Auth/RegisterUser',["redirect_link"=>$request->url()]);
       }
