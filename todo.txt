@@ -1,0 +1,25 @@
+https://cdn.docuseal.co/js/builder.js
+
+db_user_name=root
+db_password=root@244739@Sk
+
+
+
+//local db env
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pdf-builder
+DB_USERNAME=root
+DB_PASSWORD=root
+
+
+//server db env
+
+DB_CONNECTION=mysql
+DB_HOST=SG-pdf-builder-9130-mysql-master.servers.mongodirector.com
+DB_PORT=3306
+DB_DATABASE=php-builder
+DB_USERNAME=root
+DB_PASSWORD=root@244739@Sk

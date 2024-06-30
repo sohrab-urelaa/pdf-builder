@@ -9,7 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <link id="favicon" rel="icon" href="{{ mix('/favicon.ico') }}">
         <!-- Scripts -->
         @routes
         @viteReactRefresh
@@ -18,5 +18,19 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+         <script>
+        fetch('/site-settings')
+            .then(response => response.json())
+            .then(data => {
+                window.SITE_SETTINGS=data;
+                if (data.favicon) {
+                    document.getElementById('favicon').href = data.favicon;
+                }
+                 if (data.theme) {
+                    document.documentElement.setAttribute('data-theme', data.theme);
+                }
+            });
+    </script>
     </body>
 </html>

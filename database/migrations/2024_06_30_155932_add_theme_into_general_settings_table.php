@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('submitted_template', function (Blueprint $table) {
-            $table->unsignedBigInteger('owner_id')->default("1");
-            $table->foreign('owner_id')->references('id')->on('users');
+         Schema::table('general_settings', function (Blueprint $table) {
+            $table->string('theme');
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('submitted_template', function (Blueprint $table) {
-              $table->dropColumn('description');
+         Schema::table("general_settings",function (Blueprint $table){
+           $table->dropColumns('theme');
         });
     }
 };

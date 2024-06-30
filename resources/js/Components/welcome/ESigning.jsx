@@ -4,7 +4,7 @@ const ESigning = () => {
             <div className="flex flex-wrap">
                 <div className="w-full px-4">
                     <div className="mx-auto mb-16 max-w-4xl text-center">
-                        <h2 className="mb-4 text-4xl font-bold text-dark sm:text-4xl md:text-5xl text-neutral-700">
+                        <h2 className="mb-4 text-4xl font-bold text-dark sm:text-4xl md:text-5xl text-base-content">
                             eSigning{" "}
                             <rough-notation
                                 className="inline"
@@ -27,7 +27,7 @@ const ESigning = () => {
                                 ></path>
                             </svg>
                         </h2>
-                        <p className="text-base text-neutral-500 text-xl">
+                        <p className="text-base-content text-xl">
                             For individuals, small teams and large
                             organizations.
                         </p>
@@ -61,10 +61,10 @@ const ESigning = () => {
                                 <path d="M9.8 7.5l2.982 3.28a3 3 0 0 0 4.238 .202l3.28 -2.982"></path>
                             </svg>
                         </div>
-                        <h3 className="mb-4 text-2xl font-semibold text-neutral-700 text-dark">
+                        <h3 className="mb-4 text-2xl font-semibold text-base-content text-dark">
                             Fast and slick
                         </h3>
-                        <p className="text-lg leading-relaxed text-body-color text-neutral-600">
+                        <p className="text-lg leading-relaxed text-body-color text-base-content">
                             Lightning-fast and smooth document signing with a
                             step-by-step form.
                         </p>
@@ -72,7 +72,7 @@ const ESigning = () => {
                 </div>
                 <div className="w-full">
                     <div className="relative max-w-sm">
-                        <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-400 text-white">
+                        <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-400 text-base-content">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="w-12 h-12"
@@ -95,10 +95,10 @@ const ESigning = () => {
                                 <path d="M10 18v.01"></path>
                             </svg>
                         </div>
-                        <h3 className="mb-4 text-2xl font-semibold text-neutral-700 text-dark">
+                        <h3 className="mb-4 text-2xl font-semibold text-base-content text-dark">
                             Works everywhere
                         </h3>
-                        <p className="text-lg leading-relaxed text-body-color text-neutral-600">
+                        <p className="text-lg leading-relaxed text-body-color text-base-content">
                             From mobile to desktop. Document signing made simple
                             on any device.
                         </p>
@@ -129,10 +129,10 @@ const ESigning = () => {
                                 <path d="M16 7h4"></path>
                             </svg>
                         </div>
-                        <h3 className="mb-4 text-2xl font-semibold text-neutral-700 text-dark">
+                        <h3 className="mb-4 text-2xl font-semibold text-base-content text-dark">
                             Feature-rich
                         </h3>
-                        <p className="text-lg leading-relaxed text-body-color text-neutral-600">
+                        <p className="text-lg leading-relaxed text-body-color text-base-content">
                             Reminders, API integration, seamless embedding,
                             branding and more.
                         </p>

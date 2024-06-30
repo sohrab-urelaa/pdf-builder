@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
+use App\Models\GeneralSetting;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,9 +34,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/site-settings', function () {
+    $settings = GeneralSetting::first();
+        return response()->json($settings);
+});
 
 
 require __DIR__.'/auth.php';
 require __DIR__.'/user.php';
 require __DIR__.'/pdf_template.php';
+require __DIR__.'/admin.php';
+require __DIR__.'/footer.php';
+require __DIR__.'/user_settings.php';
 

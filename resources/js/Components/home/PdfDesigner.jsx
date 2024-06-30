@@ -17,13 +17,24 @@ const PDFDesigner = ({ template: dbTemplate }) => {
         let template = JSON.parse(template_string);
         setBasePdf(template?.basePdf);
         if (template) {
-            getFontsData().then(() => {
+            getFontsData().then((font) => {
                 if (designerRef.current) {
                     designer.current = new Designer({
                         domContainer: designerRef.current,
                         template,
                         options: {
-                            theme: {},
+                            options: {
+                                font,
+                                // lang,
+                                // labels: {
+                                //     clear: "🗑️", // Add custom labels to consume them in your own plugins
+                                // },
+                                theme: {
+                                    // token: {
+                                    //     colorPrimary: "#25c2a0",
+                                    // },
+                                },
+                            },
                         },
                         plugins: getPlugins(),
                     });

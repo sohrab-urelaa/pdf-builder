@@ -4,7 +4,7 @@ const GetStarted = () => {
     return (
         <section>
             <div class="py-12">
-                <h2 class="text-4xl font-bold text-neutral-700 lg:text-5xl text-center pb-10">
+                <h2 class="text-4xl font-bold text-base-content lg:text-5xl text-center pb-10">
                     Get started now
                 </h2>
                 <div class="mx-auto max-w-5xl bg-base-200/50 rounded-3xl px-6 py-8 md:px-12 md:py-12">
@@ -12,7 +12,7 @@ const GetStarted = () => {
                         <div class="flex w-full flex-col space-y-3 md:space-y-0 justify-between items-center">
                             <div class="mb-8">
                                 <div class="mx-auto">
-                                    <p class="text-3xl font-bold tracking-tight text-center text-neutral-700 sm:text-4xl">
+                                    <p class="text-3xl font-bold tracking-tight text-center text-base-content sm:text-4xl">
                                         Sign for free
                                         <br />
                                         <span class="text-warning tracking-wider">
@@ -43,7 +43,7 @@ const GetStarted = () => {
                         <div class="flex w-full flex-col space-y-3 md:space-y-0 justify-between items-center">
                             <div class="mb-8">
                                 <div class="mx-auto">
-                                    <p class="text-3xl font-bold tracking-tight text-center text-neutral-700 sm:text-4xl">
+                                    <p class="text-3xl font-bold tracking-tight text-center text-base-content sm:text-4xl">
                                         Contact us to
                                         <br />
                                         <span class="block md:inline text-warning tracking-wider">

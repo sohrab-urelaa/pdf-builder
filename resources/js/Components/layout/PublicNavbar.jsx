@@ -32,19 +32,43 @@ const navItems = [
     },
 ];
 
-const PublicNavbar = ({ user }) => {
+const PublicNavbar = ({ user, enableMenuButton = false }) => {
+    const logoLink = window.SITE_SETTINGS?.site_logo;
+    const siteName = window.SITE_SETTINGS?.site_name;
+    console.log("LOGO", logoLink);
     return (
         <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-2 md:px-4">
             <div className="max-w-6xl m-auto flex justify-between items-center">
-                <div className="flex items-center w-1/4">
+                <div className="flex items-center w-1/4 gap-1">
+                    {enableMenuButton && (
+                        <label
+                            htmlFor="user_settings_drawer"
+                            className="ml-1 btn btn-ghost btn-circle"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h7"
+                                ></path>
+                            </svg>
+                        </label>
+                    )}
                     <div className="flex items-center space-x-2">
                         <Link href="/" className="flex items-center space-x-2">
                             <img
-                                src={appLogoImg}
-                                className="w-[50px] h-[50px]"
+                                src={logoLink || appLogoImg}
+                                className="w-[50px] h-[50px] rounded-full object-cover"
                             />
                             <div className="text-2xl font-bold text-base-content">
-                                DocuSeal
+                                {siteName}
                             </div>
                         </Link>
                     </div>
@@ -139,9 +163,11 @@ const PublicNavbar = ({ user }) => {
                 <div className="flex items-center justify-end w-1/4">
                     {user ? (
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <button className="btn btn-ghost text-xl">
-                                Settings
-                            </button>
+                            <Link href="/settings/plans">
+                                <button className="btn btn-ghost text-xl">
+                                    Settings
+                                </button>
+                            </Link>
                             <div className="ms-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -161,7 +187,7 @@ const PublicNavbar = ({ user }) => {
 
                                     <Dropdown.Content>
                                         <Dropdown.Link
-                                            href={route("profile.edit")}
+                                            href={"/settings/profile"}
                                         >
                                             Profile
                                         </Dropdown.Link>

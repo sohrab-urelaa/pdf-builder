@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\SubmitTemplateController;
 use App\Http\Controllers\TemplateController;
 use App\Models\PdfTemplate;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,6 @@ Route::middleware(['auth','admin'])->group(function () {
 
 Route::middleware(['user'])->group(function () {
     Route::get('/submit-templates/{templateId}', [TemplateController::class, 'getTemplate'])->name('submit-templates');
-    Route::post("/upload-template",[TemplateController::class,"uploadTemplate"])->name("upload-template");
+    Route::post("/upload-template",[SubmitTemplateController::class,"uploadTemplate"])->name("upload-template");
 
 });

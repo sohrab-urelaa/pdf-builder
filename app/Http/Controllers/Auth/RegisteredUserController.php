@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanyModel;
+use App\Models\PlansModel;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -35,6 +37,8 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'companyName' => 'required|string|max:255',
+            'description' => 'required|string',
         ]);
 
         $user = User::create([
@@ -43,6 +47,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $defaultPlan = PlansModel::where('isDefault', true)->first();
+        $company = CompanyModel::create([
+            "companyName"=> $request->companyName,
+            "description"=> $request->description,
+            "ownerId"=> $user["id"],
+            "planId"=> $defaultPlan["id"],
+        ]);
         event(new Registered($user));
 
         Auth::login($user);

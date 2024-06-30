@@ -51,7 +51,7 @@ export default function Dashboard({ auth, templates }) {
                             <div className="flex justify-between gap-2">
                                 <div>
                                     <p
-                                        className="flex text-secondary-content font-bold items-center gap-2 text-[18px] mb-3 tooltip"
+                                        className="flex text-base-content font-bold items-center gap-2 text-[18px] mb-3 tooltip"
                                         data-tip="Document Title"
                                     >
                                         <span>
@@ -82,7 +82,7 @@ export default function Dashboard({ auth, templates }) {
                                 </div>
                                 <div className="flex">
                                     <p
-                                        className="flex text-secondary-content font-bold items-center gap-2 text-[22px] tooltip"
+                                        className="flex text-base-content font-bold items-center gap-2 text-[22px] tooltip"
                                         data-tip={item?.user?.name}
                                     >
                                         {item?.user?.email}

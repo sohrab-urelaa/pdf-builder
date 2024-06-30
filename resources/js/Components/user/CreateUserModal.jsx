@@ -23,15 +23,14 @@ const CreateUserModal = ({ open, setOpen }) => {
         e.preventDefault();
         post(route("users.create"), {
             onSuccess: (res) => {
-                if (res.props.users) {
+                if (res.props.user) {
                     setOpen(false);
                 }
             },
         });
     };
-    console.log("Data", data);
     return (
-        <Modal open={open} setOpen={setOpen} title="Register New Admin">
+        <Modal open={open} setOpen={setOpen} title="Register New User">
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
@@ -44,7 +43,6 @@ const CreateUserModal = ({ open, setOpen }) => {
                         autoComplete="name"
                         isFocused={true}
                         onChange={(e) => setData("name", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.name} className="mt-2" />
@@ -61,7 +59,6 @@ const CreateUserModal = ({ open, setOpen }) => {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         onChange={(e) => setData("email", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.email} className="mt-2" />
@@ -78,7 +75,6 @@ const CreateUserModal = ({ open, setOpen }) => {
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                         onChange={(e) => setData("password", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.password} className="mt-2" />
@@ -100,7 +96,6 @@ const CreateUserModal = ({ open, setOpen }) => {
                         onChange={(e) =>
                             setData("password_confirmation", e.target.value)
                         }
-                        required
                     />
 
                     <InputError

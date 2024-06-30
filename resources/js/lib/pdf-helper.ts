@@ -113,7 +113,8 @@ export const getPlugins = () => {
         ReadOnlyImage: readOnlyImage,
         SVG: svg,
         ReadOnlySvg: readOnlySvg,
-        QR: barcodes.qrcode,
+        // QR: barcodes.qrcode,
+        qrcode: barcodes.qrcode,
         Code128: barcodes.code128,
         // Signature: plugins.signature,
     };

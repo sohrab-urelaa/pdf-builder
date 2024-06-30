@@ -31,15 +31,17 @@ const Video = () => {
                                     <path d="M13 12h.01"></path>
                                 </svg>
                             </span>
-                            <span>Create document form</span>
+                            <span className="text-base-content">
+                                Create document form
+                            </span>
                         </h2>
-                        <p className="text-lg leading-relaxed mt-4 text-neutral-600">
+                        <p className="text-lg leading-relaxed mt-4 text-base-content">
                             Turn your documents into fillable forms with 10
                             field types available.
                         </p>
                     </div>
                     <div className="bg-base-200/50 rounded-xl p-6 mt-4">
-                        <h2 className="text-2xl flex space-x-3 items-center text-neutral-700 mb-2 font-bold leading-normal">
+                        <h2 className="text-2xl flex space-x-3 items-center text-base-content mb-2 font-bold leading-normal">
                             <span className="flex rounded-lg bg-green-400 p-2 w-12 h-12">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -63,9 +65,11 @@ const Video = () => {
                                     <path d="M16 7h4"></path>
                                 </svg>
                             </span>
-                            <span>Sign documents</span>
+                            <span className="text-base-content">
+                                Sign documents
+                            </span>
                         </h2>
-                        <p className="text-lg leading-relaxed mt-4 text-neutral-600">
+                        <p className="text-lg leading-relaxed mt-4 text-base-content">
                             Sign documents yourself or invite multiple parties
                             via email or text to sign.
                         </p>

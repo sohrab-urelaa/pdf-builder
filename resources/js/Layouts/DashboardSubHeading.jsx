@@ -21,7 +21,7 @@ const DashboardSubHeading = ({ title }) => {
                         <div
                             className={`${
                                 route().current("dashboard")
-                                    ? " bg-base-content  text-white  "
+                                    ? " bg-base-300  text-base-content  "
                                     : ""
                             } cursor-pointer rounded-md px-2 py-1`}
                         >
@@ -56,7 +56,7 @@ const DashboardSubHeading = ({ title }) => {
                         <div
                             className={`${
                                 route().current("submissions")
-                                    ? " bg-base-content  text-white  "
+                                    ? " bg-base-300  text-base-content  "
                                     : ""
                             } cursor-pointer rounded-md px-2 py-1`}
                         >
@@ -83,7 +83,7 @@ const DashboardSubHeading = ({ title }) => {
                         </div>
                     </NavLink>
                 </div>
-                <h1 className="text-4xl text-secondary-content font-extrabold ml-2">
+                <h1 className="text-4xl text-base-content font-extrabold ml-2">
                     {title}
                 </h1>
             </div>

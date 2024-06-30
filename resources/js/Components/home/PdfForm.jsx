@@ -20,14 +20,23 @@ const PdfForm = ({ template: dbTemplate }) => {
         let template = JSON.parse(template_string);
         console.log(template);
         if (template) {
-            getFontsData().then(() => {
+            getFontsData().then((font) => {
                 const inputs = [{ a: "a1", b: "b1", c: "c1" }];
                 if (designerRef.current) {
                     designer.current = new Form({
                         domContainer: designerRef.current,
                         template,
                         options: {
-                            theme: {},
+                            font,
+                            // lang,
+                            // labels: {
+                            //     clear: "🗑️", // Add custom labels to consume them in your own plugins
+                            // },
+                            theme: {
+                                // token: {
+                                //     colorPrimary: "#25c2a0",
+                                // },
+                            },
                         },
                         inputs,
                         plugins: getPlugins(),
@@ -43,22 +52,24 @@ const PdfForm = ({ template: dbTemplate }) => {
         if (designer.current) {
             const template = designer.current.getTemplate();
             const inputs = designer.current.getInputs();
-            generate({ template, inputs: inputs }).then((pdf) => {
-                const blob = new Blob([pdf.buffer], {
-                    type: "application/pdf",
-                });
-                const formData = new FormData();
-                formData.append("file", blob);
-                formData.append("template_id", dbTemplate?.id);
-                router.post("/upload-template", formData, {
-                    onSuccess: (res) => {
-                        if (res?.props?.submitted_template?.id) {
-                            router.replace("/dashboard");
-                        }
-                    },
-                });
-                // window.open(URL.createObjectURL(blob));
-            });
+            generate({ template, inputs: inputs, plugins: getPlugins() }).then(
+                (pdf) => {
+                    const blob = new Blob([pdf.buffer], {
+                        type: "application/pdf",
+                    });
+                    const formData = new FormData();
+                    formData.append("file", blob);
+                    formData.append("template_id", dbTemplate?.id);
+                    router.post("/upload-template", formData, {
+                        onSuccess: (res) => {
+                            if (res?.props?.submitted_template?.id) {
+                                router.replace("/dashboard");
+                            }
+                        },
+                    });
+                    // window.open(URL.createObjectURL(blob));
+                }
+            );
         }
     };
 

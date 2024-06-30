@@ -202,6 +202,10 @@ class TemplateController extends Controller
     }
 
 
+
+
+
+
     // Update the specified task
     // public function update(Request $request, Task $task)
     // {

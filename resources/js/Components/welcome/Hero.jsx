@@ -5,14 +5,14 @@ const Hero = ({ user }) => {
         <div className="hero  min-h-screen">
             <div className="hero-content text-center">
                 <div className="">
-                    <h1 className="text-6xl font-extrabold text-secondary-content">
+                    <h1 className="text-6xl font-extrabold text-base-content">
                         Document Signing{" "}
                         <span className="text-yellow">for Everyone</span>
                     </h1>
                     <p className="py-6 w-full md:w-[60%] mx-auto text-xl">
                         Free forever for individuals, extensible for businesses
                         and developers.
-                        <span className="text-secondary-content font-bold">
+                        <span className="text-base-content font-bold">
                             {" "}
                             #1 Open Source Alternative
                         </span>{" "}
@@ -40,7 +40,7 @@ const Hero = ({ user }) => {
                         </Link>
                     )}
 
-                    <p className="py-6 w-full md:w-[60%] font-extrabold mx-auto text-4xl text-secondary-content">
+                    <p className="py-6 w-full md:w-[60%] font-extrabold mx-auto text-4xl text-base-content">
                         <span className="text-yellow">29.2k</span> businesses
                         and individuals have signed with to DocuSign, PandaDoc
                         and more.

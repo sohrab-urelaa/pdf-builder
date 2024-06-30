@@ -28,6 +28,8 @@ class UserController extends Controller
 
      public function createUser(Request $request)
      {
+
+        $current_user=auth()->user();
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -38,9 +40,10 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'=>"user"
+            'role'=>"user",
+            "parent_admin"=>$current_user['id']
         ]);
-        redirect("users");
+        redirect("/settings/users");
     }
     public function getRegisterUser()
     {

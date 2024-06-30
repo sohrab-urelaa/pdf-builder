@@ -36,7 +36,7 @@ export default function Dashboard({ auth, templates }) {
                                     <Link
                                         href={`/submitted-templates/${item.id}`}
                                     >
-                                        <h1 className="text-xl text-secondary-content font-extrabold">
+                                        <h1 className="text-xl text-base-content font-extrabold">
                                             {item?.title}
                                         </h1>
                                     </Link>
