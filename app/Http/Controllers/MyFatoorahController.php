@@ -156,7 +156,9 @@ class MyFatoorahController extends Controller {
                 CompanyModel::where('ownerId',$user["id"] )->update(['planId' => $subscription['plan_id']]);
                 $is_subscription_done=true;
             }
-
+            if($is_subscription_done){
+                SubscriptionModel::where("user_id",$user["id"])->update(["is_active"=>false]);
+            }
              SubscriptionModel::where('id', $order_id)->update([
                 'payment_status' => $invoice_status,
                 'is_active' => $is_subscription_done,
@@ -165,6 +167,8 @@ class MyFatoorahController extends Controller {
                 'payment_message' => $payment_message,
                 'payment_method' => $payment_method,
             ]);
+
+            
 
             $subscription=$this->getSubscriptionData($order_id);
             if($is_subscription_done){

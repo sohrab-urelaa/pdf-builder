@@ -13,6 +13,7 @@ use App\Models\SubmittedTemplate;
 use App\Models\SubscriptionModel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AdminViewController extends Controller
@@ -26,6 +27,27 @@ class AdminViewController extends Controller
         $submissionsCount = SubmittedTemplate::count();
         $subscriptionCount = SubscriptionModel::where("is_active",true)->count();
         $companyCount = CompanyModel::count();
+         $users = DB::table('users')
+            ->selectRaw('DATE_FORMAT(created_at, "%M %Y") as name, COUNT(*) as userRegistered')
+            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%M %Y")'))
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+         $template_creation = DB::table('pdf_template')
+            ->selectRaw('DATE_FORMAT(created_at, "%M %Y") as name, COUNT(*) as templateCreated')
+            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%M %Y")'))
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $subscriptions = DB::table('subscriptions')
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%M %Y") as name'),
+                DB::raw('SUM(amount) as totalSubscriptionsAmount'),
+                DB::raw('COUNT(*) as totalSubscriptionsCount')
+            )
+            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%M %Y")'))
+            ->orderBy(DB::raw('MIN(created_at)'), 'asc')
+            ->get();
 
         $data=[
             "totalAdmin"=>$adminCount,
@@ -34,6 +56,9 @@ class AdminViewController extends Controller
             "totalSubmissions"=>$submissionsCount,
             "totalSubscription"=>$subscriptionCount,
             "totalCompany"=>$companyCount,
+            "userRegistrationGraph"=>$users,
+            "subscriptionGraph"=>$subscriptions,
+            "templateCreationGraph"=>$template_creation,
         ];
 
 

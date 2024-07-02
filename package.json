@@ -27,6 +27,7 @@
         "react-icons": "^5.2.1",
         "react-moveable": "^0.30.3",
         "react-selecto": "^1.12.0",
+        "recharts": "^2.12.7",
         "typescript": "^5.4.5"
     },
     "devDependencies": {

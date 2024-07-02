@@ -1,6 +1,7 @@
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
 import CreateUserModal from "../../Components/user/CreateUserModal";
 import { useState } from "react";
+import Pagination from "../../Components/utill/Pagination";
 const UserListSettings = ({ auth, users }) => {
     const [createUserModal, setCreateUserModal] = useState(false);
     return (
@@ -27,7 +28,7 @@ const UserListSettings = ({ auth, users }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) => (
+                        {users?.data?.map((user) => (
                             <tr key={user.id} scope="row">
                                 <td>{user?.name}</td>
                                 <td>{user?.email}</td>
@@ -46,6 +47,8 @@ const UserListSettings = ({ auth, users }) => {
                     </tbody>
                 </table>
             </div>
+            <br />
+            <Pagination links={users?.links} />
             <CreateUserModal
                 open={createUserModal}
                 setOpen={setCreateUserModal}

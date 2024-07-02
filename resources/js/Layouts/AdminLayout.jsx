@@ -104,63 +104,71 @@ const navItems = [
 
 const AdminLayout = ({ children, user, title }) => {
     return (
-        <div className="drawer lg:drawer-open">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content bg-base-100 shadow">
-                <AdminNavbar user={user} title={title} />
-                <div className="p-4">{children}</div>
-            </div>
-            <div className="drawer-side">
-                <label
-                    htmlFor="my-drawer-2"
-                    aria-label="close sidebar"
-                    className="drawer-overlay"
-                ></label>
-                <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
-                    <li className="">
+        <>
+            <AdminNavbar user={user} title={title} />
+
+            <div className="drawer lg:drawer-open">
+                <input
+                    id="my-drawer-2"
+                    type="checkbox"
+                    className="drawer-toggle"
+                />
+                <div className="drawer-content bg-base-100 shadow">
+                    <div className="p-4">{children}</div>
+                </div>
+                <div className="drawer-side">
+                    <label
+                        htmlFor="my-drawer-2"
+                        aria-label="close sidebar"
+                        className="drawer-overlay"
+                    ></label>
+                    <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
+                        {/* <li className="">
                         <ApplicationLogo
                             headerTitle={title}
                             link="/admin/home"
                         />
                     </li>
-                    <hr />
-                    <li>
-                        {navItems.map((navItem) => {
-                            if (navItem.subModules) {
-                                return (
-                                    <>
-                                        <summary className="text-lg">
-                                            {navItem?.name}
-                                        </summary>
-                                        <ul>
-                                            {navItem?.subOptions?.map(
-                                                (subItem) => (
-                                                    <li>
-                                                        <Link
-                                                            className="text-lg mr-6"
-                                                            href={subItem.link}
-                                                        >
-                                                            {subItem?.title}
-                                                        </Link>
-                                                    </li>
-                                                )
-                                            )}
-                                        </ul>
-                                    </>
-                                );
-                            } else {
-                                return (
-                                    <Link href={`${navItem.link}`}>
-                                        <summary className="text-lg">
-                                            {navItem?.name}
-                                        </summary>
-                                    </Link>
-                                );
-                            }
-                        })}
-                    </li>
-                </ul>
-                {/* <ul
+                    <hr /> */}
+                        <li>
+                            {navItems.map((navItem) => {
+                                if (navItem.subModules) {
+                                    return (
+                                        <>
+                                            <summary className="text-lg">
+                                                {navItem?.name}
+                                            </summary>
+                                            <ul>
+                                                {navItem?.subOptions?.map(
+                                                    (subItem) => (
+                                                        <li>
+                                                            <Link
+                                                                className="text-lg mr-6"
+                                                                href={
+                                                                    subItem.link
+                                                                }
+                                                            >
+                                                                {subItem?.title}
+                                                            </Link>
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        </>
+                                    );
+                                } else {
+                                    return (
+                                        <Link href={`${navItem.link}`}>
+                                            <summary className="text-lg">
+                                                {navItem?.name}
+                                            </summary>
+                                        </Link>
+                                    );
+                                }
+                            })}
+                        </li>
+                    </ul>
+                    {/* <ul
                     tabindex="0"
                     className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
                 >
@@ -217,8 +225,9 @@ const AdminLayout = ({ children, user, title }) => {
                         )}{" "}
                     </li>
                 </ul> */}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

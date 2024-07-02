@@ -15,7 +15,10 @@ class UserSettingsViewController extends Controller
    function getUserSettingsPlan(){
       $current_user=auth()->user();
       $company=CompanyModel::where(["ownerId"=>$current_user["id"]])->with("plan")->first();
-      $subscription=SubscriptionModel::where("company_id",$company["id"])->first();
+      $subscription=SubscriptionModel::where([
+            "company_id"=>$company["id"],
+            "is_active"=>true,
+            ])->first();
 
         if($subscription){
             $endDate = Carbon::parse($subscription->end_date);
@@ -33,7 +36,7 @@ class UserSettingsViewController extends Controller
    }
    function getUsersSettingsPage(){
       $current_user=auth()->user();
-        $users = User::where(["parent_admin"=>$current_user["id"]])->get();
+        $users = User::where(["parent_admin"=>$current_user["id"]])->paginate(7);
         return Inertia::render('UserSettings/UserListSettings', 
         [
             "user"=>$current_user,
@@ -80,6 +83,17 @@ class UserSettingsViewController extends Controller
             "user"=>$current_user,
             "plan"=>$plan,
             "isYearly"=>$billing_cycle === 'yearly' ?true:false
+        ]);
+   }
+   function getUerPaymentPage(){
+      $current_user=auth()->user();
+        $data=SubscriptionModel::where("user_id",$current_user["id"])->with("plan")->paginate(7);
+
+
+        return Inertia::render('UserSettings/UserPayments', 
+        [
+            "user"=>$current_user,
+            "data"=>$data,
         ]);
    }
 }

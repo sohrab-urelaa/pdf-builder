@@ -34,6 +34,12 @@ const navItems = [
         subModules: false,
         link: "/settings/signatures",
     },
+    {
+        id: 5,
+        name: "Payments",
+        subModules: false,
+        link: "/settings/payments",
+    },
 ];
 
 const UserSettingsLayout = ({ children, user, title }) => {

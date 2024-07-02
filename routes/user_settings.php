@@ -11,6 +11,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/settings/signatures', [UserSettingsViewController::class, 'getSigneturePage'])->name('users.sign');
     Route::get('/settings/profile', [UserSettingsViewController::class, 'getProfilePage'])->name('users.profile');
     Route::get('/settings/company', [UserSettingsViewController::class, 'getCompanyPage'])->name('users.company');
+    Route::get('/settings/payments', [UserSettingsViewController::class, 'getUerPaymentPage'])->name('users.payments');
     Route::get('/settings/plans/upgrade', [UserSettingsViewController::class, 'getUpgradePlansPage'])->name('users.membership');
     Route::get('/settings/plans/pay/{planId}/{billing_cycle}', [UserSettingsViewController::class, 'getPayPlanPage'])->name('users.pay_membership');
 
