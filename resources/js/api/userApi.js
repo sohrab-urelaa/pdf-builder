@@ -7,3 +7,12 @@ export const upgradeMembership = async (bodyData) => {
         return err?.response?.data;
     }
 };
+
+export const getFooters = async () => {
+    try {
+        const res = await axios.get("/footers");
+        return res.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

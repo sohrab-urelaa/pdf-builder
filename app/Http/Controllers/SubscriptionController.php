@@ -39,14 +39,15 @@ class SubscriptionController extends Controller
             'end_date' => $request->billing_cycle === 'yearly' ? now()->addYear() : now()->addMonth(),
             'is_active' => true,
             'payment_method' => $request->payment_method,
-            'payment_status' => 'paid', 
+            'payment_status' => 'pending', 
             'amount' => $amount,
             'billing_cycle' => $request->billing_cycle,
             'company_id' => $company["id"],
         ]);
 
        
-        CompanyModel::where('ownerId', Auth::id())->update(['planId' => $request->plan_id]);
+        // CompanyModel::where('ownerId', Auth::id())->update(['planId' => $request->plan_id]);
+        // return redirect("/myfatoorah/checkout?oid=".$subscription["id"]);
 
         return response()->json(['message' => 'Subscription created successfully', 'subscription' => $subscription], 201);
     }

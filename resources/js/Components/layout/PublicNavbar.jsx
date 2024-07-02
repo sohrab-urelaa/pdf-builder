@@ -35,7 +35,6 @@ const navItems = [
 const PublicNavbar = ({ user, enableMenuButton = false }) => {
     const logoLink = window.SITE_SETTINGS?.site_logo;
     const siteName = window.SITE_SETTINGS?.site_name;
-    console.log("LOGO", logoLink);
     return (
         <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-2 md:px-4">
             <div className="max-w-6xl m-auto flex justify-between items-center">

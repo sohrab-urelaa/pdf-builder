@@ -5,6 +5,41 @@ import TextInput from "../../../Components/TextInput";
 import InputError from "../../../Components/InputError";
 import { saveGeneralSettings } from "../../../api/adminApi";
 import { Select } from "../../../Components/Select";
+
+const themes = [
+    "light",
+    "dark",
+    "cupcake",
+    "bumblebee",
+    "emerald",
+    "corporate",
+    "synthwave",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "halloween",
+    "garden",
+    "forest",
+    "aqua",
+    "lofi",
+    "pastel",
+    "fantasy",
+    "wireframe",
+    "black",
+    "luxury",
+    "dracula",
+    "cmyk",
+    "autumn",
+    "business",
+    "acid",
+    "lemonade",
+    "night",
+    "coffee",
+    "winter",
+    "dim",
+    "nord",
+    "sunset",
+];
 const labels = {
     site_name: "Site Name",
     site_description: "Site Description",
@@ -223,13 +258,11 @@ const GeneralSettings = ({ auth, settings }) => {
                                 }))
                             }
                         >
-                            {["light", "dark", "cupcake", "synthwave"]?.map(
-                                (themeItem) => (
-                                    <option key={themeItem} value={themeItem}>
-                                        {themeItem}
-                                    </option>
-                                )
-                            )}
+                            {themes?.map((themeItem) => (
+                                <option key={themeItem} value={themeItem}>
+                                    {themeItem}
+                                </option>
+                            ))}
                         </Select>
 
                         <InputError

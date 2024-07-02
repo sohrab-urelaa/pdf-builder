@@ -1,5 +1,7 @@
 import { Link } from "@inertiajs/react";
 import ApplicationLogo from "../ApplicationLogo";
+import { useEffect, useState } from "react";
+import { getFooters } from "../../api/userApi";
 
 const footerItems = [
     {
@@ -135,8 +137,18 @@ const footerItems = [
 ];
 
 const Footer = () => {
+    const [footers, setFooters] = useState([]);
+    useEffect(() => {
+        const fetchFooters = async () => {
+            const res = await getFooters();
+            setFooters(res || []);
+        };
+        fetchFooters();
+    }, []);
+    const siteName = window.SITE_SETTINGS?.site_name;
+
     return (
-        <footer className="px-4 mx-0 md:mx-2 md:px-2">
+        <footer className="px-4 mx-0 md:mx-2 md:px-2 mt-10">
             <div className="border-t border-base-300 flex py-8 mx-auto flex-col md:flex-row gap-8 md:gap-16 max-w-6xl">
                 <div className="flex flex-col order-2 md:order-1 shrink-0">
                     <div className="pt-6 border-t border-base-30 md:pt-0 md:border-t-0">
@@ -153,22 +165,20 @@ const Footer = () => {
                     </div>
                     <div className="mt-4 md:mt-12">
                         <div className="text-sm text-neutral-700">
-                            © 2024 DocuSeal LLC
+                            © {siteName}
                         </div>
-                        <div className="text-neutral-500 text-xs">
-                            Badda, Dhaka
-                        </div>
+                        <div className="text-neutral-500 text-xs"></div>
                     </div>
                 </div>
                 <div className="flex gap-6 flex-col md:flex-row order-1 md:order-2 flex-grow">
-                    <div className="lg:flex lg:justify-between grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                        {footerItems.map((footerItem) => (
+                    <div className="lg:flex  grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
+                        {footers.map((footerItem) => (
                             <div key={footerItem.id}>
                                 <p className="text-sm md:text-xs font-extralilightght uppercase mb-4 text-neutral-400">
                                     {footerItem.title}
                                 </p>
                                 <ul className="space-y-2 text-neutral-600 text-md md:text-sm">
-                                    {footerItem.subNavs.map((item) => (
+                                    {footerItem.sub_navs.map((item) => (
                                         <li key={item.id}>
                                             <a href={item.link} target="_blank">
                                                 {item.title}

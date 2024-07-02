@@ -8,6 +8,7 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
     const paymentAmount = isYearly ? plan?.yearly_price : plan?.monthly_price;
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [createdSubscriptions, setCreatedSubscriptions] = useState(null);
     const [error, setError] = useState("");
     const [navigationTimeout, setNavigationTimeout] = useState(30);
     const currentInterval = useRef(null);
@@ -19,11 +20,13 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
             payment_method: "Bkash",
         };
         try {
+            setCreatedSubscriptions(null);
             setIsLoading(true);
             const result = await upgradeMembership(bodyData);
             if (result?.data?.subscription) {
+                setCreatedSubscriptions(result?.data?.subscription);
                 setIsSuccess(true);
-                setAutoNavigation();
+                setAutoNavigation(result?.data?.subscription);
                 setError("");
             } else {
                 setError("Something wen't wrong!! Please try again leter.");
@@ -34,23 +37,30 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
         }
     };
 
-    const setAutoNavigation = () => {
-        setNavigationTimeout(5);
-        currentInterval.current = setInterval(() => {
-            setNavigationTimeout((prev) => {
-                if (prev == 0) {
-                    clearInterval(currentInterval.current);
-                    handleNaviageToMembershipPage();
-                    return 0;
-                } else {
-                    return prev - 1;
-                }
-            });
-        }, 1000);
+    const setAutoNavigation = (subscription) => {
+        window.location.href = `/myfatoorah/checkout?oid=${subscription.id}`;
+        // setNavigationTimeout(5);
+        // currentInterval.current = setInterval(() => {
+        //     setNavigationTimeout((prev) => {
+        //         if (prev == 0) {
+        //             clearInterval(currentInterval.current);
+        //             handleNaviageToMembershipPage();
+        //             return 0;
+        //         } else {
+        //             return prev - 1;
+        //         }
+        //     });
+        // }, 1000);
     };
 
     const handleNaviageToMembershipPage = () => {
-        router.replace("/settings/plans");
+        if (createdSubscriptions?.id) {
+            router.replace(
+                `/myfatoorah/checkout?oid=${createdSubscriptions.id}`
+            );
+        } else {
+            router.replace("/settings/plans");
+        }
     };
 
     return (
@@ -94,11 +104,11 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                 />
                             </svg>
-                            <span>Your membership upgraded successfully</span>
+                            <span>Payment initiated successfully</span>
                         </div>
                         <br />
                         <p>
-                            We will redirect to home page after{" "}
+                            We will redirect to payment page after{" "}
                             <span className="font-extrabold text-lg">
                                 {navigationTimeout}s
                             </span>
@@ -108,7 +118,7 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
                             onClick={handleNaviageToMembershipPage}
                             className="btn btn-neutral text-xl"
                         >
-                            Navigate To Home
+                            Navigate To Payment Page
                         </button>
                     </div>
                 )}

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
+use App\Models\FooterModel;
 use App\Models\GeneralSetting;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/site-settings', function () {
     $settings = GeneralSetting::first();
         return response()->json($settings);
+});
+Route::get('/footers', function () {
+        $footers = FooterModel::with('subNavs')->get();
+        return response()->json($footers);
 });
 
 
