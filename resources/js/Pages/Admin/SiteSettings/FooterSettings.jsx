@@ -47,9 +47,8 @@ const FooterSettings = ({ auth, footers }) => {
         <AdminLayout user={auth?.user} title={"Footer Settings"}>
             <div className="w-full lg:w-[80%] lg:mx-auto">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl text-base-content font-bold">
-                        Footers
-                    </h1>
+                    <p className="text-4xl font-bold">Footers</p>
+
                     <button
                         onClick={() => setCreateFooterModal(true)}
                         className="btn btn-neutral"

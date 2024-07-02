@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TemplateSubmitted;
 use App\Models\CompanyModel;
 use App\Models\FooterModel;
 use App\Models\FooterSubNavModel;
 use App\Models\GeneralSetting;
+use App\Models\PdfTemplate;
 use App\Models\PlansModel;
+use App\Models\SubmittedTemplate;
+use App\Models\SubscriptionModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,7 +19,28 @@ class AdminViewController extends Controller
 {
     function home(){
         $current_user=auth()->user();
-        return Inertia::render('Admin/AdminHome', ["user"=>$current_user]);
+
+        $adminCount = User::where('role', 'admin')->count();
+        $userCount = User::where('role', 'user')->count();
+        $pdfTemplateCount = PdfTemplate::count();
+        $submissionsCount = SubmittedTemplate::count();
+        $subscriptionCount = SubscriptionModel::where("is_active",true)->count();
+        $companyCount = CompanyModel::count();
+
+        $data=[
+            "totalAdmin"=>$adminCount,
+            "totalUser"=>$userCount,
+            "totalTemplate"=>$pdfTemplateCount,
+            "totalSubmissions"=>$submissionsCount,
+            "totalSubscription"=>$subscriptionCount,
+            "totalCompany"=>$companyCount,
+        ];
+
+
+        return Inertia::render('Admin/AdminHome', [
+            "user"=>$current_user,
+            "data"=>$data,
+        ]);
     } 
     function getPlansPage(){
         $current_user=auth()->user();
@@ -23,7 +49,7 @@ class AdminViewController extends Controller
     }
     function getCompanyPage(){
         $current_user=auth()->user();
-        $companies=CompanyModel::with("plan")->with("owner")->get();
+        $companies=CompanyModel::with("plan")->with("owner")->paginate(7);
         return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"companies"=>$companies]);
     }
 
@@ -45,6 +71,66 @@ class AdminViewController extends Controller
         [
             "user"=>$current_user,
             "settings"=>$settings,
+        ]);
+    }
+
+
+    function getAdminsPage(){
+        $current_user=auth()->user();
+        $admins=User::where("role","admin")->paginate(7);
+        return Inertia::render('Admin/AdminAdmins', 
+        [
+            "user"=>$current_user,
+            "users"=>$admins,
+        ]);
+    }
+    function getUsersPage(){
+        $current_user=auth()->user();
+        $users=User::where("role","user")->paginate(7);
+        return Inertia::render('Admin/AdminUsers', 
+        [
+            "user"=>$current_user,
+            "data"=>$users,
+        ]);
+    }
+    function getSubscriptions(){
+        $current_user=auth()->user();
+        $data=SubscriptionModel::with("user")->with("plan")->with("company")->paginate(7);
+        return Inertia::render('Admin/AdminSubscriptions', 
+        [
+            "user"=>$current_user,
+            "data"=>$data,
+        ]);
+    }
+    function getPdfTemplatesPage(){
+        $current_user=auth()->user();
+        $data=PdfTemplate::with("owner")->paginate(7);
+        return Inertia::render('Admin/AdminPdfTemplates', 
+        [
+            "user"=>$current_user,
+            "data"=>$data,
+        ]);
+    }
+    function getPdfSubmissionsPage($templateId=null){
+        $current_user=auth()->user();
+        $pdf_templates=null;
+        if($templateId){
+            $pdf_templates = SubmittedTemplate::where("template_id",$templateId)
+                        ->with("user")
+                        ->with("parent_template")
+                        ->with("owner")
+                        ->paginate(7);
+        }else{
+             $pdf_templates = SubmittedTemplate::with("user")
+                        ->with("parent_template")
+                        ->with("owner")
+                        ->paginate(7);
+        }
+       
+        return Inertia::render('Admin/AdminPdfSubmissions', 
+        [
+            "user"=>$current_user,
+            "data"=>$pdf_templates,
         ]);
     }
 

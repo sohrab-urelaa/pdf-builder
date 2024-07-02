@@ -21,15 +21,23 @@ class SubscriptionModel extends Model
         'amount',
         'billing_cycle',
         'company_id',
+        'invoice_error',
+        'invoice_id',
+        'payment_message',
+        "currency"
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,"user_id");
     }
 
     public function plan()
     {
-        return $this->belongsTo(PlansModel::class);
+        return $this->belongsTo(PlansModel::class,"plan_id");
+    }
+    public function company()
+    {
+        return $this->belongsTo(CompanyModel::class,"company_id");
     }
 }

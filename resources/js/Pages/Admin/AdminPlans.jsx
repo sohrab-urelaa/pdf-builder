@@ -9,7 +9,7 @@ const AdminPlans = ({ auth, plans }) => {
         <AdminLayout title={"Plans"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <h1>Plans</h1>
+                    <p className="text-4xl font-bold">Plans</p>
                     <button
                         onClick={() => setCreateNewPlans(true)}
                         className="btn  btn-outline font-xl"
@@ -17,12 +17,13 @@ const AdminPlans = ({ auth, plans }) => {
                         Create New Plan
                     </button>
                 </div>
+                <div className="flex  gap-4 mt-4 flex-wrap">
+                    {plans?.map((plan) => (
+                        <PlanItem key={plan.id} plan={plan} />
+                    ))}
+                </div>
             </div>
-            <div className="flex  gap-4 mt-4 flex-wrap">
-                {plans?.map((plan) => (
-                    <PlanItem key={plan.id} plan={plan} />
-                ))}
-            </div>
+
             <CreateNewPlansModal
                 open={createNewPlans}
                 setOpen={setCreateNewPlans}

@@ -2,18 +2,24 @@ import { router, useForm } from "@inertiajs/react";
 import InputError from "../InputError";
 import InputLabel from "../InputLabel";
 import TextInput from "../TextInput";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PrimaryButton from "../PrimaryButton";
+import { Select } from "../Select";
 import Modal from "../utill/Modal";
+import currency_lists from "../../lib/currency_list.json";
 
 const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
+    const [currency_list, setCurrencyList] = useState(currency_lists);
     const { data, setData, post, processing, errors, reset, put } = useForm({
         title: "",
         description: "",
         number_of_document: "",
         monthly_price: "",
         yearly_price: "",
+        currency: "",
+        currency_symbol: "",
         isDefault: false,
+        currency_id: "",
     });
 
     useEffect(() => {
@@ -43,6 +49,16 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                 },
             });
         }
+    };
+
+    const handleCurrencyChange = (value) => {
+        const currency_item = currency_list.find((item) => item.id == value);
+        setData((prev) => ({
+            ...prev,
+            currency_id: value,
+            currency: currency_item?.currency_name,
+            currency_symbol: currency_item?.currency_symbol,
+        }));
     };
     return (
         <Modal
@@ -142,6 +158,28 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                         message={errors.monthly_price}
                         className="mt-2"
                     />
+                </div>
+                <div className="mt-4">
+                    <InputLabel htmlFor="currency" value="Currency" />
+                    <Select
+                        id="currency"
+                        name="currency"
+                        value={data.currency_id}
+                        className="mt-1 block w-full"
+                        onChange={(e) => handleCurrencyChange(e.target.value)}
+                    >
+                        {currency_list?.map((currency_item) => (
+                            <option
+                                key={currency_item.id}
+                                value={currency_item.id}
+                            >
+                                {currency_item.currency_symbol}{" "}
+                                {currency_item.currency_name}
+                            </option>
+                        ))}
+                    </Select>
+
+                    <InputError message={errors.currency} className="mt-2" />
                 </div>
                 <div className="mt-4 flex items-center">
                     <input

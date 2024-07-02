@@ -11,6 +11,11 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin/home', [AdminViewController::class, 'home'])->name('admin.home');
     Route::get('/admin/plans', [AdminViewController::class, 'getPlansPage'])->name('admin.plans');
     Route::get('/admin/company', [AdminViewController::class, 'getCompanyPage'])->name('admin.company');
+    Route::get('/admin/admin-list', [AdminViewController::class, 'getAdminsPage'])->name('admin.adminList');
+    Route::get('/admin/user-list', [AdminViewController::class, 'getUsersPage'])->name('admin.userList');
+    Route::get('/admin/subscriptions', [AdminViewController::class, 'getSubscriptions'])->name('admin.subscriptions');
+    Route::get('/admin/templates', [AdminViewController::class, 'getPdfTemplatesPage'])->name('admin.pdfTemplates');
+    Route::get('/admin/submissions/{templateId?}', [AdminViewController::class, 'getPdfSubmissionsPage'])->name('admin.pdfSubmissions');
     Route::get('/admin/site-settings/footer', [AdminViewController::class, 'getFooterSettingsPage'])->name('admin.footersettings');
     Route::get('/admin/site-settings/general', [AdminViewController::class, 'getGeneralSettingsPage'])->name('admin.generalSettings');
 });

@@ -5,6 +5,12 @@ import AdminNavbar from "../Components/admin/AdminNavbar";
 
 const navItems = [
     {
+        id: 10,
+        name: "Home",
+        subModules: false,
+        link: "/admin/home",
+    },
+    {
         id: 1,
         name: "Site Settings",
         subModules: true,
@@ -33,9 +39,45 @@ const navItems = [
     },
     {
         id: 3,
+        name: "Admins",
+        subModules: false,
+        link: "/admin/admin-list",
+    },
+    {
+        id: 5,
+        name: "Users",
+        subModules: false,
+        link: "/admin/user-list",
+    },
+    {
+        id: 4,
         name: "Plans",
         subModules: false,
         link: "/admin/plans",
+    },
+    {
+        id: 6,
+        name: "Subscriptions",
+        subModules: false,
+        link: "/admin/subscriptions",
+    },
+    {
+        id: 7,
+        name: "Pdf",
+        subModules: true,
+
+        subOptions: [
+            {
+                id: 77,
+                title: "Templates",
+                link: "/admin/templates",
+            },
+            {
+                id: 78,
+                title: "Submissions",
+                link: "/admin/submissions",
+            },
+        ],
     },
     // {
     //     id: 2,

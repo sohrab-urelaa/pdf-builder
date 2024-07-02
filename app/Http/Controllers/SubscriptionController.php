@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -31,18 +32,26 @@ class SubscriptionController extends Controller
         // Calculate the amount based on billing cycle
         $amount = $request->billing_cycle === 'yearly' ? $plan->yearly_price : $plan->monthly_price;
 
-        // Create the subscription
+      
+        $end_date= now()->addMonth();
+
+        if($request->billing_cycle === 'yearly'){
+            $end_date=now()->addYear();
+        }
+
+        // Create the subscription  
         $subscription = SubscriptionModel::create([
             'user_id' => Auth::id(),
             'plan_id' => $request->plan_id,
             'start_date' => now(),
-            'end_date' => $request->billing_cycle === 'yearly' ? now()->addYear() : now()->addMonth(),
-            'is_active' => true,
+            'end_date' =>  $end_date,
+            'is_active' => false,
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending', 
             'amount' => $amount,
             'billing_cycle' => $request->billing_cycle,
             'company_id' => $company["id"],
+            'currency' => $plan["currency"],
         ]);
 
        

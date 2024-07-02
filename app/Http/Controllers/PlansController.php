@@ -18,6 +18,8 @@ class PlansController extends Controller
             'monthly_price' => 'required|integer',
             'yearly_price' => 'required|integer',
             'isDefault' => 'required|boolean',
+            'currency' => 'required|string',
+            'currency_symbol' => 'required|string',
         ]);
         if ($validatedData['isDefault']) {
             PlansModel::where('isDefault', true)->update(['isDefault' => false]);
@@ -49,6 +51,8 @@ class PlansController extends Controller
             'monthly_price' => 'sometimes|required|integer',
             'yearly_price' => 'sometimes|required|integer',
             'isDefault' => 'required|boolean',
+            'currency' => 'required|string',
+            'currency_symbol' => 'required|string',
         ]);
 
          if ($validatedData['isDefault']) {

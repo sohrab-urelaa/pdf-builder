@@ -12,7 +12,12 @@
 @endforeach
 
 <script>
+    function getOrderId(){
+        const orderId=document.getElementById("order_id_field").value;
+        return orderId;
+    }
     function mfCardSubmit(pmid){
-        window.location.href = "{{url('myfatoorah')}}?pmid=" + pmid;
+        const orderId=getOrderId();
+        window.location.href = `{{url('myfatoorah')}}?pmid=${pmid}&oid=${orderId}`
     }
 </script>

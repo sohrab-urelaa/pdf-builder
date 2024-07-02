@@ -35,14 +35,18 @@ const UserUpgradePlanItem = ({ plan }) => {
                     {isMonthlyView ? (
                         <p className="monthly-plan text-dark font-bold">
                             <span className="text-4xl">
-                                ${plan?.monthly_price}
+                                {plan?.currency_symbol}
+                                {plan?.monthly_price}
+                                {plan?.currency}
                             </span>
                             / month
                         </p>
                     ) : (
                         <p className="yearly-plan text-dark relative font-bold ">
                             <span className="text-4xl relative inline-block">
-                                ${plan?.yearly_price}
+                                {plan?.currency_symbol}
+                                {plan?.yearly_price}
+                                {plan?.currency}
                             </span>{" "}
                             <span className="ml-5"> / year</span>
                         </p>

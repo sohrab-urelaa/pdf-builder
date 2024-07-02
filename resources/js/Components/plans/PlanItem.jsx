@@ -29,12 +29,16 @@ const PlanItem = ({ plan }) => {
                             <p className="text-dark mb-4 font-bold"></p>
                             <div className="font-bold">
                                 <span className="text-3xl">
-                                    {plan?.monthly_price}
+                                    {plan?.currency_symbol}
+                                    {""}
+                                    {plan?.monthly_price} {plan?.currency}
                                 </span>{" "}
                                 / month
                             </div>
                             <div className="text-sm mt-1 text-neutral-600">
-                                Annual license billed {plan?.yearly_price}
+                                Annual license billed {plan?.currency_symbol}
+                                {""}
+                                {plan?.yearly_price} {plan?.currency}
                             </div>
                             <p></p>
                         </div>

@@ -6,6 +6,7 @@
     </head>
 
     <body dir="{{App::isLocale('ar') ? 'rtl' : 'ltr'}}">
+        <input style="visibility:hidden;" id="order_id_field" value="{{$orderId}}"/>
         <div class="mf-payment-methods-container" id="mf-noPaymentGateways">
             <div class="mf-danger-text">
                 {{__('myfatoorah.noPaymentGateways')}}
@@ -71,8 +72,13 @@
 
             <script src="{{asset('vendor/myfatoorah/js/checkout.js')}}"></script>
             <script>
+                function getOrderId(){
+                    const orderId=document.getElementById("order_id_field").value;
+                   return orderId;
+                }
                 function mfCallback(response) {
-                    window.location.href = "{{url('myfatoorah')}}?sid=" + response.sessionId;
+                    const orderId=getOrderId();
+                    window.location.href = `{{url('myfatoorah')}}?sid=${response.sessionId}&oid=${orderId}`
                 }
             </script>
 

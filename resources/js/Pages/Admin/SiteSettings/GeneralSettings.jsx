@@ -138,8 +138,6 @@ const GeneralSettings = ({ auth, settings }) => {
                 });
                 setErrors(updatedErrors);
             }
-
-            console.log("Result", result);
         } catch (err) {
         } finally {
             setLoading(false);
@@ -149,7 +147,9 @@ const GeneralSettings = ({ auth, settings }) => {
     return (
         <AdminLayout user={auth?.user} title={"Footer Settings"}>
             <div className="w-full lg:w-[80%] lg:mx-auto">
-                <div className="flex items-center justify-between"></div>
+                <div className="flex items-center justify-between">
+                    <p className="text-4xl font-bold">General Settings</p>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex items-center gap-3">
                         <label className="btn btn-secondary">

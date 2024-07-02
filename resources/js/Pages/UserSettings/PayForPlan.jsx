@@ -137,7 +137,8 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
                                 >
                                     {!isLoading ? (
                                         <>
-                                            Pay ${paymentAmount} For{" "}
+                                            Pay {plan?.currency_symbol}
+                                            {paymentAmount} {plan?.currency} For{" "}
                                             {isYearly ? "/year" : "/month"}
                                         </>
                                     ) : (
