@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
-import { appLogoImg } from "../../assets/assets";
-import ApplicationLogo from "../Components/ApplicationLogo";
-import AdminNavbar from "../Components/admin/AdminNavbar";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import PublicNavbar from "../Components/layout/PublicNavbar";
 const navItems = [
     {
@@ -33,6 +33,12 @@ const navItems = [
         name: "E-Signature",
         subModules: false,
         link: "/settings/signatures",
+    },
+    {
+        id: 6,
+        name: "Verify Signature",
+        subModules: false,
+        link: "/settings/verify-signatures",
     },
     {
         id: 5,
@@ -107,6 +113,8 @@ const UserSettingsLayout = ({ children, user, title }) => {
                     </div>
                 </div>
             </div>
+
+            <ToastContainer theme="dark" />
         </>
     );
 };

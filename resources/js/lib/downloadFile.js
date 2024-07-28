@@ -1,6 +1,6 @@
 export const downloadPdf = async (submitted_template) => {
     try {
-        const name = `${submitted_template?.parent_template?.title}-${submitted_template?.user?.name}`;
+        const name = `${submitted_template?.parent_template?.title}-${submitted_template?.submitted_user_name}`;
         // Fetch the PDF file
         const response = await fetch(submitted_template.templated_pdf_link);
 

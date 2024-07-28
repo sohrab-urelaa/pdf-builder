@@ -2,6 +2,8 @@ import { Link } from "@inertiajs/react";
 import { appLogoImg } from "../../assets/assets";
 import ApplicationLogo from "../Components/ApplicationLogo";
 import AdminNavbar from "../Components/admin/AdminNavbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const navItems = [
     {
@@ -76,6 +78,29 @@ const navItems = [
                 id: 78,
                 title: "Submissions",
                 link: "/admin/submissions",
+            },
+        ],
+    },
+    {
+        id: 8,
+        name: "Email",
+        subModules: true,
+
+        subOptions: [
+            {
+                id: 88,
+                title: "Email Templates",
+                link: "/admin/email-templates",
+            },
+            {
+                id: 89,
+                title: "Smtp Config",
+                link: "/admin/smtp-config",
+            },
+            {
+                id: 881,
+                title: "Bulk Emailing",
+                link: "/admin/bulk-emailing",
             },
         ],
     },
@@ -227,6 +252,7 @@ const AdminLayout = ({ children, user, title }) => {
                 </ul> */}
                 </div>
             </div>
+            <ToastContainer theme="dark" />
         </>
     );
 };

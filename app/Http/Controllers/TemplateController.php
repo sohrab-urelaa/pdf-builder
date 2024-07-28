@@ -30,8 +30,7 @@ class TemplateController extends Controller
     {
         if (auth()->check()) {
             $current_user=auth()->user();
-            $pdf_templates = SubmittedTemplate::with("user")
-                        ->with("parent_template")
+            $pdf_templates = SubmittedTemplate::with("parent_template")
                         ->with("owner")
                         ->get();
             return Inertia::render('Submissions', [
@@ -132,8 +131,7 @@ class TemplateController extends Controller
     {
         try {
              $template=PdfTemplate::find($templateId);
-            $submitted_template=SubmittedTemplate::with("user")
-                        ->where('template_id',$templateId)
+            $submitted_template=SubmittedTemplate::where('template_id',$templateId)
                         ->with("parent_template")
                         ->with("owner")
                         ->get();
@@ -159,7 +157,7 @@ class TemplateController extends Controller
             $submitted_user_email=$current_user["email"];
            
 
-            $full_path=asset('storage/' . $pdf_file_path);
+             $full_path=asset('storage/' . $pdf_file_path);
 
              $template=PdfTemplate::find($template_id);
              $template_owner=User::find($template["user_id"]);

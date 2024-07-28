@@ -24,6 +24,6 @@ class EnsureUserIsUser
               }
               
         }
-          return Inertia::render('Auth/RegisterUser',["redirect_link"=>$request->url()]);
+          // return Inertia::render('Auth/RegisterUser',["redirect_link"=>$request->url()]);
       }
 }

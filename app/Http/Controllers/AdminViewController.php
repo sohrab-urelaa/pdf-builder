@@ -141,13 +141,11 @@ class AdminViewController extends Controller
         $pdf_templates=null;
         if($templateId){
             $pdf_templates = SubmittedTemplate::where("template_id",$templateId)
-                        ->with("user")
                         ->with("parent_template")
                         ->with("owner")
                         ->paginate(7);
         }else{
-             $pdf_templates = SubmittedTemplate::with("user")
-                        ->with("parent_template")
+             $pdf_templates = SubmittedTemplate::with("parent_template")
                         ->with("owner")
                         ->paginate(7);
         }

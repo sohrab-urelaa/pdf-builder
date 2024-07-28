@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
           $this->call([
             AdminUserSeeder::class,
-            DeleteTableInfoSeeder::class,
+            EmailTemplatesSeeder::class
         ]);
     }
 }

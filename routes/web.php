@@ -51,4 +51,6 @@ require __DIR__.'/pdf_template.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/footer.php';
 require __DIR__.'/user_settings.php';
+require __DIR__.'/email_templates.php';
+require __DIR__.'/smtp_config.php';
 

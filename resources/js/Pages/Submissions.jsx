@@ -7,13 +7,13 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineDownload } from "react-icons/ai";
 import formatDateString from "../lib/date-formate";
 import { MdDeleteOutline } from "react-icons/md";
-
+import rawPdf from "./sohrab2.pdf";
 export default function Dashboard({ auth, templates }) {
     const downloadPdf = async (submitted_template) => {
         try {
-            const name = `${submitted_template?.parent_template?.title}-${submitted_template?.user?.name}`;
+            const name = `${submitted_template?.parent_template?.title}-${submitted_template?.submitted_user_name}`;
             // Fetch the PDF file
-            const response = await fetch(submitted_template.templated_pdf_link);
+            const response = await fetch(rawPdf);
 
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -83,9 +83,9 @@ export default function Dashboard({ auth, templates }) {
                                 <div className="flex">
                                     <p
                                         className="flex text-base-content font-bold items-center gap-2 text-[22px] tooltip"
-                                        data-tip={item?.user?.name}
+                                        data-tip={item?.submitted_user_name}
                                     >
-                                        {item?.user?.email}
+                                        {item?.submitted_user_email}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">

@@ -14,7 +14,7 @@ export default function SubmittedTemplates({
 }) {
     const downloadPdf = async (submitted_template) => {
         try {
-            const name = `${template?.title}-${submitted_template?.user?.name}`;
+            const name = `${template?.title}-${submitted_template?.submitted_user_name}`;
             // Fetch the PDF file
             const response = await fetch(submitted_template.templated_pdf_link);
 
@@ -100,9 +100,9 @@ export default function SubmittedTemplates({
                                     <div className="flex">
                                         <p
                                             className="flex text-secondary-content font-bold items-center gap-2 text-[22px] tooltip"
-                                            data-tip={item?.user?.name}
+                                            data-tip={item?.submitted_user_name}
                                         >
-                                            {item?.user?.email}
+                                            {item?.submitted_user_email}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">

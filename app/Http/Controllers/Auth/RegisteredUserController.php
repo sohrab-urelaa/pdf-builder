@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\EmailTemplateProviders;
+use App\Mail\CustomMailTemplate;
 use App\Models\CompanyModel;
 use App\Models\PlansModel;
 use App\Models\User;
@@ -54,6 +56,14 @@ class RegisteredUserController extends Controller
             "ownerId"=> $user["id"],
             "planId"=> $defaultPlan["id"],
         ]);
+
+        //trigger register user email
+        
+         $template=EmailTemplateProviders::registration_success_template($user);
+         if($template){
+            CustomMailTemplate::send_email($template);
+         }
+
         event(new Registered($user));
 
         Auth::login($user);

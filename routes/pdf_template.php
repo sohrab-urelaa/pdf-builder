@@ -26,8 +26,5 @@ Route::middleware(['auth','admin'])->group(function () {
 
 });
 
-Route::middleware(['user'])->group(function () {
-    Route::get('/submit-templates/{templateId}', [TemplateController::class, 'getTemplate'])->name('submit-templates');
-    Route::post("/upload-template",[SubmitTemplateController::class,"uploadTemplate"])->name("upload-template");
-
-});
+Route::get('/submit-templates/{templateId}', [TemplateController::class, 'getTemplate'])->name('submit-templates');
+Route::post("/upload-template",[SubmitTemplateController::class,"uploadTemplate"])->name("upload-template");

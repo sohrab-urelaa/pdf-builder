@@ -1,12 +1,44 @@
+import { useState } from "react";
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
+import CreateNewSignature from "../../Components/user/CreateNewSignature";
+import Pagination from "../../Components/utill/Pagination";
+import { router } from "@inertiajs/react";
+import ActionModal from "../../Components/utill/ActionModal";
+import { deleteCertificate } from "../../api/userApi";
+import { toast } from "react-toastify";
+const ESignature = ({ auth, data }) => {
+    const [createSignatureModal, setCreateSignatureModal] = useState(false);
+    const [selectedSignature, setSelectedSignature] = useState(null);
+    const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
+    const handleSuccess = () => {
+        router.reload();
+    };
 
-const ESignature = ({ auth }) => {
+    const handleDelete = async () => {
+        try {
+            const res = await deleteCertificate(selectedSignature?.id);
+
+            setDeleteConfirmModal(false);
+            setSelectedSignature(null);
+            if (res?.success) {
+                toast.success(res?.message);
+                handleSuccess();
+            } else {
+                toast.error(res?.message);
+            }
+        } catch (err) {}
+    };
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
                     <p className="text-4xl font-bold">Signing Certificates</p>
-                    <button className="btn btn-neutral">Upload Cert</button>
+                    <button
+                        onClick={() => setCreateSignatureModal(true)}
+                        className="btn btn-neutral"
+                    >
+                        Upload Cert
+                    </button>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -16,32 +48,53 @@ const ESignature = ({ auth }) => {
                             <th>Name</th>
                             <th>Valid To</th>
                             <th>Status</th>
-                            <th class="text-right" width="1px"></th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr scope="row">
-                            <td>Md Sohrab Hossain Sohel</td>
-                            <td>mdsohelranask6869@gmail.com</td>
-                            <td>
-                                <span class="badge badge-info badge-outline">
-                                    admin
-                                </span>
-                            </td>
-                            <td class="flex items-center space-x-2 justify-end">
-                                <a
-                                    class="btn btn-outline btn-xs"
-                                    title="Edit"
-                                    data-turbo-frame="modal"
-                                    href="/users/20605/edit"
-                                >
-                                    Edit
-                                </a>{" "}
-                            </td>
-                        </tr>
+                        {data?.data?.map((item) => (
+                            <tr key={item.id} scope="row">
+                                <td>{item?.name}</td>
+                                <td>{item?.user?.name}</td>
+                                <td>
+                                    <button className="btn btn-sm btn-outline">
+                                        {item?.is_active
+                                            ? "Active"
+                                            : "Inactive"}
+                                    </button>
+                                </td>{" "}
+                                <td>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedSignature(item);
+                                            setDeleteConfirmModal(true);
+                                        }}
+                                        className="btn btn-sm btn-outline"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
+                <CreateNewSignature
+                    open={createSignatureModal}
+                    setOpen={setCreateSignatureModal}
+                    onSuccess={handleSuccess}
+                />
+
+                <ActionModal
+                    open={deleteConfirmModal}
+                    setOpen={setDeleteConfirmModal}
+                    onAction={handleDelete}
+                    onCancel={() => setDeleteConfirmModal(false)}
+                    title={"Delete Certificates"}
+                    description={`Are you sure you want to delete this cert?`}
+                />
             </div>
+            <br />
+            <Pagination links={data.links} />
         </UserSettingsLayout>
     );
 };

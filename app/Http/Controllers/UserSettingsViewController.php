@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyModel;
 use App\Models\PlansModel;
+use App\Models\SslCertificateModal;
 use App\Models\SubscriptionModel;
 use App\Models\User;
 use Carbon\Carbon;
@@ -45,9 +46,11 @@ class UserSettingsViewController extends Controller
    }
    function getSigneturePage(){
       $current_user=auth()->user();
+       $certificates=SslCertificateModal::where("user_id",$current_user["id"])->with("user")->paginate();
         return Inertia::render('UserSettings/ESignature', 
         [
             "user"=>$current_user,
+            "data"=>$certificates
         ]);
    }
    function getProfilePage(){
@@ -64,6 +67,13 @@ class UserSettingsViewController extends Controller
         [
             "user"=>$current_user,
             "company"=>$company,
+        ]);
+   }
+   function getVerifySigneturePage(){
+      $current_user=auth()->user();
+        return Inertia::render('UserSettings/VerifySignature', 
+        [
+            "user"=>$current_user,
         ]);
    }
    function getUpgradePlansPage(){

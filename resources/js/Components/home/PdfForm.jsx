@@ -1,24 +1,23 @@
 import { useRef, useState } from "react";
 import { Designer, Form } from "../../pdf-ui/src/index";
 import { getFontsData, getPlugins, readFile } from "../../lib/pdf-helper";
-import { usePdfTemplates } from "../../context/PdfTemplateContext";
-import Navbar from "./Navbar";
-import UploadedDocuments from "./LeftSidebar";
-import { cloneDeep } from "../../pdf-ui/src/helper";
-import { useForm } from "@inertiajs/react";
-import { router } from "@inertiajs/react";
 import { generate } from "@pdfme/generator";
+import { uploadTemplate } from "../../api/userApi";
+import { toast } from "react-toastify";
+import CreateTemplateModal from "./CreateTemplateModal";
+import SubmitTemplateModal from "./SubmitTemplateModal";
 const headerHeight = 65;
 
 const PdfForm = ({ template: dbTemplate }) => {
     const designerRef = useRef(null);
     const [prevDesignerRef, setPrevDesignerRef] = useState(null);
     const designer = useRef(null);
+    const [openSubmitPdfForm, setSubmitPdfForm] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const buildForm = () => {
         const template_string = dbTemplate?.template_json;
         let template = JSON.parse(template_string);
-        console.log(template);
         if (template) {
             getFontsData().then((font) => {
                 const inputs = [{ a: "a1", b: "b1", c: "c1" }];
@@ -48,7 +47,11 @@ const PdfForm = ({ template: dbTemplate }) => {
         }
     };
 
-    const onSaveTemplate = async () => {
+    const onSubmit = () => {
+        setSubmitPdfForm(true);
+    };
+
+    const onSaveTemplate = async (data) => {
         if (designer.current) {
             const template = designer.current.getTemplate();
             const inputs = designer.current.getInputs();
@@ -57,20 +60,28 @@ const PdfForm = ({ template: dbTemplate }) => {
                     const blob = new Blob([pdf.buffer], {
                         type: "application/pdf",
                     });
-                    const formData = new FormData();
-                    formData.append("file", blob);
-                    formData.append("template_id", dbTemplate?.id);
-                    router.post("/upload-template", formData, {
-                        onSuccess: (res) => {
-                            if (res?.props?.submitted_template?.id) {
-                                router.replace("/dashboard");
-                            }
-                        },
-                    });
-                    // window.open(URL.createObjectURL(blob));
+                    handleUploadTemplate(blob, data);
                 }
             );
         }
+    };
+    const handleUploadTemplate = async (blob, data) => {
+        const formData = new FormData();
+        formData.append("file", blob);
+        formData.append("template_id", dbTemplate?.id);
+        formData.append("submitted_user_name", data?.name);
+        formData.append("submitted_user_email", data?.email);
+        formData.append("location", data?.location);
+        setIsLoading(true);
+        const result = await uploadTemplate(formData);
+        setIsLoading(false);
+        setSubmitPdfForm(false);
+        if (result?.success) {
+            toast.success(result?.message);
+        } else {
+            toast.error(result?.message);
+        }
+        console.log("Result", result);
     };
 
     //@ts-ignore
@@ -105,11 +116,17 @@ const PdfForm = ({ template: dbTemplate }) => {
                 </div>
             </main>
             <button
-                onClick={() => onSaveTemplate()}
-                className="btn btn-outline btn-sm fixed right-20 bottom-20"
+                onClick={() => onSubmit()}
+                className="btn btn-contained btn-neutral btn-lg fixed right-20 bottom-20 w-[150px]"
             >
                 Submit
             </button>
+            <SubmitTemplateModal
+                open={openSubmitPdfForm}
+                setOpen={setSubmitPdfForm}
+                onSuccess={onSaveTemplate}
+                isLoading={isLoading}
+            />
         </div>
     );
 };

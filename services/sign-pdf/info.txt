@@ -1,0 +1,12 @@
+//create certificates
+
+openssl req -x509 -newkey rsa:2048 -keyout private.key -out certificate.crt -days 365 -nodes
+
+
+//convert certificate and private key into p12 file
+
+openssl pkcs12 -export -out certificate.p12 -inkey private.key -in certificate.crt
+
+//verify the certificate 
+
+openssl pkcs12 -info -in certificate.p12

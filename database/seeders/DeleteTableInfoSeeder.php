@@ -17,5 +17,10 @@ class DeleteTableInfoSeeder extends Seeder
 
         DB::table('submitted_template')->delete();
         DB::table('pdf_template')->delete();
+        DB::table('users')->delete();
+        DB::table('company')->delete();
+        DB::table('plans')->delete();
+        DB::table('ssl_certificates')->delete();
+        DB::table('subscriptions')->delete();
     }
 }

@@ -5,7 +5,6 @@ import { Link } from "@inertiajs/react";
 const UserSettingsPlans = ({ auth, company, subscription }) => {
     const plan = company?.plan;
     const [isMonthlyView, setIsMonthlyView] = useState(true);
-    console.log("Subscriptions", subscription, company);
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">

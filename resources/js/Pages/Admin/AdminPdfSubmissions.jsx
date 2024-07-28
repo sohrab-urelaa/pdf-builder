@@ -57,9 +57,9 @@ const AdminPdfSubmissions = ({ auth, data }) => {
                                 <div className="flex">
                                     <p
                                         className="flex text-base-content font-bold items-center gap-2 text-[22px] tooltip"
-                                        data-tip={item?.user?.name}
+                                        data-tip={item?.submitted_user_name}
                                     >
-                                        {item?.user?.email}
+                                        {item?.submitted_user_email}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">

@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 class TemplateSubmitted extends Mailable
 {
     use Queueable, SerializesModels;
-public $mailData;
+    public $mailData;
     /**
      * Create a new message instance.
      */
