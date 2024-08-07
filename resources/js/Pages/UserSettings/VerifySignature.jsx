@@ -23,8 +23,8 @@ const VerifySignature = ({ auth }) => {
                 setResult(res?.result?.result);
             } else {
                 toast.error("No Signature found on uploaded pdf");
+                setResult(null);
             }
-            console.log("Result", result);
         } catch (err) {
             toast.error("Something wen't wrong, please try again later.");
         } finally {

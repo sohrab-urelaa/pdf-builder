@@ -108,7 +108,7 @@ class SubmitTemplateController extends Controller
         $submitter_location=$submitter["location"];
 
         $client = new Client();
-        $response = $client->post('http://localhost:5000/sign-pdf', [
+        $response = $client->post('http://localhost:5001/sign-pdf', [
             'multipart' => [
                 [
                     'name'     => 'pdfFile',
@@ -162,7 +162,7 @@ class SubmitTemplateController extends Controller
     private function verifyPDF($pdf_path){
 
         $client = new Client();
-        $response = $client->post('http://localhost:5000/check-signature', [
+        $response = $client->post('http://localhost:5001/check-signature', [
             'multipart' => [
                 [
                     'name'     => 'pdfFile',

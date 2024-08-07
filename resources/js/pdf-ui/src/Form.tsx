@@ -23,6 +23,7 @@ class Form extends PreviewUI {
     }
 
     protected render() {
+        console.log("Inputes", this.getInputs());
         if (!this.domContainer) throw Error(DESTROYED_ERR_MSG);
         ReactDOM.render(
             <AppContextProvider

@@ -58,6 +58,7 @@ const Preview = ({
 
     const input = inputs[unitCursor];
 
+    console.log("Input", input);
     const init = (template: Template) => {
         const options = { font };
         getDynamicTemplate({
