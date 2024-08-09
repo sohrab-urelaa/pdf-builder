@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="cupcake">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="cupcake"
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,7 @@
         @inertia
 
          <script>
-        fetch('/site-settings')
+            fetch('/site-settings')
             .then(response => response.json())
             .then(data => {
                 const site_settings=data?.settings;
@@ -33,6 +33,14 @@
                     document.documentElement.setAttribute('data-theme', site_settings.theme);
                 }
             });
+        const isRTL=localStorage.getItem("isRTL")==="1";
+        if (isRTL) {
+            document.documentElement.setAttribute("dir", "rtl");
+        } else {
+            document.documentElement.removeAttribute("dir");
+        }
+
+
     </script>
     </body>
 </html>

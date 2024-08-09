@@ -2,18 +2,20 @@ import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
 import CreateUserModal from "../../Components/user/CreateUserModal";
 import { useState } from "react";
 import Pagination from "../../Components/utill/Pagination";
+import { useTranslation } from "react-i18next";
 const UserListSettings = ({ auth, users }) => {
+    const { t } = useTranslation();
     const [createUserModal, setCreateUserModal] = useState(false);
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-3 flex items-center justify-between gap-3">
-                    <p className="text-4xl font-bold">Users</p>
+                    <p className="text-4xl font-bold">{t("users")}</p>
                     <button
                         onClick={() => setCreateUserModal(true)}
                         className="btn btn-neutral"
                     >
-                        New User
+                        {t("new_user")}
                     </button>
                 </div>
             </div>
@@ -21,9 +23,9 @@ const UserListSettings = ({ auth, users }) => {
                 <table class="table w-full table-lg rounded-b-none overflow-hidden">
                     <thead class="bg-base-200">
                         <tr class="text-base-content uppercase">
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
+                            <th>{t("name")}</th>
+                            <th>{t("email")}</th>
+                            <th>{t("role")}</th>
                             <th class="text-right" width="1px"></th>
                         </tr>
                     </thead>
@@ -39,7 +41,7 @@ const UserListSettings = ({ auth, users }) => {
                                 </td>
                                 <td class="flex items-center space-x-2 justify-end">
                                     <button class="btn btn-outline btn-xs">
-                                        Edit
+                                        {t("edit")}
                                     </button>{" "}
                                 </td>
                             </tr>

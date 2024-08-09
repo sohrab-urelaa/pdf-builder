@@ -6,6 +6,7 @@ import { Select } from "../../Components/Select";
 import InputLabel from "../../Components/InputLabel";
 import TextInput from "../../Components/TextInput";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const UserCompany = ({ auth, company }) => {
     const { data, setData, post, processing, errors, reset, put } = useForm({
@@ -13,6 +14,7 @@ const UserCompany = ({ auth, company }) => {
         description: "",
         planId: "",
     });
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (company) {
@@ -32,12 +34,15 @@ const UserCompany = ({ auth, company }) => {
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
-                    <p className="text-4xl font-bold">Company</p>
+                    <p className="text-4xl font-bold">{t("company")}</p>
                 </div>
             </div>
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="companyName" value="Company Name" />
+                    <InputLabel
+                        htmlFor="companyName"
+                        value={t("company_name")}
+                    />
 
                     <TextInput
                         id="companyName"
@@ -54,7 +59,10 @@ const UserCompany = ({ auth, company }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="description" value="Description" />
+                    <InputLabel
+                        htmlFor="description"
+                        value={t("description")}
+                    />
                     <TextInput
                         id="description"
                         type="text"
@@ -69,7 +77,7 @@ const UserCompany = ({ auth, company }) => {
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Update
+                        {t("update")}
                     </PrimaryButton>
                 </div>
             </form>

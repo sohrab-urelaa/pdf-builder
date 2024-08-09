@@ -1,22 +1,24 @@
 import AdminLayout from "../../Layouts/AdminLayout";
 import Pagination from "../../Components/utill/Pagination";
+import { useTranslation } from "react-i18next";
 
 const AdminUsers = ({ auth, data }) => {
+    const { t } = useTranslation();
     return (
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
-                        User Lists ({data?.total})
+                        {t("user_list")} ({data?.total})
                     </p>
                 </div>
                 <div class="overflow-x-auto mt-4">
                     <table class="table w-full table-lg rounded-b-none overflow-hidden">
                         <thead class="bg-base-200">
                             <tr class="text-base-content uppercase">
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
+                                <th>{t("name")}</th>
+                                <th>{t("email")}</th>
+                                <th>{t("role")}</th>
                                 <th class="text-right" width="1px"></th>
                             </tr>
                         </thead>
@@ -32,7 +34,7 @@ const AdminUsers = ({ auth, data }) => {
                                     </td>
                                     <td class="flex items-center space-x-2 justify-end">
                                         <button class="btn btn-outline btn-xs">
-                                            Edit
+                                            {t("edit")}
                                         </button>{" "}
                                     </td>
                                 </tr>

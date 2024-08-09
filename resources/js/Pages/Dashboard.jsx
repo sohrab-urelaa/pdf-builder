@@ -11,7 +11,7 @@ import { useState } from "react";
 import formatDateString from "../lib/date-formate";
 import { useTranslation } from "react-i18next";
 export default function Dashboard({ auth, templates }) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const handleCopyLink = (template) => {
         const link = `${window.origin}/submit-templates/${template.id}`;
         navigator.clipboard
@@ -25,11 +25,9 @@ export default function Dashboard({ auth, templates }) {
     };
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Dashboard" />
+            <Head title={t("dashboard")} />
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <DashboardSubHeading
-                    title={`Templates  ${t("Welcome to React")}`}
-                />
+                <DashboardSubHeading title={t("templates")} />
 
                 <div className="flex items-center gap-4 flex-wrap mt-4">
                     {templates.map((item) => (

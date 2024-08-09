@@ -1,28 +1,30 @@
 import AdminLayout from "../../Layouts/AdminLayout";
 import Pagination from "../../Components/utill/Pagination";
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
+import { useTranslation } from "react-i18next";
 
 const UserPayments = ({ auth, data }) => {
+    const { t } = useTranslation();
     return (
         <UserSettingsLayout title={"Payments"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
-                        Payments ({data?.total})
+                        {t("payments")} ({data?.total})
                     </p>
                 </div>
                 <div class="overflow-x-auto mt-4">
                     <table class="table w-full table-lg rounded-b-none overflow-hidden">
                         <thead class="bg-base-200">
                             <tr class="text-base-content uppercase">
-                                <th>Plan</th>
-                                <th>Billing Cycle</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Amount</th>
-                                <th>Payment Method</th>
-                                <th>Payment Status</th>
-                                <th>Subscription Status</th>
+                                <th>{t("plan")}</th>
+                                <th>{t("billing_cycle")}</th>
+                                <th>{t("start_date")}</th>
+                                <th>{t("end_date")}</th>
+                                <th>{t("amount")}</th>
+                                <th>{t("payment_method")}</th>
+                                <th>{t("payment_status")}</th>
+                                <th>{t("subscription_status")}</th>
                                 <th class="text-right" width="1px"></th>
                             </tr>
                         </thead>
@@ -46,8 +48,8 @@ const UserPayments = ({ auth, data }) => {
                                     <td>
                                         <button class="btn btn-outline btn-xs">
                                             {item?.is_active
-                                                ? "Active"
-                                                : "Inactive"}
+                                                ? t("active")
+                                                : t("inactive")}
                                         </button>
                                     </td>
                                 </tr>

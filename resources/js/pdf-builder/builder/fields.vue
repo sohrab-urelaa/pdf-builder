@@ -3,14 +3,14 @@
         <FieldSubmitter
             :model-value="selectedSubmitter.uuid"
             class="roles-dropdown w-full rounded-lg"
-            :style="withStickySubmitters ? { backgroundColor } : {}"
+            :style="withStickySubmitters ? {} : {}"
             :submitters="submitters"
             :menu-style="{
-                backgroundColor: ['', null, 'transparent'].includes(
-                    backgroundColor
-                )
-                    ? 'white'
-                    : backgroundColor,
+                // backgroundColor: ['', null, 'transparent'].includes(
+                //     backgroundColor
+                // )
+                //     ? 'white'
+                //     : backgroundColor,
             }"
             :editable="editable && !defaultSubmitters.length"
             @new-submitter="save"
@@ -136,7 +136,6 @@
                 "
                 draggable="true"
                 class="field-type-button group flex items-center justify-center border border-dashed w-full rounded relative"
-                :style="{ backgroundColor }"
                 :class="
                     drawFieldType === type
                         ? 'border-base-content/40'

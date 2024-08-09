@@ -24,6 +24,7 @@ class SupportedLanguageController extends Controller
             'country_code' => 'required|string|max:10|unique:supported_languages,country_code',
             'translation_file' => 'required|file|mimes:json', 
             'is_active' => 'required|string',
+            'rtl' => 'required|string',
         ]);
 
 
@@ -40,6 +41,7 @@ class SupportedLanguageController extends Controller
         }
 
           $validated['is_active']=$validated["is_active"]==="true"?1:0;
+          $validated['rtl']=$validated["rtl"]==="true"?1:0;
 
         $supportedLanguage = SupportedLanguage::create($validated);
             return response()->json([
@@ -64,6 +66,7 @@ class SupportedLanguageController extends Controller
             'country_code' => 'required|string|max:10',
             'translation_file' => 'required|file|mimes:json',
             'is_active' => 'required|string',
+            'rtl' => 'required|string',
             'id' => 'required|string',
         ]);
 
@@ -83,6 +86,7 @@ class SupportedLanguageController extends Controller
         }
         Log::info("Validated",["data"=>$validated]);
         $validated['is_active']=$validated["is_active"]==="true"?1:0;
+        $validated['rtl']=$validated["rtl"]==="true"?1:0;
 
         $supportedLanguage->update($validated);
           return response()->json([

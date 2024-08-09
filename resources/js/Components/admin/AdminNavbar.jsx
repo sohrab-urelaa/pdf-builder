@@ -15,6 +15,19 @@ const AdminNavbar = ({ user, title }) => {
 
     const [langList, setLangList] = useState(window.SUPPORTED_LANGUAGES);
     const { i18n } = useTranslation();
+
+    const handleChangeLanguage = (language) => {
+        setSelectedLang(language?.country_code);
+        setIsOpenLangDropDown(false);
+        i18n.changeLanguage(language?.country_code);
+
+        localStorage.setItem("isRTL", language?.rtl?.toString());
+        if (language?.rtl === 1) {
+            document.documentElement.setAttribute("dir", "rtl");
+        } else {
+            document.documentElement.removeAttribute("dir");
+        }
+    };
     return (
         <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-1 md:px-5">
             <div className="w-full px-1 md:px-5 m-auto flex justify-between items-center">
@@ -57,15 +70,9 @@ const AdminNavbar = ({ user, title }) => {
                                 {langList?.map((language) => {
                                     return (
                                         <li
-                                            onClick={() => {
-                                                setSelectedLang(
-                                                    language?.country_code
-                                                );
-                                                setIsOpenLangDropDown(false);
-                                                i18n.changeLanguage(
-                                                    language?.country_code
-                                                );
-                                            }}
+                                            onClick={() =>
+                                                handleChangeLanguage(language)
+                                            }
                                             key={language?.country_name}
                                         >
                                             <a>{language?.country_name}</a>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { createCertificate } from "../../api/userApi";
+import { useTranslation } from "react-i18next";
 
 const initialData = {
     name: "",
@@ -18,6 +19,7 @@ const CreateNewSignature = ({ open, setOpen, onSuccess }) => {
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [processing, setProcessing] = useState(false);
+    const { t } = useTranslation();
 
     const submit = async (e) => {
         e.preventDefault();
@@ -64,10 +66,14 @@ const CreateNewSignature = ({ open, setOpen, onSuccess }) => {
         }
     };
     return (
-        <Modal open={open} setOpen={setOpen} title="Create New Certificate">
+        <Modal
+            open={open}
+            setOpen={setOpen}
+            title={t("create_new_certificate")}
+        >
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value={t("name")} />
 
                     <TextInput
                         id="name"
@@ -87,7 +93,7 @@ const CreateNewSignature = ({ open, setOpen, onSuccess }) => {
                     <InputError message={errors.name} className="mt-2" />
                 </div>
                 <div>
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value={t("password")} />
 
                     <TextInput
                         id="password"
@@ -118,7 +124,7 @@ const CreateNewSignature = ({ open, setOpen, onSuccess }) => {
                             }
                             className="hidden"
                         />
-                        Choose Certificate
+                        {t("choose_certificate")}
                     </label>
                     {data?.certificate && (
                         <div>
@@ -144,13 +150,13 @@ const CreateNewSignature = ({ open, setOpen, onSuccess }) => {
                         }
                     />
                     <label className="ml-2" htmlFor="isActiveCert">
-                        Active
+                        {t("active")}
                     </label>
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Upload Certificate
+                        {t("upload_certificate")}
                     </PrimaryButton>
                 </div>
             </form>

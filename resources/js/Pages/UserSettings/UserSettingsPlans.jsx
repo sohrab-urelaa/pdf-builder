@@ -1,27 +1,29 @@
 import { useState } from "react";
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
 import { Link } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 
 const UserSettingsPlans = ({ auth, company, subscription }) => {
     const plan = company?.plan;
     const [isMonthlyView, setIsMonthlyView] = useState(true);
+    const { t } = useTranslation();
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
-                <p className="text-4xl font-bold mb-4">Plans</p>
+                <p className="text-4xl font-bold mb-4">{t("plans")}</p>
                 {subscription && plan && (
                     <div className="card bg-base-200/60 border-2 border-secondary-focus p-4 rounded-lg mb-4">
                         <p className="text-base-content font-extrabold text-2xl">
-                            You are currently under{" "}
+                            {t("you_are_currently_under")}{" "}
                             <span className="text-green-500">
                                 {plan?.title}
                             </span>
                             <br />
-                            And{" "}
+                            {t("and")}{" "}
                             <span className="text-green-500">
                                 {subscription?.daysLeft}
                             </span>{" "}
-                            days Left for your running plan
+                            {t("days_left_for_plan")}
                         </p>
                     </div>
                 )}
@@ -40,7 +42,7 @@ const UserSettingsPlans = ({ auth, company, subscription }) => {
                                             !isMonthlyView ? " tab-active" : ""
                                         }`}
                                     >
-                                        Yearly
+                                        {t("yearly")}
                                     </a>
                                     <a
                                         onClick={() => setIsMonthlyView(true)}
@@ -49,7 +51,7 @@ const UserSettingsPlans = ({ auth, company, subscription }) => {
                                             isMonthlyView ? " tab-active" : ""
                                         }`}
                                     >
-                                        Monthly
+                                        {t("monthly")}
                                     </a>
                                 </div>
                             </div>
@@ -61,7 +63,7 @@ const UserSettingsPlans = ({ auth, company, subscription }) => {
                                             {plan?.monthly_price}
                                             {plan?.currency}
                                         </span>
-                                        / month
+                                        / {t("month")}
                                     </p>
                                 ) : (
                                     <p className="yearly-plan text-dark relative font-bold ">
@@ -70,7 +72,10 @@ const UserSettingsPlans = ({ auth, company, subscription }) => {
                                             {plan?.yearly_price}
                                             {plan?.currency}
                                         </span>{" "}
-                                        <span className="ml-5"> / year</span>
+                                        <span className="ml-5">
+                                            {" "}
+                                            / {t("year")}
+                                        </span>
                                     </p>
                                 )}
                             </div>
@@ -81,7 +86,7 @@ const UserSettingsPlans = ({ auth, company, subscription }) => {
 
                 <Link href="/settings/plans/upgrade">
                     <button className="btn btn-neutral mt-5">
-                        UPGRADE YOUR MEMBERSHIP
+                        {t("upgrade_your_membership")}
                     </button>
                 </Link>
             </div>

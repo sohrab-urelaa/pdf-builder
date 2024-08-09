@@ -2,8 +2,10 @@ import { useState } from "react";
 import CreateNewPlansModal from "./CreateNewPlansModal";
 import ActionModal from "../utill/ActionModal";
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 
 const PlanItem = ({ plan }) => {
+    const { t } = useTranslation();
     const [editPlanModal, setEditPlanModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
@@ -33,10 +35,11 @@ const PlanItem = ({ plan }) => {
                                     {""}
                                     {plan?.monthly_price} {plan?.currency}
                                 </span>{" "}
-                                / month
+                                / {t("month")}
                             </div>
                             <div className="text-sm mt-1 text-neutral-600">
-                                Annual license billed {plan?.currency_symbol}
+                                {t("annual_license_billed")}{" "}
+                                {plan?.currency_symbol}
                                 {""}
                                 {plan?.yearly_price} {plan?.currency}
                             </div>
@@ -56,13 +59,13 @@ const PlanItem = ({ plan }) => {
                         onClick={() => setEditPlanModal(true)}
                         className="btn btn-outline text-xl"
                     >
-                        EDIT
+                        {t("edit")}
                     </button>
                     <button
                         onClick={() => setDeleteModal(true)}
                         className="btn btn-warning text-xl"
                     >
-                        DELETE
+                        {t("delete")}
                     </button>
                 </div>
             </div>

@@ -9,14 +9,16 @@ import { FaRegUser } from "react-icons/fa";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineDownload } from "react-icons/ai";
 import { MdDeleteOutline } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 const AdminPdfSubmissions = ({ auth, data }) => {
+    const { t } = useTranslation();
     return (
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
-                        Pdf Submissions ({data?.total})
+                        {t("pdf_submissions")} ({data?.total})
                     </p>
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
@@ -70,14 +72,14 @@ const AdminPdfSubmissions = ({ auth, data }) => {
                                         <span>
                                             <AiOutlineDownload size={22} />
                                         </span>
-                                        DOWNLOAD
+                                        {t("download")}
                                     </button>
                                     <a
                                         href={item?.templated_pdf_link}
                                         target="_blank"
                                     >
                                         <button className="btn btn-neutral btn-outline btn-sm font-bold">
-                                            VIEW
+                                            {t("view")}
                                         </button>
                                     </a>
                                     <button className="btn btn-neutral btn-outline btn-sm font-bold ">

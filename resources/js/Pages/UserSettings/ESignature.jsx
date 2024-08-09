@@ -6,10 +6,12 @@ import { router } from "@inertiajs/react";
 import ActionModal from "../../Components/utill/ActionModal";
 import { deleteCertificate } from "../../api/userApi";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const ESignature = ({ auth, data }) => {
     const [createSignatureModal, setCreateSignatureModal] = useState(false);
     const [selectedSignature, setSelectedSignature] = useState(null);
     const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
+    const { t } = useTranslation();
     const handleSuccess = () => {
         router.reload();
     };
@@ -32,12 +34,14 @@ const ESignature = ({ auth, data }) => {
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
-                    <p className="text-4xl font-bold">Signing Certificates</p>
+                    <p className="text-4xl font-bold">
+                        {t("signing_certificates")}
+                    </p>
                     <button
                         onClick={() => setCreateSignatureModal(true)}
                         className="btn btn-neutral"
                     >
-                        Upload Cert
+                        {t("upload_cert")}
                     </button>
                 </div>
             </div>
@@ -45,10 +49,10 @@ const ESignature = ({ auth, data }) => {
                 <table class="table w-full table-lg rounded-b-none overflow-hidden">
                     <thead class="bg-base-200">
                         <tr class="text-neutral uppercase">
-                            <th>Name</th>
-                            <th>Valid To</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>{t("name")}</th>
+                            <th>{t("valid_to")}</th>
+                            <th>{t("Status")}</th>
+                            <th>{t("action")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,8 +63,8 @@ const ESignature = ({ auth, data }) => {
                                 <td>
                                     <button className="btn btn-sm btn-outline">
                                         {item?.is_active
-                                            ? "Active"
-                                            : "Inactive"}
+                                            ? t("active")
+                                            : t("inactive")}
                                     </button>
                                 </td>{" "}
                                 <td>
@@ -71,7 +75,7 @@ const ESignature = ({ auth, data }) => {
                                         }}
                                         className="btn btn-sm btn-outline"
                                     >
-                                        Delete
+                                        {t("delete")}
                                     </button>
                                 </td>
                             </tr>
@@ -89,8 +93,8 @@ const ESignature = ({ auth, data }) => {
                     setOpen={setDeleteConfirmModal}
                     onAction={handleDelete}
                     onCancel={() => setDeleteConfirmModal(false)}
-                    title={"Delete Certificates"}
-                    description={`Are you sure you want to delete this cert?`}
+                    title={t("delete_certificates")}
+                    description={t("delete_certificates_message")}
                 />
             </div>
             <br />

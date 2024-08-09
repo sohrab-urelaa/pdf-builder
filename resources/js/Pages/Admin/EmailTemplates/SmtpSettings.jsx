@@ -2,12 +2,13 @@ import { useState } from "react";
 import AdminLayout from "../../../Layouts/AdminLayout";
 import { Link, router } from "@inertiajs/react";
 import CreateSmtpConfigModal from "../../../Components/smtp-config/CreateSmtpConfigModal";
+import { useTranslation } from "react-i18next";
 
 const SmtpSettings = ({ auth, smtp_settings }) => {
     const [createConfigModal, setCreateConfigModal] = useState(false);
     const [editConfigModal, setEditConfigModal] = useState(false);
     const [selectedConfig, setSelectedConfig] = useState(null);
-
+    const { t } = useTranslation();
     const onCreateSuccess = () => {
         router.reload();
     };
@@ -15,12 +16,12 @@ const SmtpSettings = ({ auth, smtp_settings }) => {
         <AdminLayout title={"Smtp Config"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <p className="text-4xl font-bold">Smtp</p>
+                    <p className="text-4xl font-bold">{t("smtp")}</p>
                     <button
                         onClick={() => setCreateConfigModal(true)}
                         className="btn btn-outline btn-neutral btn-md"
                     >
-                        Create New Config
+                        {t("create_new_config")}
                     </button>
                 </div>
             </div>
@@ -28,17 +29,17 @@ const SmtpSettings = ({ auth, smtp_settings }) => {
                 <table class="table w-full table-lg rounded-b-none overflow-hidden">
                     <thead class="bg-base-200">
                         <tr class="text-base-content uppercase">
-                            <th>Driver</th>
-                            <th>Host</th>
-                            <th>Port</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Encryption</th>
-                            <th>Mail From Address</th>
-                            <th>Mail From Name</th>
-                            <th>Status</th>
-                            <th class="text-right" width="1px">
-                                Action
+                            <th>{t("driver")}</th>
+                            <th>{t("host")}</th>
+                            <th>{t("port")}</th>
+                            <th>{t("username")}</th>
+                            <th>{t("password")}</th>
+                            <th>{t("encryption")}</th>
+                            <th>{t("mail_form_address")}</th>
+                            <th>{t("mail_form_name")}</th>
+                            <th>{t("Status")}</th>
+                            <th className="text-right" width="1px">
+                                {t("action")}
                             </th>
                         </tr>
                     </thead>
@@ -67,10 +68,10 @@ const SmtpSettings = ({ auth, smtp_settings }) => {
                                             }}
                                             className="btn btn-sm btn-outline"
                                         >
-                                            Edit
+                                            {t("edit")}
                                         </button>
                                         <button className="btn btn-sm btn-outline btn-warning">
-                                            Delete
+                                            {t("delete")}
                                         </button>
                                     </div>
                                 </td>

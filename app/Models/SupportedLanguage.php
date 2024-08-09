@@ -14,5 +14,6 @@ class SupportedLanguage extends Model
         'country_code',
         'translation_path',
         'is_active',
+        'rtl',
     ];
 }

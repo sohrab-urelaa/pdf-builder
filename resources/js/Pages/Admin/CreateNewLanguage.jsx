@@ -12,13 +12,16 @@ import {
 import { toast } from "react-toastify";
 import ActionModal from "../../Components/utill/ActionModal";
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 
 const initialData = {
     country_name: "",
     country_code: "",
     is_active: false,
+    rtl: false,
 };
 const CreateNewLanguage = ({ auth, edit_language }) => {
+    const { t } = useTranslation();
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [isDataSubmitted, setIsDataSubmitted] = useState(false);
@@ -46,6 +49,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                 country_code: edit_language?.country_code,
                 country_name: edit_language?.country_name,
                 is_active: edit_language?.is_active == "0" ? false : true,
+                rtl: edit_language?.rtl == "0" ? false : true,
             });
         } else {
             fetchLocalInfo();
@@ -200,6 +204,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
             formData.append("country_code", data.country_code);
             formData.append("is_active", data.is_active ? "true" : "false");
             formData.append("translation_file", jsonFile);
+            formData.append("rtl", data.rtl);
             let res;
             if (!edit_language) {
                 res = await createNewLanguage(formData);
@@ -244,7 +249,9 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <p className="text-4xl font-bold">Create New Language</p>
+                    <p className="text-4xl font-bold">
+                        {t("create_new_language")}
+                    </p>
                 </div>
                 <br />
                 {!isDataSubmitted && (
@@ -283,7 +290,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                                 />
                                             </svg>
                                         </button>
-                                        Continue with -
+                                        {t("continue_with")} -
                                         <span className="">
                                             {localD?.data?.country_name}
                                         </span>
@@ -292,13 +299,13 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                             })}
                         </div>
                         <p className="mt-4 mb-2 text-2xl font-bold">
-                            Continue with New One
+                            {t("continue_with_new_one")}
                         </p>
                         <form onSubmit={submit} className="max-w-xl">
                             <div>
                                 <InputLabel
                                     htmlFor="country_name"
-                                    value="Country Name"
+                                    value={t("country_name")}
                                 />
 
                                 <TextInput
@@ -324,7 +331,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                             <div className="mt-4">
                                 <InputLabel
                                     htmlFor="country_code"
-                                    value="Country Code"
+                                    value={t("country_code")}
                                 />
 
                                 <TextInput
@@ -348,7 +355,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                             </div>
                             <div className="flex items-center justify-end mt-4">
                                 <PrimaryButton className="ms-4">
-                                    Next
+                                    {t("next")}
                                 </PrimaryButton>
                             </div>
                         </form>
@@ -374,7 +381,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                     }}
                                     className="btn btn-neutral text-xl my-2 max-w-[280px]"
                                 >
-                                    Create Another Language
+                                    {t("create_another_language")}
                                 </button>
                                 <button
                                     onClick={() => {
@@ -382,7 +389,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                     }}
                                     className="btn btn-neutral text-xl my-2 max-w-[280px]"
                                 >
-                                    Fill With English
+                                    {t("fill_with_english")}
                                 </button>
                                 <div className="form-control">
                                     <label className="label cursor-pointer">
@@ -402,15 +409,37 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                         />
                                         <span className="label-text ml-2">
                                             {data?.is_active
-                                                ? "Active"
-                                                : "Deactive"}
+                                                ? t("active")
+                                                : t("inactive")}
+                                        </span>
+                                    </label>
+                                </div>
+                                <div className="form-control">
+                                    <label className="label cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="toggle"
+                                            checked={data.rtl}
+                                            onChange={(e) => {
+                                                setData((prev) => {
+                                                    return {
+                                                        ...prev,
+                                                        rtl: e.target.checked,
+                                                    };
+                                                });
+                                            }}
+                                        />
+                                        <span className="label-text ml-2">
+                                            {data?.rtl
+                                                ? t("rtl_enabled")
+                                                : t("rtl_disabled")}
                                         </span>
                                     </label>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <h3 className="basis-[300px] font-bold text-xl">
-                                    English
+                                    {t("english")}
                                 </h3>
                                 <h3 className="font-bold text-xl">
                                     {data.country_name}
@@ -472,13 +501,13 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-2">
                                     <h3 className="basis-[300px] font-bold text-xl">
-                                        New Field
+                                        {t("new_field")}
                                     </h3>
                                     <button
                                         className="btn btn-neutral btn-md"
                                         onClick={() => setNewField(true)}
                                     >
-                                        Create
+                                        {t("create")}
                                     </button>
                                 </div>
                                 <h3 className="font-bold text-xl">
@@ -525,7 +554,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                                         }}
                                                         className="btn btn-neutral btn-md"
                                                     >
-                                                        Add
+                                                        {t("add")}
                                                     </button>
                                                 )}
                                         </div>
@@ -546,9 +575,9 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                 )}
                 {isFormFullEntered().isFormValid
                     ? edit_language?.id
-                        ? "Update Language"
-                        : "Create Language"
-                    : "Save Into Local"}
+                        ? t("update_language")
+                        : t("create_language")
+                    : t("save_into_local")}
             </button>
             <ActionModal
                 open={deleteActionModal}
@@ -558,8 +587,10 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                     setDeleteActionModal(false);
                     setDeleteLang(null);
                 }}
-                title={"Delete Language"}
-                description={`Are you sure you want to delete this language? (${deleteLang?.data?.country_name})`}
+                title={t("delete_language")}
+                description={`${t("delete_language_confirmation_message")} (${
+                    deleteLang?.data?.country_name
+                })`}
             />
             <br />
         </AdminLayout>

@@ -8,7 +8,9 @@ import { AiOutlineDownload } from "react-icons/ai";
 import formatDateString from "../lib/date-formate";
 import { MdDeleteOutline } from "react-icons/md";
 import rawPdf from "./sohrab2.pdf";
+import { useTranslation } from "react-i18next";
 export default function Dashboard({ auth, templates }) {
+    const { t } = useTranslation();
     const downloadPdf = async (submitted_template) => {
         try {
             const name = `${submitted_template?.parent_template?.title}-${submitted_template?.submitted_user_name}`;
@@ -42,10 +44,10 @@ export default function Dashboard({ auth, templates }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Dashboard" />
+            <Head title={t("submissions")} />
 
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <DashboardSubHeading title={"Submissions"} />
+                <DashboardSubHeading title={t("submissions")} />
                 <div className="flex flex-col gap-4 mt-4">
                     {templates.map((item) => (
                         <div className="bg-base-200 p-6 rounded-lg">
@@ -53,7 +55,7 @@ export default function Dashboard({ auth, templates }) {
                                 <div>
                                     <p
                                         className="flex text-base-content font-bold items-center gap-2 text-[18px] mb-3 tooltip"
-                                        data-tip="Document Title"
+                                        data-tip={t("document_title")}
                                     >
                                         <span>
                                             <IoDocumentTextOutline color="text-base-content" />
@@ -62,7 +64,7 @@ export default function Dashboard({ auth, templates }) {
                                     </p>
                                     <p
                                         className="flex items-center gap-2 text-[14px] tooltip"
-                                        data-tip="Author"
+                                        data-tip={t("author")}
                                     >
                                         <span>
                                             <FaRegUser color="text-base-content" />
@@ -71,7 +73,7 @@ export default function Dashboard({ auth, templates }) {
                                     </p>
                                     <p
                                         className="flex items-center gap-2 text-[14px] tooltip"
-                                        data-tip="Created At"
+                                        data-tip={t("created_at")}
                                     >
                                         <span>
                                             <CiCalendar color="text-base-content" />
@@ -97,14 +99,14 @@ export default function Dashboard({ auth, templates }) {
                                         <span>
                                             <AiOutlineDownload size={22} />
                                         </span>
-                                        DOWNLOAD
+                                        {t("download")}
                                     </button>
                                     <a
                                         href={item?.templated_pdf_link}
                                         target="_blank"
                                     >
                                         <button className="btn btn-neutral btn-outline btn-sm font-bold">
-                                            VIEW
+                                            {t("view")}
                                         </button>
                                     </a>
                                     <button className="btn btn-neutral btn-outline btn-sm font-bold ">

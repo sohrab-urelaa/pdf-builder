@@ -7,6 +7,7 @@ import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { createSmtpConfig, updateSmtpConfig } from "../../api/smtp-config";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const initalData = {
     mail_driver: "asdf",
     mail_host: "asdf",
@@ -25,6 +26,7 @@ const CreateSmtpConfigModal = ({
     smtpConfig = {},
     onSuccess = () => {},
 }) => {
+    const { t } = useTranslation();
     const [data, setData] = useState(initalData);
     const [errors, setErrors] = useState(initalData);
     const [processing, setProcessing] = useState(false);
@@ -105,20 +107,21 @@ const CreateSmtpConfigModal = ({
         <Modal
             open={open}
             setOpen={setOpen}
-            title={edit ? "Update Smtp Config" : "New Smtp Config"}
+            title={edit ? t("update_smtp_config") : t("new_smtp_config")}
         >
             <form onSubmit={submit}>
                 {Object.keys(initalData).map((inputItemKey) => {
                     const value = data[inputItemKey];
                     const error = errors[inputItemKey];
-                    const label = inputItemKey
-                        .split("_")
-                        .map(
-                            (splitedKey) =>
-                                splitedKey?.charAt(0).toUpperCase() +
-                                splitedKey.slice(1)
-                        )
-                        .join(" ");
+                    // const label = inputItemKey
+                    //     .split("_")
+                    //     .map(
+                    //         (splitedKey) =>
+                    //             splitedKey?.charAt(0).toUpperCase() +
+                    //             splitedKey.slice(1)
+                    //     )
+                    //     .join(" ");
+                    const label = t(`${inputItemKey}`);
                     const id = inputItemKey;
 
                     return (
@@ -143,7 +146,7 @@ const CreateSmtpConfigModal = ({
                 })}
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        {edit ? "Update Config" : " Create Config"}
+                        {edit ? t("update_config") : t("create_config")}
                     </PrimaryButton>
                 </div>
             </form>

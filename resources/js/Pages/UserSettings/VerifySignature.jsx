@@ -3,11 +3,13 @@ import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
 import { FileUploader } from "react-drag-drop-files";
 import { toast } from "react-toastify";
 import { verifyTemplate } from "../../api/userApi";
+import { useTranslation } from "react-i18next";
 
 const VerifySignature = ({ auth }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
+    const { t } = useTranslation();
     const handleChange = (file) => {
         setFile(file);
     };
@@ -19,14 +21,14 @@ const VerifySignature = ({ auth }) => {
             formData.append("file", file);
             const res = await verifyTemplate(formData);
             if (res?.result?.result?.signatures?.length > 0) {
-                toast.success("Signature found");
+                toast.success(t("signature_found"));
                 setResult(res?.result?.result);
             } else {
-                toast.error("No Signature found on uploaded pdf");
+                toast.error(t("signature_not_found_message"));
                 setResult(null);
             }
         } catch (err) {
-            toast.error("Something wen't wrong, please try again later.");
+            toast.error(t("something_went_wrong_message"));
         } finally {
             setLoading(false);
         }
@@ -35,7 +37,9 @@ const VerifySignature = ({ auth }) => {
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
-                    <p className="text-4xl font-bold">Verify Certificates</p>
+                    <p className="text-4xl font-bold">
+                        {t("verify_certificates")}
+                    </p>
                 </div>
                 <FileUploader
                     classes="w-full h-[300px]"
@@ -54,7 +58,7 @@ const VerifySignature = ({ auth }) => {
                             disabled={loading}
                             className="btn btn-md text-xl btn-neutral mt-4 w-[120px]"
                         >
-                            Verify
+                            {t("verify")}
                         </button>
                         <hr className="my-3" />
                         {result && (
@@ -76,28 +80,28 @@ const VerifySignature = ({ auth }) => {
                                         <div className="flex gap-4">
                                             <div className="flex flex-col gap-5">
                                                 <p className="text-2xl font-bold text-base-content mt-2">
-                                                    Submitter Info
+                                                    {t("submitter_info")}
                                                 </p>
                                                 <p className="text-xl font-bold text-base-content mt-2">
-                                                    Submitter Email:{" "}
+                                                    {t("submitter_email")}:{" "}
                                                     <span className="bg-white rounded-md p-3 ml-3 ">
                                                         {contactInfo}
                                                     </span>
                                                 </p>
                                                 <p className="text-xl font-bold text-base-content mt-2">
-                                                    Submitter Name:{" "}
+                                                    {t("submitter_name")}:{" "}
                                                     <span className="bg-white rounded-md p-3 ml-3">
                                                         {name}
                                                     </span>
                                                 </p>
                                                 <p className="text-xl font-bold text-base-content mt-2">
-                                                    Submitter Location:{" "}
+                                                    {t("submitter_location")}:{" "}
                                                     <span className="bg-white rounded-md p-3 ml-3">
                                                         {location}
                                                     </span>
                                                 </p>
                                                 <p className="text-xl font-bold text-base-content mt-2">
-                                                    Reason:{" "}
+                                                    {t("Reason")}:{" "}
                                                     <span className="bg-white rounded-md p-3 ml-3">
                                                         {reason}
                                                     </span>
@@ -105,7 +109,7 @@ const VerifySignature = ({ auth }) => {
                                             </div>
                                             <div className="flex flex-col gap-3">
                                                 <p className="text-2xl font-bold text-base-content mt-2">
-                                                    Certificats
+                                                    {t("certificates")}
                                                 </p>
                                                 <div>
                                                     {certificates?.map(
@@ -125,12 +129,16 @@ const VerifySignature = ({ auth }) => {
                                                             return (
                                                                 <div className="mt-2">
                                                                     <p className="text-xl font-bold text-base-content mt-2">
-                                                                        ---Issued
-                                                                        By---
+                                                                        {t(
+                                                                            "issued_by"
+                                                                        )}
                                                                     </p>
                                                                     <hr />
                                                                     <p className="text-xl font-bold text-base-content mt-2">
-                                                                        Name:{" "}
+                                                                        {t(
+                                                                            "name"
+                                                                        )}
+                                                                        :{" "}
                                                                         <span className="bg-white rounded-md p-3 ml-3">
                                                                             {
                                                                                 commonName
@@ -138,7 +146,10 @@ const VerifySignature = ({ auth }) => {
                                                                         </span>
                                                                     </p>
                                                                     <p className="text-xl font-bold text-base-content mt-2">
-                                                                        Country:{" "}
+                                                                        {t(
+                                                                            "country"
+                                                                        )}
+                                                                        :{" "}
                                                                         <span className="bg-white rounded-md p-3 ml-3">
                                                                             {
                                                                                 countryName
@@ -146,7 +157,10 @@ const VerifySignature = ({ auth }) => {
                                                                         </span>
                                                                     </p>
                                                                     <p className="text-xl font-bold text-base-content mt-2">
-                                                                        Organization:{" "}
+                                                                        {t(
+                                                                            "organization"
+                                                                        )}
+                                                                        :{" "}
                                                                         <span className="bg-white rounded-md p-3 ml-3">
                                                                             {
                                                                                 organizationName

@@ -6,7 +6,7 @@
     >
         <select
             :placeholder="t('format')"
-            class="select select-bordered select-xs font-normal w-full max-w-xs !h-7 !outline-0 bg-transparent"
+            class="select select-bordered select-xs font-normal w-full max-w-xs !h-7 !outline-0 bg-base-200"
             @change="
                 [
                     (field.preferences ||= {}),
@@ -23,15 +23,12 @@
                     format === field.preferences?.format ||
                     (format === 'none' && !field.preferences?.format)
                 "
+                class="bg-base-200"
             >
                 {{ formatNumber(123456789.567, format) }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("format") }}
         </label>
     </div>
@@ -63,11 +60,7 @@
                 {{ t(value) }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("align") }}
         </label>
     </div>
@@ -103,11 +96,7 @@
                 {{ option.value || `${t("option")} ${index + 1}` }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("default_value") }}
         </label>
     </div>
@@ -126,7 +115,6 @@
         />
         <label
             v-if="field.default_value"
-            :style="{ backgroundColor }"
             class="absolute -top-1 left-2.5 px-1 h-4"
             style="font-size: 8px"
         >
@@ -171,11 +159,7 @@
                 {{ t("custom") }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("validation") }}
         </label>
     </div>
@@ -198,7 +182,6 @@
         />
         <label
             v-if="field.validation.pattern"
-            :style="{ backgroundColor }"
             class="absolute -top-1 left-2.5 px-1 h-4"
             style="font-size: 8px"
         >
@@ -216,11 +199,7 @@
                 {{ formatDate(new Date(), format) }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("format") }}
         </label>
     </div>
@@ -256,11 +235,7 @@
                 {{ t("typed") }}
             </option>
         </select>
-        <label
-            :style="{ backgroundColor }"
-            class="absolute -top-1 left-2.5 px-1 h-4"
-            style="font-size: 8px"
-        >
+        <label class="absolute -top-1 left-2.5 px-1 h-4" style="font-size: 8px">
             {{ t("format") }}
         </label>
     </div>

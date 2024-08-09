@@ -7,8 +7,10 @@ import PrimaryButton from "../PrimaryButton";
 import { Select } from "../Select";
 import Modal from "../utill/Modal";
 import currency_lists from "../../lib/currency_list.json";
+import { useTranslation } from "react-i18next";
 
 const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
+    const { t } = useTranslation();
     const [currency_list, setCurrencyList] = useState(currency_lists);
     const { data, setData, post, processing, errors, reset, put } = useForm({
         title: "",
@@ -64,11 +66,11 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
         <Modal
             open={open}
             setOpen={setOpen}
-            title={edit ? "Update Plan" : "Create New Plan"}
+            title={edit ? t("update_plan") : t("create_new_plan")}
         >
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="title" value="Title" />
+                    <InputLabel htmlFor="title" value={t("title")} />
 
                     <TextInput
                         id="title"
@@ -85,7 +87,10 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="description" value="Description" />
+                    <InputLabel
+                        htmlFor="description"
+                        value={t("description")}
+                    />
                     <TextInput
                         id="description"
                         type="text"
@@ -101,7 +106,7 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="number_of_document"
-                        value="Number of Template"
+                        value={t("number_of_template")}
                     />
 
                     <TextInput
@@ -122,7 +127,10 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="yearly_price" value="Yearly Price" />
+                    <InputLabel
+                        htmlFor="yearly_price"
+                        value={t("yearly_price")}
+                    />
 
                     <TextInput
                         id="yearly_price"
@@ -141,7 +149,10 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                     />
                 </div>
                 <div className="mt-4">
-                    <InputLabel htmlFor="monthly_price" value="Monthly Price" />
+                    <InputLabel
+                        htmlFor="monthly_price"
+                        value={t("monthly_price")}
+                    />
 
                     <TextInput
                         id="monthly_price"
@@ -160,7 +171,7 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                     />
                 </div>
                 <div className="mt-4">
-                    <InputLabel htmlFor="currency" value="Currency" />
+                    <InputLabel htmlFor="currency" value={t("currency")} />
                     <Select
                         id="currency"
                         name="currency"
@@ -190,13 +201,13 @@ const CreateNewPlansModal = ({ open, setOpen, edit = false, plan = {} }) => {
                         onChange={(e) => setData("isDefault", e.target.checked)}
                     />
                     <label className="ml-2" htmlFor="isDefaultPlan">
-                        Default
+                        {t("default")}
                     </label>
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        {edit ? "Update" : " Create Plan"}
+                        {edit ? t("update") : t("create_plan")}
                     </PrimaryButton>
                 </div>
             </form>

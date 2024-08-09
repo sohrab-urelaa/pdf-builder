@@ -1,23 +1,25 @@
 import AdminLayout from "../../Layouts/AdminLayout";
 import { Link } from "@inertiajs/react";
 import Pagination from "../../Components/utill/Pagination";
+import { useTranslation } from "react-i18next";
 
 const AdminPdfTemplates = ({ auth, data }) => {
+    const { t } = useTranslation();
     return (
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
-                        Pdf Templates ({data?.total})
+                        {t("pdf_templates")}({data?.total})
                     </p>
                 </div>
                 <div class="overflow-x-auto mt-4">
                     <table class="table w-full table-lg rounded-b-none overflow-hidden">
                         <thead class="bg-base-200">
                             <tr class="text-base-content uppercase">
-                                <th>Owner</th>
-                                <th>Title</th>
-                                <th>Description</th>
+                                <th>{t("owner")}</th>
+                                <th>{t("title")}</th>
+                                <th>{t("description")}</th>
                                 <th class="text-right" width="1px"></th>
                             </tr>
                         </thead>
@@ -39,7 +41,7 @@ const AdminPdfTemplates = ({ auth, data }) => {
                                             href={`/admin/submissions/${item.id}`}
                                         >
                                             <button class="btn btn-outline btn-sm">
-                                                View Submissions
+                                                {t("view_submissions")}
                                             </button>{" "}
                                         </Link>
                                     </td>

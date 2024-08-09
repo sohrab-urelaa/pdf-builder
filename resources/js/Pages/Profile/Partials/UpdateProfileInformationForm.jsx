@@ -4,6 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
+import { useTranslation } from "react-i18next";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -11,7 +12,7 @@ export default function UpdateProfileInformation({
     className = "",
 }) {
     const user = usePage().props.auth.user;
-
+    const { t } = useTranslation();
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
@@ -28,17 +29,17 @@ export default function UpdateProfileInformation({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-base-content">
-                    Profile Information
+                    {t("profile_information")}
                 </h2>
 
                 <p className="mt-1 text-sm text-base-content">
-                    Update your account's profile information and email address.
+                    {t("profile_information_message")}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value={t("name")} />
 
                     <TextInput
                         id="name"
@@ -54,7 +55,7 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value={t("email")} />
 
                     <TextInput
                         id="email"
@@ -72,28 +73,29 @@ export default function UpdateProfileInformation({
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
-                            Your email address is unverified.
+                            {t("email_address_unverified_message")}
                             <Link
                                 href={route("verification.send")}
                                 method="post"
                                 as="button"
                                 className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                Click here to re-send the verification email.
+                                {t("click_to_resend_verification_mail")}
                             </Link>
                         </p>
 
                         {status === "verification-link-sent" && (
                             <div className="mt-2 font-medium text-sm text-success">
-                                A new verification link has been sent to your
-                                email address.
+                                {t("new_verification_link_sent_message")}
                             </div>
                         )}
                     </div>
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>
+                        {t("save")}
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -102,7 +104,7 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">Saved.</p>
+                        <p className="text-sm text-gray-600">{t("saved")}</p>
                     </Transition>
                 </div>
             </form>

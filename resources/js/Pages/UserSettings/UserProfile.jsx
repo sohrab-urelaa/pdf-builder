@@ -1,12 +1,14 @@
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
 import UpdateProfileInformationForm from "../Profile/Partials/UpdateProfileInformationForm";
 import UpdatePasswordForm from "../Profile/Partials/UpdatePasswordForm";
+import { useTranslation } from "react-i18next";
 const UserProfile = ({ auth, mustVerifyEmail, status }) => {
+    const { t } = useTranslation();
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
-                    <p className="text-4xl font-bold">Profile</p>
+                    <p className="text-4xl font-bold">{t("profile")}</p>
                 </div>
             </div>
 

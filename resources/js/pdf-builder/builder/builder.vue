@@ -30,7 +30,6 @@
             id="title_container"
             class="flex justify-between py-1.5 items-center pr-4 top-0 z-10"
             :class="{ sticky: withStickySubmitters || isBreakpointLg }"
-            :style="{ backgroundColor }"
         >
             <div class="flex items-center space-x-3">
                 <Logo :withSiteName="false" />
@@ -104,10 +103,7 @@
                     @down="moveDocument(item, 1)"
                     @change="save"
                 />
-                <div
-                    class="sticky bottom-0 py-2 space-y-2"
-                    :style="{ backgroundColor }"
-                >
+                <div class="sticky bottom-0 py-2 space-y-2">
                     <Upload
                         v-if="
                             sortedDocuments.length &&
@@ -287,7 +283,6 @@
                 <div
                     v-if="showDrawField || drawField"
                     class="sticky inset-0 h-full z-20"
-                    :style="{ backgroundColor }"
                 >
                     <div
                         class="bg-base-200 rounded-lg p-5 text-center space-y-4"

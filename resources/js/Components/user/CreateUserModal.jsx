@@ -5,6 +5,7 @@ import TextInput from "../TextInput";
 import { useEffect } from "react";
 import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
+import { useTranslation } from "react-i18next";
 
 const CreateUserModal = ({ open, setOpen }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -13,7 +14,7 @@ const CreateUserModal = ({ open, setOpen }) => {
         password: "",
         password_confirmation: "",
     });
-
+    const { t } = useTranslation();
     useEffect(() => {
         return () => {
             reset("password", "password_confirmation");
@@ -30,10 +31,10 @@ const CreateUserModal = ({ open, setOpen }) => {
         });
     };
     return (
-        <Modal open={open} setOpen={setOpen} title="Register New User">
+        <Modal open={open} setOpen={setOpen} title={t("register_new_user")}>
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value={t("name")} />
 
                     <TextInput
                         id="name"
@@ -49,7 +50,7 @@ const CreateUserModal = ({ open, setOpen }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value={t("email")} />
 
                     <TextInput
                         id="email"
@@ -65,7 +66,7 @@ const CreateUserModal = ({ open, setOpen }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value={t("password")} />
 
                     <TextInput
                         id="password"
@@ -83,7 +84,7 @@ const CreateUserModal = ({ open, setOpen }) => {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value={t("confirm_password")}
                     />
 
                     <TextInput
@@ -106,7 +107,7 @@ const CreateUserModal = ({ open, setOpen }) => {
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Create User
+                        {t("create_user")}
                     </PrimaryButton>
                 </div>
             </form>

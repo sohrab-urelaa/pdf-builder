@@ -2,7 +2,6 @@
     <div class="list-field group mb-2">
         <div
             class="border border-base-300 rounded rounded-tr-none relative group py-2 px-1"
-            :style="{ backgroundColor: backgroundColor }"
         >
             <div
                 class="flex items-center justify-between relative group/contenteditable-container"
@@ -113,7 +112,7 @@
                         <ul
                             v-if="renderDropdown"
                             tabindex="0"
-                            class="mt-1.5 dropdown-content menu menu-xs p-2 shadow rounded-box w-52 z-10"
+                            class="mt-1.5 dropdown-content bg-base-200 menu menu-xs p-2 shadow rounded-box w-52 z-10"
                             :style="{ backgroundColor: dropdownBgColor }"
                             draggable="true"
                             @dragstart.prevent.stop
@@ -318,11 +317,7 @@ export default {
     },
     computed: {
         fieldNames: FieldType.computed.fieldNames,
-        dropdownBgColor() {
-            return ["", null, "transparent"].includes(this.backgroundColor)
-                ? "white"
-                : this.backgroundColor;
-        },
+        dropdownBgColor() {},
         schemaAttachmentsIndexes() {
             return (this.template.schema || []).reduce((acc, item, index) => {
                 acc[item.attachment_uuid] = index;

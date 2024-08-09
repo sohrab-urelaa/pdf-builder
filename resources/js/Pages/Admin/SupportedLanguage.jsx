@@ -5,8 +5,10 @@ import { useState } from "react";
 import { deleteLanguage as deleteLanguageData } from "../../api/languageApi";
 import { toast } from "react-toastify";
 import ActionModal from "../../Components/utill/ActionModal";
+import { useTranslation } from "react-i18next";
 
 const SupportedLanguage = ({ auth, data }) => {
+    const { t } = useTranslation();
     const [deleteLanguage, setDeleteLanuage] = useState(null);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     const [isDeleteLoading, setIsDeleteLoading] = useState(false);
@@ -34,11 +36,11 @@ const SupportedLanguage = ({ auth, data }) => {
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
-                        Supported Language ({data?.total})
+                        {t("supported_language")} ({data?.total})
                     </p>
                     <Link href="/admin/language/create">
                         <button className="btn btn-neutral btn-md text-lg">
-                            Create New
+                            {t("create_new")}
                         </button>
                     </Link>
                 </div>
@@ -46,9 +48,10 @@ const SupportedLanguage = ({ auth, data }) => {
                     <table class="table w-full table-lg rounded-b-none overflow-hidden">
                         <thead class="bg-base-200">
                             <tr class="text-base-content uppercase">
-                                <th>Country</th>
-                                <th>Country code</th>
-                                <th>Status</th>
+                                <th>{t("country")}</th>
+                                <th>{t("country_code")}</th>
+                                <th>{t("rtl")}</th>
+                                <th>{t("Status")}</th>
                                 <th class="text-right" width="1px"></th>
                             </tr>
                         </thead>
@@ -59,9 +62,16 @@ const SupportedLanguage = ({ auth, data }) => {
                                     <td>{language?.country_code}</td>
                                     <td>
                                         <span class="badge badge-info badge-outline">
+                                            {language?.rtl === 0
+                                                ? t("inactive")
+                                                : t("active")}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info badge-outline">
                                             {language?.is_active === 0
-                                                ? "Deactivated"
-                                                : "Activated"}
+                                                ? t("inactive")
+                                                : t("active")}
                                         </span>
                                     </td>
                                     <td class="flex items-center space-x-2 justify-end">
@@ -69,7 +79,7 @@ const SupportedLanguage = ({ auth, data }) => {
                                             href={`/admin/language/create/${language?.id}`}
                                         >
                                             <button class="btn btn-outline btn-sm">
-                                                Edit
+                                                {t("edit")}
                                             </button>
                                         </Link>
                                         <button
@@ -79,7 +89,7 @@ const SupportedLanguage = ({ auth, data }) => {
                                             }}
                                             class="btn btn-warning btn-outline btn-sm"
                                         >
-                                            Delete
+                                            {t("delete")}
                                         </button>
                                     </td>
                                 </tr>
@@ -100,8 +110,10 @@ const SupportedLanguage = ({ auth, data }) => {
                     setIsOpenDeleteModal(false);
                     setDeleteLanuage(null);
                 }}
-                title={"Delete Language"}
-                description={`Are you sure you want to delete this language? (${deleteLanguage?.country_name})`}
+                title={t("delete_language")}
+                description={`${t("delete_language_confirmation_message")} (${
+                    deleteLanguage?.country_name
+                })`}
             />
         </AdminLayout>
     );

@@ -7,7 +7,9 @@ import TextArea from "../../../Components/TextArea";
 import { sendBulkEmail } from "../../../api/email-template";
 import { toast } from "react-toastify";
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 const BulkEmailing = ({ auth, email_template, markers }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({
         receivers: "",
@@ -55,14 +57,17 @@ const BulkEmailing = ({ auth, email_template, markers }) => {
         <AdminLayout title={"Bulk Emailing"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <p className="text-4xl font-bold">Bulk Emailing</p>
+                    <p className="text-4xl font-bold">{t("bulk_emailing")}</p>
                 </div>
                 <form
                     className="mt-4 card shadow-md p-4 rounded-md flex flex-col gap-4"
                     onSubmit={handleSubmitTemplate}
                 >
                     <div>
-                        <InputLabel htmlFor="subject" value="Email Subject" />
+                        <InputLabel
+                            htmlFor="subject"
+                            value={t("email_subject")}
+                        />
                         <TextInput
                             id="subject"
                             type="text"
@@ -86,7 +91,7 @@ const BulkEmailing = ({ auth, email_template, markers }) => {
                     <div>
                         <InputLabel
                             htmlFor="receivers"
-                            value="Email Receivers"
+                            value={t("email_receivers")}
                         />
                         <TextArea
                             id="receivers"
@@ -110,7 +115,7 @@ const BulkEmailing = ({ auth, email_template, markers }) => {
                         />
                     </div>
                     <div>
-                        <InputLabel htmlFor="body" value="Email Body" />
+                        <InputLabel htmlFor="body" value={t("email_body")} />
                         <TextArea
                             id="body"
                             type="text"
@@ -133,7 +138,7 @@ const BulkEmailing = ({ auth, email_template, markers }) => {
                             type="submit"
                             className="btn btn-neutral"
                         >
-                            Send Mail
+                            {t("send_mail")}
                         </button>
                     </div>
                 </form>

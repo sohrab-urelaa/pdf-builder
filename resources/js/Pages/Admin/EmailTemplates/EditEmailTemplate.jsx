@@ -7,7 +7,9 @@ import TextArea from "../../../Components/TextArea";
 import { updateEmailTemplate } from "../../../api/email-template";
 import { toast } from "react-toastify";
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 const EditEmailTemplate = ({ auth, email_template, markers }) => {
+    const { t } = useTranslation();
     const [data, setData] = useState({
         subject: email_template.subject,
         body: email_template.body,
@@ -59,7 +61,7 @@ const EditEmailTemplate = ({ auth, email_template, markers }) => {
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <p className="text-4xl font-bold">Edit Template</p>
+                    <p className="text-4xl font-bold">{t("edit_template")}</p>
                 </div>
                 <form
                     className="mt-4 card shadow-md p-4 rounded-md flex flex-col gap-4"
@@ -71,19 +73,22 @@ const EditEmailTemplate = ({ auth, email_template, markers }) => {
                         </p>
                         <p className="text-xl font-bold mt-2">
                             <span className="text-primary-content bg-gray-300 rounded-sm p-1 mr-2">
-                                Available Markers:{" "}
+                                {t("available_markers")}:{" "}
                             </span>{" "}
                             {markers.join(" , ")}
                         </p>
                         <p className="text-xl font-bold mt-2">
                             <span className="text-primary-content bg-gray-300 rounded-sm p-1 mr-2">
-                                Note:
+                                {t("note")}:
                             </span>{" "}
-                            To add new marker write {`{{ MARKER_NAME }}`}
+                            {t("to_add_new_marker")} {`{{ MARKER_NAME }}`}
                         </p>
                     </div>
                     <div>
-                        <InputLabel htmlFor="subject" value="Email Subject" />
+                        <InputLabel
+                            htmlFor="subject"
+                            value={t("email_subject")}
+                        />
                         <TextInput
                             id="subject"
                             type="text"
@@ -105,7 +110,7 @@ const EditEmailTemplate = ({ auth, email_template, markers }) => {
                         />
                     </div>
                     <div>
-                        <InputLabel htmlFor="status" value="Status" />
+                        <InputLabel htmlFor="status" value={t("Status")} />
                         <input
                             type="checkbox"
                             className="toggle toggle-lg"
@@ -120,7 +125,7 @@ const EditEmailTemplate = ({ auth, email_template, markers }) => {
                             }}
                             defaultChecked={data.status}
                         />
-                        <label className="ml-3">{data.status}</label>
+                        <label className="ml-3">{t(data.status)}</label>
                         <InputError message={errors?.status} className="mt-2" />
                     </div>
                     <div>
@@ -142,13 +147,13 @@ const EditEmailTemplate = ({ auth, email_template, markers }) => {
                         <InputError message={errors?.body} className="mt-2" />
                     </div>
                     <div className="mt-4 flex items-center justify-end">
-                        <button className="btn btn-ghost">Cancel</button>
+                        <button className="btn btn-ghost">{t("cancel")}</button>
                         <button
                             disabled={loading}
                             type="submit"
                             className="btn btn-neutral"
                         >
-                            Save Changes
+                            {t("save_changes")}
                         </button>
                     </div>
                 </form>
