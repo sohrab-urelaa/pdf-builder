@@ -5,6 +5,7 @@ import TextInput from "../../../Components/TextInput";
 import InputError from "../../../Components/InputError";
 import { saveGeneralSettings } from "../../../api/adminApi";
 import { Select } from "../../../Components/Select";
+import { Trans, useTranslation } from "react-i18next";
 
 const themes = [
     "light",
@@ -64,6 +65,7 @@ const GeneralSettings = ({ auth, settings }) => {
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [loading, setLoading] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const newSetting = { ...settings };
@@ -148,7 +150,9 @@ const GeneralSettings = ({ auth, settings }) => {
         <AdminLayout user={auth?.user} title={"Footer Settings"}>
             <div className="w-full lg:w-[80%] lg:mx-auto">
                 <div className="flex items-center justify-between">
-                    <p className="text-4xl font-bold">General Settings</p>
+                    <p className="text-4xl font-bold">
+                        {t("general_settings")}
+                    </p>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex items-center gap-3">
@@ -164,7 +168,7 @@ const GeneralSettings = ({ auth, settings }) => {
                                 }
                                 className="hidden"
                             />
-                            Choose Site Logo
+                            {t("choose_site_logo")}
                         </label>
                         {files?.site_logo && (
                             <div className="flex flex-col gap-2">
@@ -195,7 +199,7 @@ const GeneralSettings = ({ auth, settings }) => {
                                 }
                                 className="hidden"
                             />
-                            Choose Favicon
+                            {t("choose_favicon")}
                         </label>
                         {files?.favicon && (
                             <div className="flex flex-col gap-2">
@@ -216,7 +220,7 @@ const GeneralSettings = ({ auth, settings }) => {
                             return null;
                         }
                         const inputItem = data[key];
-                        const label = labels[key];
+                        const label = <Trans t={t}>{labels[key]}</Trans>;
 
                         return (
                             <div className="mt-4">
@@ -278,7 +282,7 @@ const GeneralSettings = ({ auth, settings }) => {
                         className="btn btn-neutral w-[200px] text-xl"
                         disabled={loading}
                     >
-                        {loading ? "Saving..." : "Save"}
+                        {loading ? t("saving") : t("save")}
                     </button>
                 </form>
             </div>

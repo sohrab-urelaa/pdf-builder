@@ -3,6 +3,7 @@ import ActionModal from "../utill/ActionModal";
 import CreateNewCompany from "./CreateNewCompany";
 import { router } from "@inertiajs/react";
 import CreateCompanyOwner from "./CreateCompanyOwner";
+import { useTranslation } from "react-i18next";
 
 function getRandomNumber() {
     return Math.floor(Math.random() * 3) + 1;
@@ -20,6 +21,7 @@ const getPlanButton = () => {
 };
 
 const CompanyItem = ({ company }) => {
+    const { t } = useTranslation();
     const [editCompanyModal, setEditCompanyModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [createCompanyOwnerModal, setCreateCompanyOwnerModal] =
@@ -65,20 +67,20 @@ const CompanyItem = ({ company }) => {
                             onClick={() => setEditCompanyModal(true)}
                             className="btn btn-outline btn-sm"
                         >
-                            Edit
+                            {t("edit")}
                         </button>
                         <button
                             onClick={() => setDeleteModal(true)}
                             className="btn btn-neutral btn-sm"
                         >
-                            Delete
+                            {t("delete")}
                         </button>
                         {!company?.owner && (
                             <button
                                 onClick={() => setCreateCompanyOwnerModal(true)}
                                 className="btn btn-neutral btn-sm"
                             >
-                                Create Company Owner
+                                {t("create_company_owner")}
                             </button>
                         )}
                     </div>
@@ -95,8 +97,8 @@ const CompanyItem = ({ company }) => {
                 setOpen={setDeleteModal}
                 onAction={handleDelete}
                 onCancel={() => setDeleteModal(false)}
-                title={"Delete Company"}
-                description={`Are you sure you want to delete this company?`}
+                title={t("delete_company")}
+                description={t("delete_company_confirmation_message")}
             />
             <CreateCompanyOwner
                 open={createCompanyOwnerModal}

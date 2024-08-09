@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { Select } from "../Select";
+import { useTranslation } from "react-i18next";
 
 const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
     const [plans, setPlans] = useState([]);
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset, put } = useForm({
         companyName: "",
         description: "",
@@ -65,11 +67,14 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
         <Modal
             open={open}
             setOpen={setOpen}
-            title={edit ? "Update Company" : "Create New Company"}
+            title={edit ? t("update_company") : t("create_new_company")}
         >
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="companyName" value="Company Name" />
+                    <InputLabel
+                        htmlFor="companyName"
+                        value={t("company_name")}
+                    />
 
                     <TextInput
                         id="companyName"
@@ -86,7 +91,10 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="description" value="Description" />
+                    <InputLabel
+                        htmlFor="description"
+                        value={t("description")}
+                    />
                     <TextInput
                         id="description"
                         type="text"
@@ -100,7 +108,7 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="planId" value="Plan" />
+                    <InputLabel htmlFor="planId" value={t("plan")} />
 
                     <Select
                         id="planId"
@@ -112,7 +120,7 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                         }
                     >
                         <option disabled value={""}>
-                            Select Plan
+                            {t("select_plan")}
                         </option>
                         {plans?.map((item) => (
                             <option key={item?.id} value={item?.id?.toString()}>
@@ -126,7 +134,7 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        {edit ? "Update" : " Create Company"}
+                        {edit ? t("update") : t("create_company")}
                     </PrimaryButton>
                 </div>
             </form>

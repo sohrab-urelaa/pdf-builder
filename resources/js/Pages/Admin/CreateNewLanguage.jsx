@@ -30,6 +30,9 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
     const [localStorageData, setLocalStorageData] = useState([]);
     const [deleteActionModal, setDeleteActionModal] = useState(false);
     const [deleteLang, setDeleteLang] = useState(null);
+    const [addNewField, setNewField] = useState(false);
+    const [newFieldValue, setNewFieldValue] = useState("");
+    const [newFieldKey, setNewFieldKey] = useState("");
     const fetchLocalInfo = () => {
         const localNewLang = localStorage.getItem("LanguageTranslations");
         if (localNewLang) {
@@ -112,7 +115,20 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
         const isAllFilled =
             newLangKeys.filter((itemKey) => !newLang[itemKey]?.trim())
                 .length === 0;
-        return englishLangKeys.length <= newLangKeys.length && isAllFilled;
+        let extraKeys = [];
+
+        if (englishLangKeys.length < newLangKeys.length) {
+            extraKeys = newLangKeys.filter(
+                (key) => !englishLangKeys.includes(key)
+            );
+        }
+        return {
+            isFormValid:
+                englishLangKeys.length <= newLangKeys.length && isAllFilled,
+            englishLangKeys,
+            newLangKeys,
+            extraKeysInNew: extraKeys,
+        };
     };
 
     const saveDataInfoLocal = () => {
@@ -165,7 +181,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
     };
 
     const handleCreateLanguage = async () => {
-        const isFormValid = isFormFullEntered();
+        const isFormValid = isFormFullEntered().isFormValid;
 
         if (!isFormValid) {
             saveDataInfoLocal();
@@ -426,6 +442,96 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                                     </div>
                                 );
                             })}
+                            {isFormFullEntered().extraKeysInNew.map(
+                                (extraKey) => {
+                                    const englishData = "--";
+                                    const newLangData = newLang[extraKey] ?? "";
+                                    return (
+                                        <div
+                                            className="flex items-center gap-2"
+                                            key={extraKey}
+                                        >
+                                            <h3 className="basis-[300px]">
+                                                {englishData}
+                                            </h3>
+                                            <TextInput
+                                                value={newLangData}
+                                                className="mt-1 block flex-[1]"
+                                                onChange={(e) =>
+                                                    setNewLang((prev) => ({
+                                                        ...prev,
+                                                        [extraKey]:
+                                                            e.target.value,
+                                                    }))
+                                                }
+                                            />
+                                        </div>
+                                    );
+                                }
+                            )}
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2">
+                                    <h3 className="basis-[300px] font-bold text-xl">
+                                        New Field
+                                    </h3>
+                                    <button
+                                        className="btn btn-neutral btn-md"
+                                        onClick={() => setNewField(true)}
+                                    >
+                                        Create
+                                    </button>
+                                </div>
+                                <h3 className="font-bold text-xl">
+                                    {addNewField && (
+                                        <div className="flex items-center gap-2">
+                                            <TextInput
+                                                placeholder="Enter Field Key"
+                                                value={newFieldKey}
+                                                className="mt-1 block flex-[1]"
+                                                onChange={(e) =>
+                                                    setNewFieldKey(
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            <TextInput
+                                                placeholder="Enter Field Value"
+                                                value={newFieldValue}
+                                                className="mt-1 block flex-[1]"
+                                                onChange={(e) =>
+                                                    setNewFieldValue(
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            {newFieldValue?.trim()?.length >
+                                                0 &&
+                                                newFieldKey?.trim()?.length >
+                                                    0 && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setNewLang(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    [newFieldKey]:
+                                                                        newFieldValue,
+                                                                })
+                                                            );
+                                                            setNewFieldValue(
+                                                                ""
+                                                            );
+                                                            setNewFieldKey("");
+                                                            setNewField(false);
+                                                        }}
+                                                        className="btn btn-neutral btn-md"
+                                                    >
+                                                        Add
+                                                    </button>
+                                                )}
+                                        </div>
+                                    )}
+                                </h3>
+                            </div>
                         </div>
                     </>
                 )}
@@ -438,7 +544,7 @@ const CreateNewLanguage = ({ auth, edit_language }) => {
                 {createLoading && (
                     <span className="loading loading-spinner loading-sm"></span>
                 )}
-                {isFormFullEntered()
+                {isFormFullEntered().isFormValid
                     ? edit_language?.id
                         ? "Update Language"
                         : "Create Language"

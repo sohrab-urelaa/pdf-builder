@@ -4,8 +4,11 @@ import CreateNewFooterModal from "../../../Components/footer/CreateNewFooterModa
 import { router } from "@inertiajs/react";
 import ActionModal from "../../../Components/utill/ActionModal";
 import { deleteChildFooters } from "../../../api/adminApi";
+import { useTranslation } from "react-i18next";
+import TranslatedText from "../../../Components/TranslatedText";
 
 const FooterSettings = ({ auth, footers }) => {
+    const [t] = useTranslation();
     const [createFooterModal, setCreateFooterModal] = useState(false);
     const [parentFooter, setParentFooter] = useState(null);
     const [deleteFooterItemModal, setDeleteFooterItemModal] = useState(false);
@@ -47,13 +50,13 @@ const FooterSettings = ({ auth, footers }) => {
         <AdminLayout user={auth?.user} title={"Footer Settings"}>
             <div className="w-full lg:w-[80%] lg:mx-auto">
                 <div className="flex items-center justify-between">
-                    <p className="text-4xl font-bold">Footers</p>
+                    <p className="text-4xl font-bold">{t("footers")}</p>
 
                     <button
                         onClick={() => setCreateFooterModal(true)}
                         className="btn btn-neutral"
                     >
-                        Create new footer
+                        {t("create_new_footer")}
                     </button>
                 </div>
                 <div className="flex items-center flex-wrap gap-3 mt-3">
@@ -64,7 +67,9 @@ const FooterSettings = ({ auth, footers }) => {
                         >
                             <div className="flex items-center gap-5 justify-between">
                                 <div className="text-xl font-medium">
-                                    {footer.title}
+                                    <TranslatedText t={t}>
+                                        {footer.title}
+                                    </TranslatedText>
                                 </div>
                                 <button
                                     onClick={() =>
@@ -72,7 +77,7 @@ const FooterSettings = ({ auth, footers }) => {
                                     }
                                     className="btn btn-neutral btn-sm"
                                 >
-                                    Add
+                                    {t("add")}
                                 </button>
                             </div>
                             <div className="ml-4 flex flex-col mt-3 gap-4">
@@ -83,7 +88,9 @@ const FooterSettings = ({ auth, footers }) => {
                                     >
                                         <div className="">
                                             <h1 className="font-bold">
-                                                {subFooter.title}
+                                                <TranslatedText t={t}>
+                                                    {subFooter.title}
+                                                </TranslatedText>
                                             </h1>
                                             <p>{subFooter.link}</p>
                                         </div>
@@ -96,7 +103,7 @@ const FooterSettings = ({ auth, footers }) => {
                                                 }
                                                 className="btn btn-secondary btn-sm"
                                             >
-                                                Delete
+                                                {t("delete")}
                                             </button>
                                         </div>
                                     </div>
@@ -115,10 +122,10 @@ const FooterSettings = ({ auth, footers }) => {
             <ActionModal
                 open={deleteFooterItemModal}
                 setOpen={handleCloseDeleteModal}
-                title={`Delete Footer Item`}
+                title={`${t("delete_footer_item_message")}`}
                 onAction={handleDelete}
                 onCancel={handleCloseDeleteModal}
-                description={"Are you sure you want to delete this footer?"}
+                description={t("delete_footer_confirmation_message")}
             />
         </AdminLayout>
     );
