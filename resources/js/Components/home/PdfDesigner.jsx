@@ -1,77 +1,63 @@
-import { useRef, useState } from "react";
-import { Designer } from "../../pdf-ui/src/index";
-import { getFontsData, getPlugins, readFile } from "../../lib/pdf-helper";
-import Navbar from "./Navbar";
-import { cloneDeep } from "../../pdf-ui/src/helper";
+import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
-import UploadedDocuments from "./LeftSidebar";
-const headerHeight = 65;
+export const defaultTemplate = {
+    acceptFileTypes:
+        "image/*, application/pdf, .docx, .doc, .xlsx, .xls, .odt, .rtf",
+    currencies: "",
+    withLogo: true,
+    withConditions: false,
+    withFormula: false,
+    withPayment: true,
+    isPaymentConnected: false,
+    withPhone: false,
+    template: {
+        id: 186250,
+        name: "Empty Doc",
+        schema: [],
+        fields: [],
+        submitters: [
+            {
+                name: "First Party",
+                uuid: "2c3038bd-82be-4024-beed-f55d246f4c69",
+            },
+        ],
+        created_at: "2024-08-02T13:30:22.594Z",
+        updated_at: "2024-08-02T13:30:22.594Z",
+        preferences: {},
+        documents: [],
+    },
+};
 
-const PDFDesigner = ({ template: dbTemplate }) => {
-    const designerRef = useRef(null);
-    const [basePdf, setBasePdf] = useState(null);
-    const [prevDesignerRef, setPrevDesignerRef] = useState(null);
-    const designer = useRef(null);
-    const buildForm = () => {
+const Builder = ({ template: dbTemplate }) => {
+    const [data, setData] = useState(defaultTemplate.template);
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
         const template_string = dbTemplate?.template_json;
-        let template = JSON.parse(template_string);
-        setBasePdf(template?.basePdf);
-        if (template) {
-            getFontsData().then((font) => {
-                if (designerRef.current) {
-                    designer.current = new Designer({
-                        domContainer: designerRef.current,
-                        template,
-                        options: {
-                            options: {
-                                font,
-                                // lang,
-                                // labels: {
-                                //     clear: "🗑️", // Add custom labels to consume them in your own plugins
-                                // },
-                                theme: {
-                                    // token: {
-                                    //     colorPrimary: "#25c2a0",
-                                    // },
-                                },
-                            },
-                        },
-                        plugins: getPlugins(),
-                    });
-                }
-            });
-        } else {
-            console.log("No template found.");
+        if (template_string) {
+            const template = JSON.parse(template_string);
+            template.id = dbTemplate.id;
+            template.name = dbTemplate.title;
+            setData(template);
+            setIsLoaded(true);
         }
-    };
+    }, [dbTemplate]);
 
-    const onChangeBasePDF = (e) => {
-        if (e.target && e.target.files) {
-            readFile(e.target.files[0], "dataURL").then(async (basePdf) => {
-                setBasePdf(basePdf);
-                if (designer.current) {
-                    designer.current.updateTemplate(
-                        Object.assign(
-                            cloneDeep(designer.current.getTemplate()),
-                            {
-                                basePdf,
-                            }
-                        )
-                    );
+    useEffect(() => {
+        document.addEventListener("DOCUMENT_SAVE_RECEIVED", ({ detail }) => {
+            if (detail.type === "ON_DOCUMENT_RECEIVE") {
+                if (detail?.data) {
+                    const jsonData = JSON.stringify(detail.data);
+                    onSaveTemplate(jsonData);
                 }
-            });
-        }
-    };
+            }
+        });
+    }, []);
 
-    const onSaveTemplate = async (title) => {
-        if (designer.current) {
-            const template_json = JSON.stringify(
-                designer.current.getTemplate()
-            );
+    const onSaveTemplate = async (templateStr) => {
+        if (templateStr) {
             const pdf_link = "demo.pdf";
             const data = {
-                template_json,
-                templated_pdf_link: pdf_link,
+                template_json: templateStr,
                 title: dbTemplate?.title,
                 description: dbTemplate?.description,
                 templated_pdf_link: dbTemplate?.templated_pdf_link,
@@ -88,45 +74,19 @@ const PDFDesigner = ({ template: dbTemplate }) => {
         }
     };
 
-    //@ts-ignore
-    if (designerRef != prevDesignerRef) {
-        if (prevDesignerRef && designer.current) {
-            designer.current.destroy();
-        }
-        buildForm();
-        //@ts-ignore
-        setPrevDesignerRef(designerRef);
-    }
-
     return (
-        <div className="px-5 md:px-36 h-screen">
-            <Navbar
-                template={dbTemplate}
-                onChangePdf={onChangeBasePDF}
-                onSaveTemplate={onSaveTemplate}
-            />
-            <main className="mt-3 flex w-full gap-3">
-                <aside className="w-[18%]">
-                    <UploadedDocuments
-                        onChangePdf={onChangeBasePDF}
-                        base64Pdf={basePdf}
-                    />
-                </aside>
-                <div className="w-[80%]">
-                    <div className="w-full">
-                        <div
-                            ref={designerRef}
-                            style={{
-                                width: "100%",
-                                height: `calc(100vh - ${headerHeight}px)`,
-                            }}
-                        />
-                    </div>
-                </div>
-            </main>
-            <aside></aside>
-        </div>
+        <>
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        <template-builder 
+                            data-template='${JSON.stringify(data)}'
+                        ></template-builder>
+                        `,
+                }}
+            ></div>
+        </>
     );
 };
 
-export default PDFDesigner;
+export default Builder;

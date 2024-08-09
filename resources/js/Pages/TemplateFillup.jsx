@@ -1,8 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import { PdfTemplateContextProvider } from "../context/PdfTemplateContext";
 import PdfForm from "../Components/home/PdfForm";
-
+import "../pdf-builder/component-builder";
 const TemplateFillup = ({ user, template }) => {
     return (
         <AuthenticatedLayout user={user}>

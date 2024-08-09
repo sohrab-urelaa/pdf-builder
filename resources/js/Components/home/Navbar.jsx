@@ -6,16 +6,10 @@ import ApplicationLogo from "../ApplicationLogo";
 import { FaUsers } from "react-icons/fa";
 import { FaRegSave } from "react-icons/fa";
 
-const Navbar = ({ onChangePdf, onSaveTemplate, template }) => {
+const Navbar = ({ onSaveTemplate, template }) => {
     const [title, setTitle] = useState("");
     const [error, setError] = useState("");
     const handleSave = () => {
-        // if (!title?.trim()) {
-        //     setError("Please enter template title");
-        //     return;
-        // }
-
-        // setError("");
         onSaveTemplate(title);
     };
     return (
@@ -26,27 +20,6 @@ const Navbar = ({ onChangePdf, onSaveTemplate, template }) => {
                 </a>
             </div>
             <div className="flex items-center gap-3">
-                {/* <div>
-                    <InputLabel htmlFor="title" value="Title" />
-                    <TextInput
-                        id="title"
-                        name="title"
-                        value={title}
-                        autoComplete="title"
-                        isFocused={true}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <InputError message={error} className="mt-2" />
-                </div> */}
-                {/* <label className="btn btn-primary self-center">
-                    Add Document
-                    <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={onChangePdf}
-                        className="hidden"
-                    />
-                </label> */}
                 <a target="_blank" href={`/submit-templates/${template?.id}`}>
                     <button className="btn btn-ghost px-5 text-[20px]">
                         <FaUsers size={22} />

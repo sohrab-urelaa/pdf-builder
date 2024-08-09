@@ -7,28 +7,7 @@ import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { router } from "@inertiajs/react";
 
-const initialTemplate = {
-    schemas: [
-        {
-            name: {
-                type: "text",
-                content: "Pet Name",
-                position: {
-                    x: 25.06,
-                    y: 24.35,
-                },
-                width: 77.77,
-                height: 18.7,
-                rotate: 0,
-                opacity: 1,
-                fontSize: 36,
-                fontColor: "#14b351",
-                fontName: "NotoSerifJP-Regular",
-            },
-        },
-    ],
-    basePdf: { width: 210, height: 297, padding: [0, 0, 0, 0] },
-};
+import { defaultTemplate } from "./PdfDesigner";
 
 const CreateTemplateModal = ({ open, setOpen }) => {
     const [data, setData] = useState({
@@ -60,7 +39,7 @@ const CreateTemplateModal = ({ open, setOpen }) => {
         setProcessing(true);
         const pdf_link = "demo.pdf";
         const data2 = {
-            template_json: JSON.stringify(initialTemplate),
+            template_json: JSON.stringify(defaultTemplate.template),
             templated_pdf_link: pdf_link,
             title: data.title,
             description: data.description,

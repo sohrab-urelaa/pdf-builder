@@ -7,6 +7,7 @@ use App\Models\PdfTemplate;
 use App\Models\SubmittedTemplate;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -41,6 +42,17 @@ class TemplateController extends Controller
 
         return response()->json(['message' => 'Not authenticated'], 401);
     }
+    public function getQrScannerPage()
+    {
+        if (auth()->check()) {
+            $current_user=auth()->user();
+            return Inertia::render('QRSubmitter', [
+                'user' => $current_user
+            ]);
+        }
+
+        return response()->json(['message' => 'Not authenticated'], 401);
+    }
 
     // Store a new task
     public function store(Request $request)
@@ -63,6 +75,7 @@ class TemplateController extends Controller
             ];
             $created_template=PdfTemplate::create($new_pdf);
              $current_user=auth()->user();
+             
             return Inertia::render('TemplateBuilder', ["user"=>$current_user,"template"=>$created_template]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return to_route(
@@ -103,7 +116,7 @@ class TemplateController extends Controller
                 $pdfTemplate->save();
             return to_route('template.index');
          } catch (\Illuminate\Validation\ValidationException $e) {
-                
+                 Log::info("Data",["Error"=>$e]);
                  return response()->json(['message' => 'An error occurred','error'=>$e,"body"=>json_decode($request->getContent(), true)], 500);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'An error occurred'], 500);
