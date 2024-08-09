@@ -2,9 +2,10 @@ import DashboardState from "../../Components/admin/DashboardState";
 import SubscriptionGraph from "../../Components/admin/SubscriptionGraph";
 import UserRegistrationGraph from "../../Components/admin/UserRegistrationGraph";
 import AdminLayout from "../../Layouts/AdminLayout";
+import { useTranslation } from "react-i18next";
 
 const AdminHome = ({ auth, data }) => {
-    console.log("Subscriptions", data.subscriptionGraph);
+    const { t } = useTranslation();
     return (
         <AdminLayout user={auth?.user} title={"Home"}>
             <div className="max-w-7xl mx-auto sm:px-2">
@@ -13,7 +14,7 @@ const AdminHome = ({ auth, data }) => {
                 <div className="flex flex-wrap gap-10">
                     <div className="flex-[1]">
                         <p className="text-4xl font-bold text-center my-4">
-                            User Registration
+                            {t("user_registration")}
                         </p>
 
                         <UserRegistrationGraph
@@ -22,7 +23,7 @@ const AdminHome = ({ auth, data }) => {
                     </div>
                     <div className="flex-[1]">
                         <p className="text-4xl font-bold text-center my-4">
-                            User Subscription Amount
+                            {t("user_subscription_amount")}
                         </p>
                         <SubscriptionGraph data={data.subscriptionGraph} />
                     </div>
@@ -30,7 +31,7 @@ const AdminHome = ({ auth, data }) => {
                 <div className="flex flex-wrap gap-10">
                     <div className="flex-[1]">
                         <p className="text-4xl font-bold text-center my-4">
-                            User Subscription
+                            {t("user_subscription")}
                         </p>
                         <SubscriptionGraph
                             data={data.subscriptionGraph}
@@ -39,7 +40,7 @@ const AdminHome = ({ auth, data }) => {
                     </div>
                     <div className="flex-[1]">
                         <p className="text-4xl font-bold text-center my-4">
-                            Template Creation
+                            {t("template_creation")}
                         </p>
                         <SubscriptionGraph
                             data={data.templateCreationGraph}

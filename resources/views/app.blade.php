@@ -23,12 +23,14 @@
         fetch('/site-settings')
             .then(response => response.json())
             .then(data => {
-                window.SITE_SETTINGS=data;
-                if (data.favicon) {
-                    document.getElementById('favicon').href = data.favicon;
+                const site_settings=data?.settings;
+                window.SITE_SETTINGS=site_settings;
+                window.SUPPORTED_LANGUAGES=data.languages || [];
+                if (site_settings.favicon) {
+                    document.getElementById('favicon').href = site_settings.favicon;
                 }
-                 if (data.theme) {
-                    document.documentElement.setAttribute('data-theme', data.theme);
+                 if (site_settings.theme) {
+                    document.documentElement.setAttribute('data-theme', site_settings.theme);
                 }
             });
     </script>

@@ -11,6 +11,7 @@ use App\Models\PdfTemplate;
 use App\Models\PlansModel;
 use App\Models\SubmittedTemplate;
 use App\Models\SubscriptionModel;
+use App\Models\SupportedLanguage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -162,6 +163,28 @@ class AdminViewController extends Controller
         [
             "user"=>$current_user,
             "data"=>$pdf_templates,
+        ]);
+    }
+
+     public function getMultiLangPage(){
+         $current_user=auth()->user();
+          $lang= SupportedLanguage::paginate(7);
+        return Inertia::render('Admin/SupportedLanguage', 
+        [
+            "user"=>$current_user,
+            "data"=>$lang,
+        ]);
+    }
+    public function getCreateLanguagePage($id = null){
+        $current_user=auth()->user();
+        $edit_language=null;
+        if($id){
+            $edit_language=SupportedLanguage::find($id);
+        }
+        return Inertia::render('Admin/CreateNewLanguage', 
+        [
+            "user"=>$current_user,
+            "edit_language"=>$edit_language,
         ]);
     }
 

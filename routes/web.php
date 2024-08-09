@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupportedLanguageController;
 use App\Models\FooterModel;
 use App\Models\GeneralSetting;
+use App\Models\SupportedLanguage;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,14 +38,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/site-settings', function () {
+     $supported_languages= SupportedLanguage::all();
     $settings = GeneralSetting::first();
-        return response()->json($settings);
+        return response()->json([
+            "settings"=>$settings,
+            "languages"=>$supported_languages
+        ]);
 });
 Route::get('/footers', function () {
         $footers = FooterModel::with('subNavs')->get();
         return response()->json($footers);
 });
-
 
 require __DIR__.'/auth.php';
 require __DIR__.'/user.php';

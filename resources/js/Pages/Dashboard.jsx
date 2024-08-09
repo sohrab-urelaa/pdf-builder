@@ -9,7 +9,9 @@ import { GrClone } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
 import formatDateString from "../lib/date-formate";
+import { useTranslation } from "react-i18next";
 export default function Dashboard({ auth, templates }) {
+    const { t, i18n } = useTranslation();
     const handleCopyLink = (template) => {
         const link = `${window.origin}/submit-templates/${template.id}`;
         navigator.clipboard
@@ -21,14 +23,13 @@ export default function Dashboard({ auth, templates }) {
                 console.error("Failed to copy text: ", err);
             });
     };
-
-    console.log("Templates", templates);
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
-
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <DashboardSubHeading title={"Templates"} />
+                <DashboardSubHeading
+                    title={`Templates  ${t("Welcome to React")}`}
+                />
 
                 <div className="flex items-center gap-4 flex-wrap mt-4">
                     {templates.map((item) => (

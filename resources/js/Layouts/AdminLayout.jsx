@@ -104,6 +104,13 @@ const navItems = [
             },
         ],
     },
+
+    {
+        id: 13,
+        name: "Language",
+        subModules: false,
+        link: "/admin/language",
+    },
     // {
     //     id: 2,
     //     name: "Services",

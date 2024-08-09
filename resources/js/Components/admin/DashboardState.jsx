@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 const DashboardState = ({ data }) => {
+    const { t } = useTranslation();
     return (
         <div className="mt-4 flex  flex-col gap-4">
             <div className="stats shadow gap-8">
@@ -18,11 +21,11 @@ const DashboardState = ({ data }) => {
                             ></path>
                         </svg>
                     </div>
-                    <div className="stat-title">Total Company</div>
+                    <div className="stat-title">{t("total_company")}</div>
                     <div className="stat-value text-primary">
                         {data.totalCompany}
                     </div>
-                    <div className="stat-desc">Number of company</div>
+                    <div className="stat-desc">{t("number_of_company")}</div>
                 </div>
 
                 <div className="stat">
@@ -41,12 +44,12 @@ const DashboardState = ({ data }) => {
                             ></path>
                         </svg>
                     </div>
-                    <div className="stat-title">Total Template</div>
+                    <div className="stat-title">{t("total_template")}</div>
                     <div className="stat-value text-secondary">
                         {data?.totalTemplate}
                     </div>
                     <div className="stat-desc">
-                        Total pdf template created by the admin and users
+                        {t("total_template_dashboard_message")}
                     </div>
                 </div>
 
@@ -57,9 +60,9 @@ const DashboardState = ({ data }) => {
                         </div>
                     </div>
                     <div className="stat-value">{data?.totalSubscription}</div>
-                    <div className="stat-title">Total Subscription</div>
+                    <div className="stat-title">{t("total_subscription")}</div>
                     <div className="stat-desc text-secondary">
-                        Total active subscritions in the system
+                        {t("total_subscription_message")}
                     </div>
                 </div>
             </div>
@@ -80,11 +83,11 @@ const DashboardState = ({ data }) => {
                             ></path>
                         </svg>
                     </div>
-                    <div className="stat-title">Total Users</div>
+                    <div className="stat-title">{t("total_users")}</div>
                     <div className="stat-value text-primary">
                         {data.totalAdmin + data.totalUser}
                     </div>
-                    <div className="stat-desc">All registered user</div>
+                    <div className="stat-desc">{t("all_registered_user")}</div>
                 </div>
 
                 <div className="stat">
@@ -103,11 +106,11 @@ const DashboardState = ({ data }) => {
                             ></path>
                         </svg>
                     </div>
-                    <div className="stat-title">Admin</div>
+                    <div className="stat-title">{t("admin")}</div>
                     <div className="stat-value text-secondary">
                         {data?.totalAdmin}
                     </div>
-                    <div className="stat-desc">Total admin</div>
+                    <div className="stat-desc">{t("admin")}</div>
                 </div>
 
                 <div className="stat">
@@ -117,9 +120,9 @@ const DashboardState = ({ data }) => {
                         </div>
                     </div>
                     <div className="stat-value">{data?.totalUser}</div>
-                    <div className="stat-title">Total Users</div>
+                    <div className="stat-title">{t("total_users")}</div>
                     <div className="stat-desc text-secondary">
-                        Users on the system
+                        {t("users_on_the_system")}
                     </div>
                 </div>
             </div>

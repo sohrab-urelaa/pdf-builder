@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminViewController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\GeneralSettingsController;
 use App\Http\Controllers\PlansController;
+use App\Http\Controllers\SupportedLanguageController;
 use Illuminate\Support\Facades\Route;
 
 //admin view routes
@@ -18,6 +19,8 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin/submissions/{templateId?}', [AdminViewController::class, 'getPdfSubmissionsPage'])->name('admin.pdfSubmissions');
     Route::get('/admin/site-settings/footer', [AdminViewController::class, 'getFooterSettingsPage'])->name('admin.footersettings');
     Route::get('/admin/site-settings/general', [AdminViewController::class, 'getGeneralSettingsPage'])->name('admin.generalSettings');
+    Route::get('/admin/language/', [AdminViewController::class, 'getMultiLangPage'])->name('admin.language');
+    Route::get('/admin/language/create/{id?}', [AdminViewController::class, 'getCreateLanguagePage'])->name('admin.language.create');
 });
 //admin post routes
 Route::middleware(['auth','admin'])->group(function () {
@@ -36,6 +39,15 @@ Route::middleware(['auth','admin'])->group(function () {
     //<===================GENERAL SITE SETTINGS=====================>
 
     Route::post('/admin/general-settings', [GeneralSettingsController::class, 'saveOrUpdate'])->name('generalSettings.create');
+
+
+    //<==================LANGUAGE RELATED APIS=========================>
+
+  
+     Route::post('/admin/language', [SupportedLanguageController::class, 'store'])->name('language.create');
+     Route::post('/admin/language-update', [SupportedLanguageController::class, 'update'])->name('language.update');
+     Route::delete('/admin/language-delete/{id}', [SupportedLanguageController::class, 'destroy'])->name('language.destroyLang');
+
 
 
 });
