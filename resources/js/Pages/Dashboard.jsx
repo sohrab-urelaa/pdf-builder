@@ -21,6 +21,8 @@ export default function Dashboard({ auth, templates }) {
                 console.error("Failed to copy text: ", err);
             });
     };
+
+    console.log("Templates", templates);
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />

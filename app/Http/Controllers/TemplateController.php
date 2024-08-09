@@ -18,7 +18,10 @@ class TemplateController extends Controller
         if (auth()->check()) {
             $current_user=auth()->user();
             $current_user_id=$current_user["id"];
-            $pdf_templates = PdfTemplate::where('user_id', $current_user_id)->with("owner")->get();
+            $pdf_templates = PdfTemplate::where('user_id', $current_user_id)
+                            ->with("owner")
+                            ->select('user_id', 'id',"created_at",'updated_at',"description","title")
+                            ->get();
             return Inertia::render('Dashboard', [
                 'templates' => $pdf_templates,
                 'user' => $current_user
@@ -31,8 +34,14 @@ class TemplateController extends Controller
     {
         if (auth()->check()) {
             $current_user=auth()->user();
-            $pdf_templates = SubmittedTemplate::with("parent_template")
-                        ->with("owner")
+            $pdf_templates = SubmittedTemplate::with([
+                                'parent_template' => function($query) {
+                                    $query->select('created_at', 'description', 'title',"user_id","id");
+                                },
+                                'owner' => function($query) {
+                                    $query->select('email', 'name', 'role',"id");
+                                }
+                            ])
                         ->get();
             return Inertia::render('Submissions', [
                 'templates' => $pdf_templates,
@@ -110,7 +119,7 @@ class TemplateController extends Controller
                 $pdfTemplate->template_json = $bodyContent["template_json"];
                 $pdfTemplate->templated_pdf_link = $bodyContent["templated_pdf_link"];
                 $pdfTemplate->title = $bodyContent["title"];
-                $pdfTemplate->description = $bodyContent["description"];
+                $pdfTemplate->description = $bodyContent["description"]?? $pdfTemplate["description"];
 
                 // Save the updated template
                 $pdfTemplate->save();
@@ -119,6 +128,7 @@ class TemplateController extends Controller
                  Log::info("Data",["Error"=>$e]);
                  return response()->json(['message' => 'An error occurred','error'=>$e,"body"=>json_decode($request->getContent(), true)], 500);
             } catch (\Exception $e) {
+                 Log::info("Data",["Error"=>$e]);
                 return response()->json(['message' => 'An error occurred'], 500);
             }
         }

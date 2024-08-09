@@ -129,7 +129,9 @@ class AdminViewController extends Controller
     }
     function getPdfTemplatesPage(){
         $current_user=auth()->user();
-        $data=PdfTemplate::with("owner")->paginate(7);
+        $data=PdfTemplate::with("owner")
+            ->select('user_id', 'id',"created_at",'updated_at',"description","title")
+            ->paginate(7);
         return Inertia::render('Admin/AdminPdfTemplates', 
         [
             "user"=>$current_user,
@@ -141,8 +143,14 @@ class AdminViewController extends Controller
         $pdf_templates=null;
         if($templateId){
             $pdf_templates = SubmittedTemplate::where("template_id",$templateId)
-                        ->with("parent_template")
-                        ->with("owner")
+                            ->with([
+                                'parent_template' => function($query) {
+                                    $query->select('created_at', 'description', 'title',"user_id","id");
+                                },
+                                'owner' => function($query) {
+                                    $query->select('email', 'name', 'role',"id");
+                                }
+                            ])
                         ->paginate(7);
         }else{
              $pdf_templates = SubmittedTemplate::with("parent_template")

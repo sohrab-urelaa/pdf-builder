@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\EmailTemplateProviders;
+use App\Mail\CustomMailTemplate;
 use App\Models\PdfTemplate;
 use App\Models\SslCertificateModal;
 use App\Models\SubmittedTemplate;
@@ -32,7 +34,9 @@ class SubmitTemplateController extends Controller
 
                 //find the parent template with owner
                 $template_id=$validated["template_id"];
-                $template=PdfTemplate::with("owner")->find($template_id);
+                $template=PdfTemplate::with("owner")
+                    ->select('user_id', 'id',"created_at",'updated_at',"description","title")
+                    ->find($template_id);
 
                 //check template is exists or not
                 if(!$template){
@@ -85,6 +89,8 @@ class SubmitTemplateController extends Controller
             ];
 
             $created_template=SubmittedTemplate::create($new_pdf_template);
+            $created_template['location']=$validated['location'];
+            $this->sendMail($created_template,$template);
 
             return response()->json([
                 "success"=>true,
@@ -106,9 +112,9 @@ class SubmitTemplateController extends Controller
         $submitter_email=$submitter["email"];
         $submitter_name=$submitter["name"];
         $submitter_location=$submitter["location"];
-
+        $request_url=env('NODE_SERVER_API_URL')."/sign-pdf";
         $client = new Client();
-        $response = $client->post('http://localhost:5001/sign-pdf', [
+        $response = $client->post($request_url, [
             'multipart' => [
                 [
                     'name'     => 'pdfFile',
@@ -162,7 +168,9 @@ class SubmitTemplateController extends Controller
     private function verifyPDF($pdf_path){
 
         $client = new Client();
-        $response = $client->post('http://localhost:5001/check-signature', [
+
+        $request_url=env('NODE_SERVER_API_URL')."/check-signature";
+        $response = $client->post($request_url, [
             'multipart' => [
                 [
                     'name'     => 'pdfFile',
@@ -205,6 +213,17 @@ class SubmitTemplateController extends Controller
 
     }
 
+    private function sendMail($submitted_template,$template){
+         $mail_template=EmailTemplateProviders::template_submitted_template_for_author($submitted_template,$template);
+         if($mail_template){
+            CustomMailTemplate::send_email($mail_template);
+         } 
+         $submitter_template=EmailTemplateProviders::template_submitted_template_for_submitter($submitted_template,$template);
+         if($submitter_template){
+            CustomMailTemplate::send_email($submitter_template);
+         }
+         
+    }
 
 
 }

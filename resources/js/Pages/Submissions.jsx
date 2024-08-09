@@ -39,6 +39,7 @@ export default function Dashboard({ auth, templates }) {
             console.error("Error downloading the PDF", error);
         }
     };
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />

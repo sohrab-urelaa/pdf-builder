@@ -5,7 +5,6 @@ import data from "./builder/template";
 import formData from "./submission_form/data";
 import DrawSignature from "./submission_form/mobile_signature.vue";
 import { createApp, reactive } from "vue";
-
 const safeRegisterElement = (name, element, options = {}) =>
     !window.customElements.get(name) &&
     window.customElements.define(name, element, options);
