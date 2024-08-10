@@ -5,6 +5,7 @@ import dolphineImg from "./dolphine.svg";
 import hiImg from "./hi.svg";
 import appLogoImg from "./appLogo.svg";
 import signinImg from "./signin.svg";
+import brickWall from "./brick-wall.svg";
 
 export {
     menu1Img,
@@ -14,4 +15,5 @@ export {
     hiImg,
     appLogoImg,
     signinImg,
+    brickWall,
 };

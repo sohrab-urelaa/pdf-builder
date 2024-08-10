@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="cupcake"
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="mindcatchlight"
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,9 +30,12 @@
                     document.getElementById('favicon').href = site_settings.favicon;
                 }
                  if (site_settings.theme) {
-                    document.documentElement.setAttribute('data-theme', site_settings.theme);
+                    // document.documentElement.setAttribute('data-theme', site_settings.theme);
                 }
             });
+        const selectedTheme=localStorage.getItem("theme");
+        const currentTheme=selectedTheme?selectedTheme:"mindcatchlight";
+        document.documentElement.setAttribute('data-theme', currentTheme);
         const isRTL=localStorage.getItem("isRTL")==="1";
         if (isRTL) {
             document.documentElement.setAttribute("dir", "rtl");

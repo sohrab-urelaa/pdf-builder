@@ -2,6 +2,7 @@ import { Link } from "@inertiajs/react";
 import { appLogoImg, signinImg } from "../../../assets/assets";
 import Dropdown from "../Dropdown";
 import ResponsiveNavLink from "../ResponsiveNavLink";
+import ThemeSwitcher from "../utill/ThemeSwither";
 const navItems = [
     {
         id: 1,
@@ -159,9 +160,10 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                         }
                     })}
                 </div>
-                <div className="flex items-center justify-end w-1/4">
+                <div className="flex items-center justify-end">
                     {user ? (
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
+                            <ThemeSwitcher />
                             <Link href="/settings/plans">
                                 <button className="btn btn-ghost text-xl">
                                     Settings
@@ -203,6 +205,9 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                         </div>
                     ) : (
                         <>
+                            <div className="">
+                                <ThemeSwitcher />
+                            </div>
                             <Link
                                 className="font-medium text-lg mr-6 hidden lg:inline"
                                 href={"/login"}

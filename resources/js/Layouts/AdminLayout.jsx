@@ -139,124 +139,64 @@ const AdminLayout = ({ children, user, title }) => {
         <>
             <AdminNavbar user={user} title={title} />
 
-            <div className="drawer lg:drawer-open">
-                <input
-                    id="my-drawer-2"
-                    type="checkbox"
-                    className="drawer-toggle"
-                />
-                <div className="drawer-content bg-base-100 shadow">
-                    <div className="p-4">{children}</div>
-                </div>
-                <div className="drawer-side">
-                    <label
-                        htmlFor="my-drawer-2"
-                        aria-label="close sidebar"
-                        className="drawer-overlay"
-                    ></label>
-                    <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
-                        {/* <li className="">
-                        <ApplicationLogo
-                            headerTitle={title}
-                            link="/admin/home"
-                        />
-                    </li>
-                    <hr /> */}
-                        <li>
-                            {navItems.map((navItem) => {
-                                if (navItem.subModules) {
-                                    return (
-                                        <>
-                                            <summary className="text-lg">
-                                                {navItem?.name}
-                                            </summary>
-                                            <ul>
-                                                {navItem?.subOptions?.map(
-                                                    (subItem) => (
-                                                        <li>
-                                                            <Link
-                                                                className="text-lg mr-6"
-                                                                href={
-                                                                    subItem.link
-                                                                }
-                                                            >
-                                                                {subItem?.title}
-                                                            </Link>
-                                                        </li>
-                                                    )
-                                                )}
-                                            </ul>
-                                        </>
-                                    );
-                                } else {
-                                    return (
-                                        <Link href={`${navItem.link}`}>
-                                            <summary className="text-lg">
-                                                {navItem?.name}
-                                            </summary>
-                                        </Link>
-                                    );
-                                }
-                            })}
-                        </li>
-                    </ul>
-                    {/* <ul
-                    tabindex="0"
-                    className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
-                >
-                    <li>
-                        {user ? (
-                            <div className="pt-4 pb-1 border-t border-gray-200 flex flex-col">
-                                <div className="px-4">
-                                    <div className="font-medium text-base text-gray-800">
-                                        {user.name}
-                                    </div>
-                                    <div className="font-medium text-sm text-gray-500">
-                                        {user.email}
-                                    </div>
-                                </div>
-
-                                <div className="mt-3 space-y-1 flex flex-col">
-                                    <li>
-                                        <Link
-                                            className="text-lg mr-6"
-                                            href={route("profile.edit")}
-                                        >
-                                            Profile
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            className="text-lg mr-6"
-                                            href={route("logout")}
-                                        >
-                                            Logout
-                                        </Link>
-                                    </li>
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                <Link
-                                    className="text-lg mr-6"
-                                    data-role="app-link"
-                                    data-event="Click Sign In"
-                                    data-event-props='{"location":"Top Navigation"}'
-                                    href={`/login`}
-                                    data-event-initialized="true"
-                                >
-                                    <span className="flex items-center justify-center space-x-1">
-                                        <img
-                                            src={signinImg}
-                                            className="w-[30px] h-[30px]"
-                                        />
-                                        <span>Sign in</span>
-                                    </span>
-                                </Link>
-                            </>
-                        )}{" "}
-                    </li>
-                </ul> */}
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="drawer lg:drawer-open">
+                    <input
+                        id="my-drawer-2"
+                        type="checkbox"
+                        className="drawer-toggle"
+                    />
+                    <div className="drawer-content bg-base-100 shadow">
+                        <div className="p-4">{children}</div>
+                    </div>
+                    <div className="drawer-side">
+                        <label
+                            htmlFor="my-drawer-2"
+                            aria-label="close sidebar"
+                            className="drawer-overlay"
+                        ></label>
+                        <ul className="menu bg-base-200 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
+                            <li>
+                                {navItems.map((navItem) => {
+                                    if (navItem.subModules) {
+                                        return (
+                                            <>
+                                                <summary className="text-lg">
+                                                    {navItem?.name}
+                                                </summary>
+                                                <ul>
+                                                    {navItem?.subOptions?.map(
+                                                        (subItem) => (
+                                                            <li>
+                                                                <Link
+                                                                    className="text-lg mr-6"
+                                                                    href={
+                                                                        subItem.link
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        subItem?.title
+                                                                    }
+                                                                </Link>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            </>
+                                        );
+                                    } else {
+                                        return (
+                                            <Link href={`${navItem.link}`}>
+                                                <summary className="text-lg">
+                                                    {navItem?.name}
+                                                </summary>
+                                            </Link>
+                                        );
+                                    }
+                                })}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <ToastContainer theme="dark" />

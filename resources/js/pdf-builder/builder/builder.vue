@@ -1,4 +1,55 @@
 <template>
+    <div class="bg-base-100 border border-b-2 border-gray-300 py-3">
+        <div style="max-width: 1600px" class="mx-auto pl-3 md:pl-4 w-full">
+            <div
+                v-if="$slots.buttons || withTitle"
+                id="title_container"
+                class="flex justify-between py-1.5 items-center pr-4 top-0 z-10"
+                :class="{ sticky: withStickySubmitters || isBreakpointLg }"
+            >
+                <div class="flex items-center space-x-3">
+                    <Logo :withSiteName="false" />
+                    <Contenteditable
+                        v-if="withTitle"
+                        :model-value="template.name"
+                        :editable="false"
+                        class="text-xl md:text-3xl font-semibold focus:text-clip"
+                        :icon-stroke-width="2.3"
+                        @update:model-value="updateName"
+                    />
+                </div>
+                <div class="space-x-3 flex items-center flex-shrink-0">
+                    <slot v-if="$slots.buttons" name="buttons" />
+                    <template v-else>
+                        <a
+                            target="_blank"
+                            :href="'/submit-templates/' + template?.id"
+                        >
+                            <button className="btn btn-ghost px-5 text-[20px]">
+                                <IconWritingSign width="22" class="inline" />
+                                <span class="hidden md:block">
+                                    SIGN YOURSELF</span
+                                >
+                            </button>
+                        </a>
+                        <button class="btn btn-outline px-5 text-[20px]">
+                            <IconUsersPlus width="20" class="inline" />
+                            <span class="hidden md:block"> SEND</span>
+                        </button>
+                        <button
+                            class="btn btn-neutral px-5 text-[20px]"
+                            :class="{ disabled: isSaving }"
+                            v-bind="isSaving ? { disabled: true } : {}"
+                            @click.prevent="onSaveClick"
+                        >
+                            <span class="hidden md:block"> SAVE</span>
+                            <IconDeviceFloppy width="22" />
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
     <div style="max-width: 1600px" class="mx-auto pl-3 md:pl-4 h-full">
         <div
             v-if="pendingFieldAttachmentUuids.length"
@@ -25,51 +76,7 @@
                 </div>
             </div>
         </div>
-        <div
-            v-if="$slots.buttons || withTitle"
-            id="title_container"
-            class="flex justify-between py-1.5 items-center pr-4 top-0 z-10"
-            :class="{ sticky: withStickySubmitters || isBreakpointLg }"
-        >
-            <div class="flex items-center space-x-3">
-                <Logo :withSiteName="false" />
-                <Contenteditable
-                    v-if="withTitle"
-                    :model-value="template.name"
-                    :editable="false"
-                    class="text-xl md:text-3xl font-semibold focus:text-clip"
-                    :icon-stroke-width="2.3"
-                    @update:model-value="updateName"
-                />
-            </div>
-            <div class="space-x-3 flex items-center flex-shrink-0">
-                <slot v-if="$slots.buttons" name="buttons" />
-                <template v-else>
-                    <a
-                        target="_blank"
-                        :href="'/submit-templates/' + template?.id"
-                    >
-                        <button className="btn btn-ghost px-5 text-[20px]">
-                            <IconWritingSign width="22" class="inline" />
-                            <span class="hidden md:block"> SIGN YOURSELF</span>
-                        </button>
-                    </a>
-                    <button class="btn btn-outline px-5 text-[20px]">
-                        <IconUsersPlus width="20" class="inline" />
-                        <span class="hidden md:block"> SEND</span>
-                    </button>
-                    <button
-                        class="btn btn-neutral px-5 text-[20px]"
-                        :class="{ disabled: isSaving }"
-                        v-bind="isSaving ? { disabled: true } : {}"
-                        @click.prevent="onSaveClick"
-                    >
-                        <span class="hidden md:block"> SAVE</span>
-                        <IconDeviceFloppy width="22" />
-                    </button>
-                </template>
-            </div>
-        </div>
+
         <div
             id="main_container"
             class="flex"

@@ -24,6 +24,24 @@ export default {
     plugins: [forms, require("daisyui")],
     daisyui: {
         themes: [
+            {
+                mindcatch: {
+                    primary: "#05edf9",
+                    secondary: "#2d001f",
+                    accent: "#0d2136",
+                    neutral: "#0d2136",
+                    "base-100": "#0d2136",
+                    info: "#0000ff",
+                    success: "#00ff00",
+                    warning: "#ff006a",
+                    error: "#c84237",
+                },
+            },
+            {
+                mindcatchlight: {
+                    ...require("daisyui/src/theming/themes")["corporate"],
+                },
+            },
             "light",
             "dark",
             "cupcake",

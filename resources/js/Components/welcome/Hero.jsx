@@ -1,8 +1,11 @@
 import { Link } from "@inertiajs/react";
-import { rocketImg } from "../../../assets/assets";
+import { rocketImg, brickWall } from "../../../assets/assets";
 const Hero = ({ user }) => {
     return (
-        <div className="hero  min-h-screen">
+        <div
+            className="hero  min-h-screen"
+            style={{ backgroundImage: `url(${brickWall})` }}
+        >
             <div className="hero-content text-center">
                 <div className="">
                     <h1 className="text-6xl font-extrabold text-base-content">
