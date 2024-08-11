@@ -1,5 +1,5 @@
 import { useState } from "react";
-import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
+import AdminLayout from "../../Layouts/AdminLayout";
 import CreateNewSignature from "../../Components/user/CreateNewSignature";
 import Pagination from "../../Components/utill/Pagination";
 import { router } from "@inertiajs/react";
@@ -7,11 +7,10 @@ import ActionModal from "../../Components/utill/ActionModal";
 import { deleteCertificate } from "../../api/userApi";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-const ESignature = ({ auth, data }) => {
+const AdminCertificates = ({ auth, data }) => {
     const [createSignatureModal, setCreateSignatureModal] = useState(false);
     const [selectedSignature, setSelectedSignature] = useState(null);
     const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
-
     const [editModal, setEditModal] = useState(false);
     const { t } = useTranslation();
     const handleSuccess = () => {
@@ -33,7 +32,7 @@ const ESignature = ({ auth, data }) => {
         } catch (err) {}
     };
     return (
-        <UserSettingsLayout user={auth?.user}>
+        <AdminLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
                 <div className="my-6 flex items-center justify-between gap-3">
                     <p className="text-4xl font-bold">
@@ -99,7 +98,9 @@ const ESignature = ({ auth, data }) => {
                     open={createSignatureModal}
                     setOpen={setCreateSignatureModal}
                     onSuccess={handleSuccess}
+                    userType="admin"
                 />
+
                 <CreateNewSignature
                     key={"edit_signature"}
                     edit={true}
@@ -121,8 +122,8 @@ const ESignature = ({ auth, data }) => {
             </div>
             <br />
             <Pagination links={data.links} />
-        </UserSettingsLayout>
+        </AdminLayout>
     );
 };
 
-export default ESignature;
+export default AdminCertificates;

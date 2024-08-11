@@ -15,7 +15,8 @@ class SslCertificateModal extends Model
         'name',
         'certificate',
         'is_active',
-        "password"
+        "password",
+        "user_type"
     ];
 
     public function user()

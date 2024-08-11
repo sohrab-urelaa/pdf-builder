@@ -50,6 +50,15 @@ class SubmitTemplateController extends Controller
                 ])->first();
 
                 if(!$certificate){
+                    //fetch admin certificate
+                    $certificate=SslCertificateModal::where([
+                        "user_type"=>"admin",
+                        "is_active"=>true
+                    ])->first();
+                }
+
+                //throw error if no certificate found either admin or user
+                if(!$certificate){
                      return response()->json(["success"=>false,"message"=>"Certificate doesn't found"]);
                 }
 

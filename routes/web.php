@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportedLanguageController;
 use App\Models\FooterModel;
 use App\Models\GeneralSetting;
+use App\Models\HeaderItem;
 use App\Models\SupportedLanguage;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,24 +39,34 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/site-settings', function () {
-     $supported_languages= SupportedLanguage::all();
+    $supported_languages = SupportedLanguage::all();
     $settings = GeneralSetting::first();
-        return response()->json([
-            "settings"=>$settings,
-            "languages"=>$supported_languages
-        ]);
+    return response()->json([
+        "settings" => $settings,
+        "languages" => $supported_languages
+    ]);
 });
-Route::get('/footers', function () {
-        $footers = FooterModel::with('subNavs')->get();
-        return response()->json($footers);
+Route::get('/site-navs', function () {
+    $footers = FooterModel::with('subNavs')->get();
+    $headers = [];
+    $current_user = auth()->user();
+
+    if ($current_user) {
+        $headers = HeaderItem::whereIn('public', ['private', 'both'])->with("subOptions")->get();
+    } else {
+        $headers = HeaderItem::whereIn('public', ['public', 'both'])->with("subOptions")->get();
+    }
+    return response()->json([
+        "footers" => $footers,
+        "headers" => $headers
+    ]);
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/user.php';
-require __DIR__.'/pdf_template.php';
-require __DIR__.'/admin.php';
-require __DIR__.'/footer.php';
-require __DIR__.'/user_settings.php';
-require __DIR__.'/email_templates.php';
-require __DIR__.'/smtp_config.php';
-
+require __DIR__ . '/auth.php';
+require __DIR__ . '/user.php';
+require __DIR__ . '/pdf_template.php';
+require __DIR__ . '/admin.php';
+require __DIR__ . '/footer.php';
+require __DIR__ . '/user_settings.php';
+require __DIR__ . '/email_templates.php';
+require __DIR__ . '/smtp_config.php';

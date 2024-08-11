@@ -5,24 +5,23 @@ import TextInput from "../TextInput";
 import { useEffect, useState } from "react";
 import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
-import { createCertificate, updateCertificate } from "../../api/userApi";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-
+import { createNewHeader, updateHeader } from "../../api/headerApi";
+import { Select } from "../Select";
 const initialData = {
     name: "",
-    certificate: null,
-    is_active: false,
-    password: "",
+    link: "",
+    public: "",
+    subModules: false,
 };
 
-const CreateNewSignature = ({
+const CreateNewHeader = ({
     open,
     setOpen,
     onSuccess,
-    userType = "user",
     edit = false,
-    certificate = {},
+    header = {},
 }) => {
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
@@ -30,24 +29,27 @@ const CreateNewSignature = ({
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (certificate?.id) {
-            const isActive = certificate?.is_active === 1;
-            setData({ ...certificate, is_active: isActive });
+        if (header?.id) {
+            const isSubModuele = header?.subModules === 1;
+            setData({ ...header, subModules: isSubModuele });
         }
-    }, [certificate, edit]);
+    }, [header, edit]);
 
     const submit = async (e) => {
         e.preventDefault();
         const newErrors = {};
 
         if (!data.name?.trim()) {
-            newErrors.name = "Please enter certifiacet name";
+            newErrors.name = "Please enter header name";
         }
 
-        if (!data.certificate && !edit) {
-            newErrors.certificate = "Please choose your ssl certificate";
+        if (!data.public?.trim()) {
+            newErrors.public = "Please choose visibility";
         }
 
+        if (!data.link?.trim() && !data.subModules) {
+            newErrors.link = "Please enter header link";
+        }
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
@@ -59,17 +61,14 @@ const CreateNewSignature = ({
         try {
             const formData = new FormData();
             formData.append("name", data.name);
-            formData.append("is_active", data.is_active);
-            if (data?.certificate?.name) {
-                formData.append("certificate", data.certificate);
-            }
-            formData.append("password", data.password);
-            formData.append("user_type", userType);
+            formData.append("link", data.link);
+            formData.append("public", data.public);
+            formData.append("subModules", data.subModules.toString());
             let result;
             if (edit) {
-                result = await updateCertificate(certificate?.id, formData);
+                result = await updateHeader(header?.id, formData);
             } else {
-                result = await createCertificate(formData);
+                result = await createNewHeader(formData);
             }
             if (result?.errors) {
                 const updatedErrors = {};
@@ -93,11 +92,12 @@ const CreateNewSignature = ({
             setProcessing(false);
         }
     };
+
     return (
         <Modal
             open={open}
             setOpen={setOpen}
-            title={edit ? t("edit_certificate") : t("create_new_certificate")}
+            title={edit ? t("edit_header") : t("create_header")}
         >
             <form onSubmit={submit}>
                 <div>
@@ -121,65 +121,65 @@ const CreateNewSignature = ({
                     <InputError message={errors.name} className="mt-2" />
                 </div>
                 <div className="mt-1">
-                    <InputLabel htmlFor="password" value={t("password")} />
+                    <InputLabel htmlFor="link" value={t("link")} />
 
                     <TextInput
-                        id="password"
-                        name="password"
-                        value={data.password}
+                        id="link"
+                        name="link"
+                        value={data.link}
                         className="mt-1 block w-full"
-                        autoComplete="password"
                         onChange={(e) =>
                             setData((prev) => ({
                                 ...prev,
-                                password: e.target.value,
+                                link: e.target.value,
                             }))
                         }
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={errors.link} className="mt-2" />
                 </div>
+                <div className="mt-4">
+                    <InputLabel htmlFor="public" value={t("visible_for")} />
+                    <Select
+                        id="public"
+                        name="public"
+                        value={data.public}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                public: e.target.value,
+                            }))
+                        }
+                    >
+                        <option disabled value={""}>
+                            {t("choose_visibility")}
+                        </option>
+                        {["public", "private", "both"].map((item) => (
+                            <option key={item} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </Select>
 
-                <div className="flex items-center gap-3 mt-4">
-                    <label className="btn btn-secondary">
-                        <input
-                            type="file"
-                            onChange={(e) =>
-                                setData((prev) => ({
-                                    ...prev,
-                                    certificate: e.target.files[0],
-                                }))
-                            }
-                            className="hidden"
-                        />
-                        {t("choose_certificate")}
-                    </label>
-                    {data?.certificate && (
-                        <div>
-                            <h1 className="text-base-content text-xl text-bold">
-                                {data.certificate?.name}
-                            </h1>
-                        </div>
-                    )}
+                    <InputError message={errors.public} className="mt-2" />
                 </div>
-                <InputError message={errors.certificate} className="mt-2" />
-
                 <div className="mt-4 flex items-center">
                     <input
                         id="isActiveCert"
                         type="checkbox"
-                        checked={data.is_active}
-                        value={data.is_active}
+                        checked={data.subModules}
+                        value={data.subModules}
                         className="checkbox"
                         onChange={(e) =>
                             setData((prev) => ({
                                 ...prev,
-                                is_active: e.target.checked,
+                                subModules: e.target.checked,
                             }))
                         }
                     />
                     <label className="ml-2" htmlFor="isActiveCert">
-                        {t("active")}
+                        {t("has_sub_modules")}
                     </label>
                 </div>
 
@@ -193,4 +193,4 @@ const CreateNewSignature = ({
     );
 };
 
-export default CreateNewSignature;
+export default CreateNewHeader;

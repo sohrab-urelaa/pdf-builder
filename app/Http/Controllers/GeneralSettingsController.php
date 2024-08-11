@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class GeneralSettingsController extends Controller
 {
-     public function index()
+    public function index()
     {
         $settings = GeneralSetting::first();
         return response()->json($settings);
@@ -16,7 +16,7 @@ class GeneralSettingsController extends Controller
 
     public function saveOrUpdate(Request $request)
     {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'site_name' => 'nullable|string|max:255',
             'theme' => 'nullable|string|max:255',
             'site_description' => 'nullable|string',
@@ -25,6 +25,7 @@ class GeneralSettingsController extends Controller
             'default_language' => 'nullable|string|max:255',
             'time_zone' => 'nullable|string|max:255',
             'contact_email' => 'nullable|string|email|max:255',
+            'home_page' => 'nullable|string',
         ]);
 
         $setting = GeneralSetting::first();
@@ -33,7 +34,7 @@ class GeneralSettingsController extends Controller
                 Storage::disk('public')->delete($setting->site_logo);
             }
             $path = $request->file('site_logo')->store('logos', 'public');
-            $full_path=asset('storage/' . $path);
+            $full_path = asset('storage/' . $path);
 
             $validated['site_logo'] = $full_path;
         }
@@ -43,7 +44,7 @@ class GeneralSettingsController extends Controller
                 Storage::disk('public')->delete($setting->favicon);
             }
             $path = $request->file('favicon')->store('favicons', 'public');
-             $full_path=asset('storage/' . $path);
+            $full_path = asset('storage/' . $path);
             $validated['favicon'] = $full_path;
         }
 

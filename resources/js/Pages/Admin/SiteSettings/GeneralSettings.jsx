@@ -6,6 +6,8 @@ import InputError from "../../../Components/InputError";
 import { saveGeneralSettings } from "../../../api/adminApi";
 import { Select } from "../../../Components/Select";
 import { Trans, useTranslation } from "react-i18next";
+import TextArea from "../../../Components/TextArea";
+import { toast } from "react-toastify";
 
 const themes = [
     "light",
@@ -55,6 +57,7 @@ const initialData = {
     time_zone: "",
     contact_email: "",
     theme: "",
+    home_page: "",
 };
 
 const GeneralSettings = ({ auth, settings }) => {
@@ -139,6 +142,8 @@ const GeneralSettings = ({ auth, settings }) => {
                     updatedErrors[key] = newErrors[key][0];
                 });
                 setErrors(updatedErrors);
+            } else {
+                toast.success("Settings updated");
             }
         } catch (err) {
         } finally {
@@ -216,7 +221,7 @@ const GeneralSettings = ({ auth, settings }) => {
                         )}
                     </div>
                     {Object.keys(data).map((key) => {
-                        if (key === "theme") {
+                        if (key === "theme" || key === "home_page") {
                             return null;
                         }
                         const inputItem = data[key];
@@ -271,6 +276,28 @@ const GeneralSettings = ({ auth, settings }) => {
 
                         <InputError
                             message={errors["theme"] || ""}
+                            className="mt-2"
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <InputLabel htmlFor={"home_page"} value={"Home Page"} />
+
+                        <TextArea
+                            id={"home_page"}
+                            name={"home_page"}
+                            value={data.home_page}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData((prev) => ({
+                                    ...prev,
+                                    home_page: e.target.value,
+                                }))
+                            }
+                            rows={5}
+                        />
+
+                        <InputError
+                            message={errors["home_page"] || ""}
                             className="mt-2"
                         />
                     </div>

@@ -47,7 +47,7 @@ const FooterSettings = ({ auth, footers }) => {
     };
 
     return (
-        <AdminLayout user={auth?.user} title={"Footer Settings"}>
+        <AdminLayout user={auth?.user} title={t("footer_settings")}>
             <div className="w-full lg:w-[80%] lg:mx-auto">
                 <div className="flex items-center justify-between">
                     <p className="text-4xl font-bold">{t("footers")}</p>

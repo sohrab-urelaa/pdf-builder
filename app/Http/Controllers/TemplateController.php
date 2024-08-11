@@ -16,12 +16,12 @@ class TemplateController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $current_user=auth()->user();
-            $current_user_id=$current_user["id"];
+            $current_user = auth()->user();
+            $current_user_id = $current_user["id"];
             $pdf_templates = PdfTemplate::where('user_id', $current_user_id)
-                            ->with("owner")
-                            ->select('user_id', 'id',"created_at",'updated_at',"description","title")
-                            ->get();
+                ->with("owner")
+                ->select('user_id', 'id', "created_at", 'updated_at', "description", "title")
+                ->get();
             return Inertia::render('Dashboard', [
                 'templates' => $pdf_templates,
                 'user' => $current_user
@@ -29,20 +29,20 @@ class TemplateController extends Controller
         }
 
         return response()->json(['message' => 'Not authenticated'], 401);
-    } 
+    }
     public function getSubmissions()
     {
         if (auth()->check()) {
-            $current_user=auth()->user();
+            $current_user = auth()->user();
             $pdf_templates = SubmittedTemplate::with([
-                                'parent_template' => function($query) {
-                                    $query->select('created_at', 'description', 'title',"user_id","id");
-                                },
-                                'owner' => function($query) {
-                                    $query->select('email', 'name', 'role',"id");
-                                }
-                            ])
-                        ->get();
+                'parent_template' => function ($query) {
+                    $query->select('created_at', 'description', 'title', "user_id", "id");
+                },
+                'owner' => function ($query) {
+                    $query->select('email', 'name', 'role', "id");
+                }
+            ])
+                ->get();
             return Inertia::render('Submissions', [
                 'templates' => $pdf_templates,
                 'user' => $current_user
@@ -54,7 +54,7 @@ class TemplateController extends Controller
     public function getQrScannerPage()
     {
         if (auth()->check()) {
-            $current_user=auth()->user();
+            $current_user = auth()->user();
             return Inertia::render('QRSubmitter', [
                 'user' => $current_user
             ]);
@@ -67,25 +67,25 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         try {
-           $request->validate([
-                "description"=>"required",
-                "templated_pdf_link"=>"required",
-                "title"=>"required",
+            $request->validate([
+                "description" => "required",
+                "templated_pdf_link" => "required",
+                "title" => "required",
             ]);
-            $current_user=auth()->user();
-            $current_user_id=$current_user["id"];
-            $bodyContent =json_decode($request->getContent(), true);
-            $new_pdf= [
-                    'user_id'=>$current_user_id,
-                    "template_json"=>$bodyContent["template_json"],
-                    "templated_pdf_link"=>$bodyContent["templated_pdf_link"],
-                    "title"=>$bodyContent["title"],
-                    "description"=>$bodyContent["description"],
+            $current_user = auth()->user();
+            $current_user_id = $current_user["id"];
+            $bodyContent = json_decode($request->getContent(), true);
+            $new_pdf = [
+                'user_id' => $current_user_id,
+                "template_json" => $bodyContent["template_json"],
+                "templated_pdf_link" => $bodyContent["templated_pdf_link"],
+                "title" => $bodyContent["title"],
+                "description" => $bodyContent["description"],
             ];
-            $created_template=PdfTemplate::create($new_pdf);
-             $current_user=auth()->user();
-             
-            return Inertia::render('TemplateBuilder', ["user"=>$current_user,"template"=>$created_template]);
+            $created_template = PdfTemplate::create($new_pdf);
+            $current_user = auth()->user();
+
+            return Inertia::render('TemplateBuilder', ["user" => $current_user, "template" => $created_template]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return to_route(
                 'template.index',
@@ -94,52 +94,52 @@ class TemplateController extends Controller
                 ]
             );
         }
-    } 
+    }
 
-    public function update(Request $request,$id)
-        {
-            try {
-                $request->validate([
-                    "templated_pdf_link" => "required",
-                    "title" => "required",
-                ]);
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                "templated_pdf_link" => "required",
+                "title" => "required",
+            ]);
 
-                $current_user = auth()->user();
-                $bodyContent = json_decode($request->getContent(), true);
-                // $id=$bodyContent["id"];
-                // Find the existing PDF template by ID
-                $pdfTemplate = PdfTemplate::find($id);
+            $current_user = auth()->user();
+            $bodyContent = json_decode($request->getContent(), true);
+            // $id=$bodyContent["id"];
+            // Find the existing PDF template by ID
+            $pdfTemplate = PdfTemplate::find($id);
 
-                // Ensure the current user is authorized to update the template
-                // if ($pdfTemplate->user_id !== $current_user->id) {
-                //     return response()->json(['message' => 'Unauthorized'], 403);
-                // }
+            // Ensure the current user is authorized to update the template
+            // if ($pdfTemplate->user_id !== $current_user->id) {
+            //     return response()->json(['message' => 'Unauthorized'], 403);
+            // }
 
-                // Update the template details
-                $pdfTemplate->template_json = $bodyContent["template_json"];
-                $pdfTemplate->templated_pdf_link = $bodyContent["templated_pdf_link"];
-                $pdfTemplate->title = $bodyContent["title"];
-                $pdfTemplate->description = $bodyContent["description"]?? $pdfTemplate["description"];
+            // Update the template details
+            $pdfTemplate->template_json = $bodyContent["template_json"];
+            $pdfTemplate->templated_pdf_link = $bodyContent["templated_pdf_link"];
+            $pdfTemplate->title = $bodyContent["title"];
+            $pdfTemplate->description = $bodyContent["description"] ?? $pdfTemplate["description"];
 
-                // Save the updated template
-                $pdfTemplate->save();
+            // Save the updated template
+            $pdfTemplate->save();
             return to_route('template.index');
-         } catch (\Illuminate\Validation\ValidationException $e) {
-                 Log::info("Data",["Error"=>$e]);
-                 return response()->json(['message' => 'An error occurred','error'=>$e,"body"=>json_decode($request->getContent(), true)], 500);
-            } catch (\Exception $e) {
-                 Log::info("Data",["Error"=>$e]);
-                return response()->json(['message' => 'An error occurred'], 500);
-            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::info("Data", ["Error" => $e]);
+            return response()->json(['message' => 'An error occurred', 'error' => $e, "body" => json_decode($request->getContent(), true)], 500);
+        } catch (\Exception $e) {
+            Log::info("Data", ["Error" => $e]);
+            return response()->json(['message' => 'An error occurred'], 500);
         }
+    }
 
 
- public function getTemplate(Request $request,$templateId)
+    public function getTemplate(Request $request, $templateId)
     {
         try {
-            $template=PdfTemplate::find($templateId);
-             $current_user=auth()->user();
-            return Inertia::render('TemplateFillup', ["user"=>$current_user,"template"=>$template]);
+            $template = PdfTemplate::find($templateId);
+            $current_user = auth()->user();
+            return Inertia::render('TemplateFillup', ["user" => $current_user, "template" => $template]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return to_route(
                 'template.index',
@@ -150,16 +150,22 @@ class TemplateController extends Controller
         }
     }
 
- public function getSubmittedTemplates(Request $request,$templateId)
+    public function getSubmittedTemplates(Request $request, $templateId)
     {
         try {
-             $template=PdfTemplate::find($templateId);
-            $submitted_template=SubmittedTemplate::where('template_id',$templateId)
-                        ->with("parent_template")
-                        ->with("owner")
-                        ->get();
-             $current_user=auth()->user();
-            return Inertia::render('SubmittedTemplates', ["user"=>$current_user,"submitted_templates"=>$submitted_template,"template"=>$template]);
+            $template = PdfTemplate::find($templateId);
+            $submitted_template = SubmittedTemplate::where('template_id', $templateId)
+                ->with([
+                    'parent_template' => function ($query) {
+                        $query->select('created_at', 'description', 'title', "user_id", "id");
+                    },
+                    'owner' => function ($query) {
+                        $query->select('email', 'name', 'role', "id");
+                    }
+                ])
+                ->get();
+            $current_user = auth()->user();
+            return Inertia::render('SubmittedTemplates', ["user" => $current_user, "submitted_templates" => $submitted_template, "template" => $template]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return to_route(
                 'template.index',
@@ -170,35 +176,35 @@ class TemplateController extends Controller
         }
     }
 
- public function uploadTemplate(Request $request,)
+    public function uploadTemplate(Request $request,)
     {
         try {
-            $current_user=auth()->user();
-            $pdf_file_path=$request->file("file")->store("submittedPdf","public");
+            $current_user = auth()->user();
+            $pdf_file_path = $request->file("file")->store("submittedPdf", "public");
             $template_id = Request::createFromGlobals()->get('template_id');
-            $current_user_id=$current_user["id"];
-            $submitted_user_email=$current_user["email"];
-           
-
-             $full_path=asset('storage/' . $pdf_file_path);
-
-             $template=PdfTemplate::find($template_id);
-             $template_owner=User::find($template["user_id"]);
-            
+            $current_user_id = $current_user["id"];
+            $submitted_user_email = $current_user["email"];
 
 
-             $new_pdf_template= [
-                    'submitted_user_email'=>$submitted_user_email,
-                    "user_id"=>$current_user_id,
-                    "template_id"=>$template_id,
-                    "template_json"=>"",
-                    "templated_pdf_link"=>$full_path,
-                    "owner_id"=>$template["user_id"],
+            $full_path = asset('storage/' . $pdf_file_path);
+
+            $template = PdfTemplate::find($template_id);
+            $template_owner = User::find($template["user_id"]);
+
+
+
+            $new_pdf_template = [
+                'submitted_user_email' => $submitted_user_email,
+                "user_id" => $current_user_id,
+                "template_id" => $template_id,
+                "template_json" => "",
+                "templated_pdf_link" => $full_path,
+                "owner_id" => $template["user_id"],
 
             ];
 
-            $created_template=SubmittedTemplate::create($new_pdf_template);
-           
+            $created_template = SubmittedTemplate::create($new_pdf_template);
+
 
             Mail::to($template_owner["email"])->send(new TemplateSubmitted([
                 'name' => $current_user["name"],
@@ -206,12 +212,14 @@ class TemplateController extends Controller
             ]));
 
 
-            return Inertia::render('Welcome', 
+            return Inertia::render(
+                'Welcome',
                 [
-                    "user"=>$current_user,
-                    "template"=>$template,
-                    "submitted_template"=>$created_template,
-                ]);
+                    "user" => $current_user,
+                    "template" => $template,
+                    "submitted_template" => $created_template,
+                ]
+            );
         } catch (\Illuminate\Validation\ValidationException $e) {
             return to_route(
                 'template.index',
@@ -243,7 +251,7 @@ class TemplateController extends Controller
     // Remove the specified task
     public function destroy($templateId)
     {
-        PdfTemplate::where("id",$templateId)->delete();
+        PdfTemplate::where("id", $templateId)->delete();
         return to_route('template.index', [
             'message' => 'Task deleted successfully'
         ]);

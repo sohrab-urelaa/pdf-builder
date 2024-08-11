@@ -3,39 +3,41 @@ import { appLogoImg, signinImg } from "../../../assets/assets";
 import Dropdown from "../Dropdown";
 import ResponsiveNavLink from "../ResponsiveNavLink";
 import ThemeSwitcher from "../utill/ThemeSwither";
-const navItems = [
-    {
-        id: 1,
-        name: "Home",
-        subModules: false,
-        link: "/",
-    },
-    {
-        id: 2,
-        name: "Services",
-        subModules: true,
-        subOptions: [
-            {
-                id: 1,
-                image: appLogoImg,
-                title: "Audio",
-                description: "Audio service will be provided",
-                link: "/",
-            },
-            {
-                id: 2,
-                image: appLogoImg,
-                title: "Video",
-                description: "Video Service also will be provided",
-                link: "/",
-            },
-        ],
-    },
-];
+import { useState } from "react";
+// const navItems = [
+//     {
+//         id: 1,
+//         name: "Home",
+//         subModules: false,
+//         link: "/",
+//     },
+//     {
+//         id: 2,
+//         name: "Services",
+//         subModules: true,
+//         subOptions: [
+//             {
+//                 id: 1,
+//                 image: appLogoImg,
+//                 title: "Audio",
+//                 description: "Audio service will be provided",
+//                 link: "/",
+//             },
+//             {
+//                 id: 2,
+//                 image: appLogoImg,
+//                 title: "Video",
+//                 description: "Video Service also will be provided",
+//                 link: "/",
+//             },
+//         ],
+//     },
+// ];
 
 const PublicNavbar = ({ user, enableMenuButton = false }) => {
     const logoLink = window.SITE_SETTINGS?.site_logo;
     const siteName = window.SITE_SETTINGS?.site_name;
+    const navItems = window.HEADER_LIST || [];
     return (
         <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-2 md:px-4">
             <div className="max-w-6xl m-auto flex justify-between items-center">
@@ -74,7 +76,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                     </div>
                 </div>
                 <div className="text-center items-center justify-center space-x-4 hidden lg:flex w-1/3">
-                    {navItems.map((navItem) => {
+                    {navItems?.map((navItem) => {
                         if (navItem?.subModules) {
                             return (
                                 <div
@@ -112,7 +114,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                             className="z-[1] menu p-2 shadow bg-base-100 rounded-box w-96"
                                         >
                                             <li className="w-full">
-                                                {navItem.subOptions.map(
+                                                {navItem?.sub_options?.map(
                                                     (subNav) => (
                                                         <Link
                                                             className="text-normal"
@@ -153,7 +155,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                         className="font-medium"
                                         href={navItem?.link}
                                     >
-                                        Pricing
+                                        {navItem?.name}
                                     </Link>
                                 </div>
                             );

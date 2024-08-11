@@ -10,7 +10,18 @@ export const upgradeMembership = async (bodyData) => {
 export const createCertificate = async (bodyData) => {
     try {
         const data = await axios.post("/settings/certificate", bodyData);
-        return data;
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
+export const updateCertificate = async (id, bodyData) => {
+    try {
+        const data = await axios.post(
+            `/settings/update-certificate/${id}`,
+            bodyData
+        );
+        return data.data;
     } catch (err) {
         return err?.response?.data;
     }
@@ -40,9 +51,9 @@ export const verifyTemplate = async (bodyData) => {
     }
 };
 
-export const getFooters = async () => {
+export const getSiteNavs = async () => {
     try {
-        const res = await axios.get("/footers");
+        const res = await axios.get("/site-navs");
         return res.data;
     } catch (err) {
         return err?.response?.data;

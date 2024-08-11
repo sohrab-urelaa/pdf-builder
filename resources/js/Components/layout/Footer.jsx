@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import ApplicationLogo from "../ApplicationLogo";
 import { useEffect, useState } from "react";
-import { getFooters } from "../../api/userApi";
+import { getSiteNavs } from "../../api/userApi";
 
 const footerItems = [
     {
@@ -137,15 +137,9 @@ const footerItems = [
 ];
 
 const Footer = () => {
-    const [footers, setFooters] = useState([]);
-    useEffect(() => {
-        const fetchFooters = async () => {
-            const res = await getFooters();
-            setFooters(res || []);
-        };
-        fetchFooters();
-    }, []);
     const siteName = window.SITE_SETTINGS?.site_name;
+
+    const footers = window.FOOTER_LIST || [];
 
     return (
         <footer className="px-4 mx-0 md:mx-2 md:px-2 mt-10">
@@ -172,7 +166,7 @@ const Footer = () => {
                 </div>
                 <div className="flex gap-6 flex-col md:flex-row order-1 md:order-2 flex-grow">
                     <div className="lg:flex  grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                        {footers.map((footerItem) => (
+                        {footers?.map((footerItem) => (
                             <div key={footerItem.id}>
                                 <p className="text-sm md:text-xs font-extralilightght uppercase mb-4 text-neutral-400">
                                     {footerItem.title}

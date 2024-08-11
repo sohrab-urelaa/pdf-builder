@@ -22,6 +22,7 @@ Route::middleware(['auth','admin'])->group(function () {
     //subscriptions model
     Route::post('/settings/subscriptions', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe');
     Route::post('/settings/certificate', [SSlCertificateController::class, 'store'])->name('certificate.upload');
+    Route::post('/settings/update-certificate/{id}', [SSlCertificateController::class, 'update'])->name('certificate.update');
     Route::post('/settings/verify-pdf', [SubmitTemplateController::class, 'verifyTemplate'])->name('pdf.verify');
     Route::delete('/settings/certificate/{id}', [SSlCertificateController::class, 'deleteCertificate'])->name('certificate.delete');
 

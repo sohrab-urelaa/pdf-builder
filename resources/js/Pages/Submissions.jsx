@@ -7,7 +7,6 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineDownload } from "react-icons/ai";
 import formatDateString from "../lib/date-formate";
 import { MdDeleteOutline } from "react-icons/md";
-import rawPdf from "./sohrab2.pdf";
 import { useTranslation } from "react-i18next";
 export default function Dashboard({ auth, templates }) {
     const { t } = useTranslation();
@@ -15,7 +14,7 @@ export default function Dashboard({ auth, templates }) {
         try {
             const name = `${submitted_template?.parent_template?.title}-${submitted_template?.submitted_user_name}`;
             // Fetch the PDF file
-            const response = await fetch(rawPdf);
+            const response = await fetch(submitted_template.templated_pdf_link);
 
             if (!response.ok) {
                 throw new Error("Network response was not ok");

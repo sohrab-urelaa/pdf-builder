@@ -25,6 +25,13 @@ const navItems = [
                 link: "/admin/site-settings/general",
             },
             {
+                id: 3,
+                image: appLogoImg,
+                title: "Header",
+                description: "",
+                link: "/admin/site-settings/header",
+            },
+            {
                 id: 1,
                 image: appLogoImg,
                 title: "Footer",
@@ -110,6 +117,12 @@ const navItems = [
         name: "Language",
         subModules: false,
         link: "/admin/language",
+    },
+    {
+        id: 14,
+        name: "Certificates",
+        subModules: false,
+        link: "/admin/certificates",
     },
     // {
     //     id: 2,
