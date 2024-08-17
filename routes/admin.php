@@ -2,10 +2,15 @@
 
 use App\Http\Controllers\AdminViewController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\FontController;
 use App\Http\Controllers\GeneralSettingsController;
 use App\Http\Controllers\HeaderItemController;
+use App\Http\Controllers\MyFatoorahAdminController;
+use App\Http\Controllers\PaymentGetwayForCountriesController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\SupportedLanguageController;
+use App\Models\PaymentGetwaysForCountries;
 use Illuminate\Support\Facades\Route;
 
 //admin view routes
@@ -24,6 +29,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/language/', [AdminViewController::class, 'getMultiLangPage'])->name('admin.language');
     Route::get('/admin/language/create/{id?}', [AdminViewController::class, 'getCreateLanguagePage'])->name('admin.language.create');
     Route::get('/admin/certificates', [AdminViewController::class, 'getCertificatePage'])->name('admin.certificate');
+    Route::get('/admin/site-settings/font', [AdminViewController::class, 'getFontPage'])->name('admin.font');
+
+    Route::get('/admin/country', [AdminViewController::class, 'getCountryPage'])->name('admin.countryPage');
+    Route::get('/admin/payment-getway/my-fatoorah', [AdminViewController::class, 'getMyFatoorahPage'])->name('admin.myFatoorah');
+    Route::get('/admin/payment-getway/home', [AdminViewController::class, 'getPaymentGetwayPage'])->name('admin.paymentGetwayPage');
 });
 //admin post routes
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -60,4 +70,26 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/sub-header', [HeaderItemController::class, 'storeSubHeader'])->name('subHeader.create');
     Route::post('/admin/sub-header-update/{id}', [HeaderItemController::class, 'editSubHeader'])->name('subHeader.update');
     Route::delete('/admin/sub-header/{id}', [HeaderItemController::class, 'deleteSubHeader'])->name('subHeader.destroy');
+
+
+    //<================FONT RELATED APIS=======================>
+    Route::post('/admin/font', [FontController::class, 'store'])->name('font.create');
+    Route::post('/admin/font-update/{id}', [FontController::class, 'update'])->name('font.update');
+    Route::delete('/admin/font/{id}', [FontController::class, 'delete'])->name('font.destroy');
+
+    //<================My Fatoorah Crud api=======================>
+    Route::post('/admin/my-fatoorah', [MyFatoorahAdminController::class, 'store'])->name('myFatoorah.create');
+    Route::post('/admin/my-fatoorah-update/{id}', [MyFatoorahAdminController::class, 'update'])->name('myFatoorah.update');
+    Route::delete('/admin/my-fatoorah/{id}', [MyFatoorahAdminController::class, 'delete'])->name('myFatoorah.destroy');
+
+    //<================My Fatoorah Crud api=======================>
+    Route::get('/admin/country-json', [CountryController::class, 'index'])->name('country.index');
+    Route::post('/admin/country', [CountryController::class, 'store'])->name('country.create');
+    Route::post('/admin/country-update/{id}', [CountryController::class, 'update'])->name('country.update');
+    Route::delete('/admin/country/{id}', [CountryController::class, 'delete'])->name('country.destroy');
+
+    //<================Payment Getway For Countries api=======================>
+    Route::post('/admin/payment-getway', [PaymentGetwayForCountriesController::class, 'store'])->name('paymentGetway.create');
+    Route::post('/admin/payment-getway-update/{id}', [PaymentGetwayForCountriesController::class, 'update'])->name('paymentGetway.update');
+    Route::delete('/admin/payment-getway/{id}', [PaymentGetwayForCountriesController::class, 'delete'])->name('paymentGetway.destroy');
 });

@@ -4,8 +4,10 @@ import ApplicationLogo from "../Components/ApplicationLogo";
 import AdminNavbar from "../Components/admin/AdminNavbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IoIosArrowDown } from "react-icons/io";
+import { useState } from "react";
 
-const navItems = [
+const navItemList = [
     {
         id: 10,
         name: "Home",
@@ -37,6 +39,13 @@ const navItems = [
                 title: "Footer",
                 description: "",
                 link: "/admin/site-settings/footer",
+            },
+            {
+                id: 4,
+                image: appLogoImg,
+                title: "Fonts",
+                description: "",
+                link: "/admin/site-settings/font",
             },
         ],
     },
@@ -124,6 +133,29 @@ const navItems = [
         subModules: false,
         link: "/admin/certificates",
     },
+    {
+        id: 15,
+        name: "Payment Getway",
+        subModules: true,
+        subOptions: [
+            {
+                id: 150,
+                title: "Payment Getway By Countries",
+                link: "/admin/payment-getway/home",
+            },
+            {
+                id: 151,
+                title: "My Fatoorah",
+                link: "/admin/payment-getway/my-fatoorah",
+            },
+        ],
+    },
+    {
+        id: 16,
+        name: "Country",
+        subModules: false,
+        link: "/admin/country",
+    },
     // {
     //     id: 2,
     //     name: "Services",
@@ -148,11 +180,27 @@ const navItems = [
 ];
 
 const AdminLayout = ({ children, user, title }) => {
+    const [navItems, setNavItems] = useState(navItemList);
+
+    const handleNavExpand = (navItemId) => {
+        setNavItems((prev) => {
+            const updatedNav = prev.map((item) => {
+                if (item.id === navItemId) {
+                    return {
+                        ...item,
+                        expanded: !item?.expanded,
+                    };
+                }
+                return item;
+            });
+            return updatedNav;
+        });
+    };
     return (
         <>
             <AdminNavbar user={user} title={title} />
 
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-3">
                 <div className="drawer lg:drawer-open">
                     <input
                         id="my-drawer-2"
@@ -162,22 +210,37 @@ const AdminLayout = ({ children, user, title }) => {
                     <div className="drawer-content bg-base-100 shadow">
                         <div className="p-4">{children}</div>
                     </div>
-                    <div className="drawer-side">
+                    <div className="drawer-side mr-3">
                         <label
                             htmlFor="my-drawer-2"
                             aria-label="close sidebar"
                             className="drawer-overlay"
                         ></label>
-                        <ul className="menu bg-base-200 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
+                        <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
                             <li>
                                 {navItems.map((navItem) => {
                                     if (navItem.subModules) {
                                         return (
                                             <>
-                                                <summary className="text-lg">
-                                                    {navItem?.name}
+                                                <summary
+                                                    onClick={() =>
+                                                        handleNavExpand(
+                                                            navItem.id
+                                                        )
+                                                    }
+                                                    className="text-lg w-full flex items-center justify-between"
+                                                >
+                                                    <div>{navItem?.name}</div>
+                                                    <IoIosArrowDown />
                                                 </summary>
-                                                <ul>
+                                                <ul
+                                                    style={{
+                                                        display:
+                                                            navItem?.expanded
+                                                                ? "block"
+                                                                : "none",
+                                                    }}
+                                                >
                                                     {navItem?.subOptions?.map(
                                                         (subItem) => (
                                                             <li>

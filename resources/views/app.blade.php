@@ -17,10 +17,23 @@
 @inertiaHead
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-base-200">
     @inertia
 
     <script>
+        //load the fonts
+
+        const loadDynamicFont = (font) => {
+            const fontLink = window?.origin + "/storage/" + font?.font_family_file;
+            const fontName = font?.font_name;
+            const fontFace = new FontFace(fontName, `url(${fontLink})`);
+            fontFace.load().then(function(loadedFont) {
+                document.fonts.add(loadedFont);
+                document.body.style.fontFamily = fontName;
+            });
+        }
+
+
         const fetchFooters = async () => {
             fetch("/site-navs")
                 .then(res => res.json())
@@ -47,6 +60,15 @@
                 if (site_settings.theme) {
                     // document.documentElement.setAttribute('data-theme', site_settings.theme);
                 }
+
+                //check font is setted from admin panel
+
+                if (data?.font) {
+                    loadDynamicFont(data?.font)
+                }
+
+
+
             });
         const selectedTheme = localStorage.getItem("theme");
         const currentTheme = selectedTheme ? selectedTheme : "mindcatchlight";

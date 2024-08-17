@@ -2,7 +2,7 @@
     <div :class="withStickySubmitters ? 'sticky top-0 z-[1]' : ''">
         <FieldSubmitter
             :model-value="selectedSubmitter.uuid"
-            class="roles-dropdown w-full rounded-lg"
+            class="roles-dropdown w-full rounded-lg hidden"
             :style="withStickySubmitters ? {} : {}"
             :submitters="submitters"
             :menu-style="{

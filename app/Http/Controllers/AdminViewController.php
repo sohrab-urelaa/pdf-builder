@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Mail\TemplateSubmitted;
 use App\Models\CompanyModel;
+use App\Models\Country;
+use App\Models\Font;
 use App\Models\FooterModel;
 use App\Models\FooterSubNavModel;
 use App\Models\GeneralSetting;
 use App\Models\HeaderItem;
+use App\Models\MyFatoorah;
+use App\Models\PaymentGetwaysForCountries;
 use App\Models\PdfTemplate;
 use App\Models\PlansModel;
 use App\Models\SslCertificateModal;
@@ -239,6 +243,54 @@ class AdminViewController extends Controller
         $data = HeaderItem::get();
         return Inertia::render(
             'Admin/SiteSettings/AdminHeaderSetings',
+            [
+                "user" => $current_user,
+                "data" => $data
+            ]
+        );
+    }
+    function getFontPage()
+    {
+        $current_user = auth()->user();
+        $font = Font::paginate();
+        return Inertia::render(
+            'Admin/SiteSettings/AdminFontSettings',
+            [
+                "user" => $current_user,
+                "data" => $font
+            ]
+        );
+    }
+    function getMyFatoorahPage()
+    {
+        $current_user = auth()->user();
+        $font = MyFatoorah::paginate();
+        return Inertia::render(
+            'Admin/PaymentGetway/AdminMyFatoorahSettings',
+            [
+                "user" => $current_user,
+                "data" => $font
+            ]
+        );
+    }
+    function getCountryPage()
+    {
+        $current_user = auth()->user();
+        $data = Country::paginate();
+        return Inertia::render(
+            'Admin/AdminCountrySettings',
+            [
+                "user" => $current_user,
+                "data" => $data
+            ]
+        );
+    }
+    function getPaymentGetwayPage()
+    {
+        $current_user = auth()->user();
+        $data = PaymentGetwaysForCountries::paginate();
+        return Inertia::render(
+            'Admin/PaymentGetway/AdminPaymentGetway',
             [
                 "user" => $current_user,
                 "data" => $data

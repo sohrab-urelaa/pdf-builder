@@ -3,6 +3,7 @@
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportedLanguageController;
+use App\Models\Font;
 use App\Models\FooterModel;
 use App\Models\GeneralSetting;
 use App\Models\HeaderItem;
@@ -41,9 +42,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/site-settings', function () {
     $supported_languages = SupportedLanguage::all();
     $settings = GeneralSetting::first();
+    $font = Font::where("is_active", 1)->first();
     return response()->json([
         "settings" => $settings,
-        "languages" => $supported_languages
+        "languages" => $supported_languages,
+        "font" => $font
     ]);
 });
 Route::get('/site-navs', function () {

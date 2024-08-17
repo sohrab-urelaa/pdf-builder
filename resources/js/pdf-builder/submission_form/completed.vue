@@ -276,7 +276,7 @@ export default {
 
                     // const centerY = absY + absHeight / 2 - textHeight / 2;
 
-                    fieldPage.drawText(fieldValue?.toString(), {
+                    fieldPage.drawText(fieldValue?.toString() || "", {
                         x: absX,
                         y: absY,
                         scale: 2.5,

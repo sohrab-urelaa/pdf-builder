@@ -6,6 +6,7 @@ import ApplicationLogo from "../ApplicationLogo";
 import { MdOutlineMenu } from "react-icons/md";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import ThemeSwitcher from "../utill/ThemeSwither";
 
 const AdminNavbar = ({ user, title }) => {
     const [selectedLang, setSelectedLang] = useState(
@@ -52,6 +53,7 @@ const AdminNavbar = ({ user, title }) => {
                             isOpenLangDropdown ? " dropdown-open" : ""
                         }`}
                     >
+                        <ThemeSwitcher />
                         <div
                             onClick={() =>
                                 setIsOpenLangDropDown((prev) => !prev)
@@ -62,6 +64,7 @@ const AdminNavbar = ({ user, title }) => {
                         >
                             {selectedLang}
                         </div>
+
                         {isOpenLangDropdown && (
                             <ul
                                 tabIndex={0}

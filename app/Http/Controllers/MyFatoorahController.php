@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyModel;
+use App\Models\MyFatoorah as MyFatoorahModel;
 use App\Models\SubscriptionModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,29 +17,42 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
-class MyFatoorahController extends Controller {
+class MyFatoorahController extends Controller
+{
 
     /**
      * @var array
      */
     public $mfConfig = [];
-    public function __construct() {
-        $this->mfConfig = [
-            'apiKey'      => config('myfatoorah.api_key'),
-            'isTest'      => config('myfatoorah.test_mode'),
-            'countryCode' => config('myfatoorah.country_iso'),
-        ];
+    public function __construct()
+    {
+        $fatoorah_config = MyFatoorahModel::where("is_active", 1)->first();
+
+        if ($fatoorah_config) {
+            $this->mfConfig = [
+                'apiKey'      => $fatoorah_config['api_key'],
+                'isTest'      => $fatoorah_config['test_mode'] === 1 ? true : false,
+                'countryCode' => config('myfatoorah.country_iso'),
+            ];
+        } else {
+            $this->mfConfig = [
+                'apiKey'      => config('myfatoorah.api_key'),
+                'isTest'      => config('myfatoorah.test_mode'),
+                'countryCode' => config('myfatoorah.country_iso'),
+            ];
+        }
     }
 
-    public function index() {
+    public function index()
+    {
         try {
             //For example: pmid=0 for MyFatoorah invoice or pmid=1 for Knet in test mode
             $paymentId = request('pmid') ?: 0;
             $sessionId = request('sid') ?: null;
             $orderId  = request('oid');
 
-            if(!$orderId && !$sessionId && !$paymentId){
-              return $this->returnIntoPaymentErrorPage($orderId,"Invalid payment initiated");
+            if (!$orderId && !$sessionId && !$paymentId) {
+                return $this->returnIntoPaymentErrorPage($orderId, "Invalid payment initiated");
             }
 
             $curlData = $this->getPayLoadData($orderId);
@@ -52,19 +66,20 @@ class MyFatoorahController extends Controller {
             return response()->json(['IsSuccess' => 'false', 'Message' => $exMessage]);
         }
     }
-    private function getPayLoadData($orderId = null) {
+    private function getPayLoadData($orderId = null)
+    {
         $callbackURL = route('myfatoorah.callback');
         $order = $this->getSubscriptionData($orderId);
 
-        if(!$order){
-            return $this->returnIntoPaymentErrorPage($orderId,"Order Not Found");
+        if (!$order) {
+            return $this->returnIntoPaymentErrorPage($orderId, "Order Not Found");
         }
 
 
-        $userName=$order["user"]["name"];
-        $amount=$order["amount"];
-        $currency=$order["currency"] ?: "KWD";
-        $customerEmail=$order["user"]["email"];
+        $userName = $order["user"]["name"];
+        $amount = $order["amount"];
+        $currency = $order["currency"] ?: "KWD";
+        $customerEmail = $order["user"]["email"];
         return [
             'CustomerName'       => $userName,
             'InvoiceValue'       => $amount,
@@ -79,29 +94,31 @@ class MyFatoorahController extends Controller {
             'SourceInfo'         => 'Laravel ' . app()::VERSION . ' - MyFatoorah Package ' . MYFATOORAH_LARAVEL_PACKAGE_VERSION
         ];
     }
-    private function getSubscriptionData($id){
-        $subscription=SubscriptionModel::with("user")->find($id);
-       return $subscription;
+    private function getSubscriptionData($id)
+    {
+        $subscription = SubscriptionModel::with("user")->find($id);
+        return $subscription;
     }
 
-    public function checkout() {
+    public function checkout()
+    {
         try {
             //You can get the data using the order object in your system
             $orderId = request('oid');
-            $subscription=$this->getSubscriptionData($orderId);
-            if(!$subscription){
-                return $this->returnIntoPaymentErrorPage($orderId,"Invalid Order passed");
+            $subscription = $this->getSubscriptionData($orderId);
+            if (!$subscription) {
+                return $this->returnIntoPaymentErrorPage($orderId, "Invalid Order passed");
             }
 
-            if($subscription["payment_status"]!=="pending"){
-                return $this->returnIntoPaymentErrorPage($orderId,"Order already used");
+            if ($subscription["payment_status"] !== "pending") {
+                return $this->returnIntoPaymentErrorPage($orderId, "Order already used");
             }
 
             //You can replace this variable with customer Id in your system
             $customerId = request($subscription["user"]["id"]);
 
-            $totalAmount=$subscription["amount"];
-            $currency=$subscription["currency"]  ?: "KWD";
+            $totalAmount = $subscription["amount"];
+            $currency = $subscription["currency"]  ?: "KWD";
 
             //You can use the user defined field if you want to save card
             $userDefinedField = config('myfatoorah.save_card') && $customerId ? "CK-$customerId" : '';
@@ -124,42 +141,44 @@ class MyFatoorahController extends Controller {
             $countries = MyFatoorah::getMFCountries();
             $jsDomain  = ($isTest) ? $countries[$vcCode]['testPortal'] : $countries[$vcCode]['portal'];
 
-            return view('myfatoorah.checkout', compact('mfSession', 'paymentMethods', 'jsDomain', 'userDefinedField','orderId'));
+            return view('myfatoorah.checkout', compact('mfSession', 'paymentMethods', 'jsDomain', 'userDefinedField', 'orderId'));
         } catch (Exception $ex) {
             $exMessage = __('myfatoorah.' . $ex->getMessage());
             return view('myfatoorah.error', compact('exMessage'));
         }
     }
-    public function callback() {
-        $is_subscription_done=false;
+    public function callback()
+    {
+        $is_subscription_done = false;
         $paymentId = request('paymentId');
+        $order_id = "";
         try {
 
             $mfObj = new MyFatoorahPaymentStatus($this->mfConfig);
             $data  = $mfObj->getPaymentStatus($paymentId, 'PaymentId');
-            $invoice_status=$data->InvoiceStatus;
-            $invoice_error=$data->InvoiceError;
-            $invoice_id=$data->InvoiceId;
-            $order_id=$data->CustomerReference;
+            $invoice_status = $data->InvoiceStatus;
+            $invoice_error = $data->InvoiceError;
+            $invoice_id = $data->InvoiceId;
+            $order_id = $data->CustomerReference;
 
-            $payment_method=$data->InvoiceTransactions[0]->PaymentGateway;
+            $payment_method = $data->InvoiceTransactions[0]->PaymentGateway;
 
-            $subscription=$this->getSubscriptionData($order_id);
+            $subscription = $this->getSubscriptionData($order_id);
             $payment_message = $this->getPaymentStatusMessage($invoice_status, $invoice_error);
 
-            $message="";
+            $message = "";
 
-            $user=$subscription["user"];
+            $user = $subscription["user"];
             //update the subscriptions
 
-            if($subscription["payment_status"]==="pending" && $invoice_status==="Paid"){
-                CompanyModel::where('ownerId',$user["id"] )->update(['planId' => $subscription['plan_id']]);
-                $is_subscription_done=true;
+            if ($subscription["payment_status"] === "pending" && $invoice_status === "Paid") {
+                CompanyModel::where('ownerId', $user["id"])->update(['planId' => $subscription['plan_id']]);
+                $is_subscription_done = true;
             }
-            if($is_subscription_done){
-                SubscriptionModel::where("user_id",$user["id"])->update(["is_active"=>false]);
+            if ($is_subscription_done) {
+                SubscriptionModel::where("user_id", $user["id"])->update(["is_active" => false]);
             }
-             SubscriptionModel::where('id', $order_id)->update([
+            SubscriptionModel::where('id', $order_id)->update([
                 'payment_status' => $invoice_status,
                 'is_active' => $is_subscription_done,
                 'invoice_error' => $invoice_error,
@@ -168,69 +187,73 @@ class MyFatoorahController extends Controller {
                 'payment_method' => $payment_method,
             ]);
 
-            
 
-            $subscription=$this->getSubscriptionData($order_id);
-            if($is_subscription_done){
-                return $this->returnIntoPaymentSuccessPage($order_id,"Subscription completed successfully");
+
+            $subscription = $this->getSubscriptionData($order_id);
+            if ($is_subscription_done) {
+                return $this->returnIntoPaymentSuccessPage($order_id, "Subscription completed successfully");
             }
 
-            return $this->returnIntoPaymentErrorPage($order_id,$payment_message);
-           
-            
+            return $this->returnIntoPaymentErrorPage($order_id, $payment_message);
+
+
             // $response = [
             //      "subscription"=>$subscription,
             //      "message"=>$message,
             // ];
         } catch (Exception $ex) {
             $exMessage = __('myfatoorah.' . $ex->getMessage());
-             SubscriptionModel::where('id', $order_id)->update([
+            SubscriptionModel::where('id', $order_id)->update([
                 'payment_status' => "Failed",
-                'is_active' =>false,
+                'is_active' => false,
                 'invoice_error' => $exMessage,
                 'invoice_id' => "",
                 'payment_message' => "",
-                'payment_method' =>"",
+                'payment_method' => "",
             ]);
-            return $this->returnIntoPaymentErrorPage($order_id,$exMessage);
+            return $this->returnIntoPaymentErrorPage($order_id, $exMessage);
             // $subscription=$this->getSubscriptionData($order_id);
             // $response = [
             //      "subscription"=>$subscription,
             //      "message"=>"Payment failed",
             // ];
-            
+
         }
         // return response()->json($response);
     }
-    private function getPaymentStatusMessage($status, $error) {
-            if ($status == 'Paid') {
-                return 'Invoice is paid.';
-            } else if ($status == 'Failed') {
-                return 'Invoice is not paid due to ' . $error;
-            } else if ($status == 'Expired') {
-                return $error;
-            }
+    private function getPaymentStatusMessage($status, $error)
+    {
+        if ($status == 'Paid') {
+            return 'Invoice is paid.';
+        } else if ($status == 'Failed') {
+            return 'Invoice is not paid due to ' . $error;
+        } else if ($status == 'Expired') {
+            return $error;
         }
-    private function returnIntoPaymentErrorPage($order_id,$message=""){
-        return redirect("/payment-error?oid=".$order_id."&message=".$message);
     }
-    private function returnIntoPaymentSuccessPage($order_id,$message=""){
-        return redirect("/payment-success?oid=".$order_id."&message=".$message);
+    private function returnIntoPaymentErrorPage($order_id, $message = "")
+    {
+        return redirect("/payment-error?oid=" . $order_id . "&message=" . $message);
     }
-   
-   
-   
-        private function getTestMessage($status, $error) {
-            if ($status == 'Paid') {
-                return 'Invoice is paid.';
-            } else if ($status == 'Failed') {
-                return 'Invoice is not paid due to ' . $error;
-            } else if ($status == 'Expired') {
-                return $error;
-            }
-        }
+    private function returnIntoPaymentSuccessPage($order_id, $message = "")
+    {
+        return redirect("/payment-success?oid=" . $order_id . "&message=" . $message);
+    }
 
-//-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+    private function getTestMessage($status, $error)
+    {
+        if ($status == 'Paid') {
+            return 'Invoice is paid.';
+        } else if ($status == 'Failed') {
+            return 'Invoice is not paid due to ' . $error;
+        } else if ($status == 'Expired') {
+            return $error;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Example on how to Display the enabled gateways at your MyFatoorah account to be displayed on the checkout page
@@ -238,14 +261,15 @@ class MyFatoorahController extends Controller {
      * 
      * @return View
      */
-   
- 
-//-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 
     /**
      * Example on how the webhook is working when MyFatoorah try to notify your system about any transaction status update
      */
-    public function webhook(Request $request) {
+    public function webhook(Request $request)
+    {
         try {
             //Validate webhook_secret_key
             $secretKey = config('myfatoorah.webhook_secret_key');
@@ -280,7 +304,8 @@ class MyFatoorahController extends Controller {
             return response()->json(['IsSuccess' => false, 'Message' => $exMessage]);
         }
     }
-     private function changeTransactionStatus($inputData) {
+    private function changeTransactionStatus($inputData)
+    {
         //1. Check if orderId is valid on your system.
         $orderId = $inputData['CustomerReference'];
 

@@ -53,7 +53,7 @@ const UserSettingsLayout = ({ children, user, title }) => {
         <>
             <PublicNavbar user={user} title={title} enableMenuButton={true} />
 
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-3">
                 <div className="drawer lg:drawer-open">
                     <input
                         id="user_settings_drawer"
@@ -69,7 +69,7 @@ const UserSettingsLayout = ({ children, user, title }) => {
                             aria-label="close sidebar"
                             className="drawer-overlay"
                         ></label>
-                        <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
+                        <ul className="mr-3 menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
                             <li>
                                 {navItems.map((navItem) => {
                                     if (navItem.subModules) {
