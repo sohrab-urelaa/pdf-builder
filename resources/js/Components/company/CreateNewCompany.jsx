@@ -7,16 +7,26 @@ import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { Select } from "../Select";
 import { useTranslation } from "react-i18next";
+import { createNewCompany, editCompany } from "../../api/companyApi";
+import { toast } from "react-toastify";
 
-const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
+const initialData = {
+    companyName: "",
+    description: "",
+    planId: "",
+};
+const CreateNewCompany = ({
+    open,
+    setOpen,
+    edit = false,
+    company = {},
+    onSuccess,
+}) => {
     const [plans, setPlans] = useState([]);
     const { t } = useTranslation();
-    const { data, setData, post, processing, errors, reset, put } = useForm({
-        companyName: "",
-        description: "",
-        planId: "",
-    });
-
+    const [data, setData] = useState(initialData);
+    const [errors, setErrors] = useState(initialData);
+    const [processing, setProcessing] = useState(false);
     useEffect(() => {
         if (edit && company) {
             setData({
@@ -36,33 +46,65 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
         fetchPlans();
     }, []);
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
-        if (edit) {
-            router.put(
-                `/admin/company/${company?.id}`,
-                {
-                    ...data,
-                    planId: data.planId?.toString(),
-                },
-                {
-                    onSuccess: (res) => {
-                        if (res?.props?.company?.id) {
-                            setOpen(false);
-                        }
-                    },
-                }
-            );
-        } else {
-            post(route("company.create"), {
-                onSuccess: (res) => {
-                    if (res.props.company) {
-                        setOpen(false);
-                    }
-                },
-            });
+        const newErrors = {};
+
+        if (!data.companyName?.trim()) {
+            newErrors.companyName = `Please enter company name`;
+        }
+
+        if (!data.description?.trim()) {
+            newErrors.description = "Please enter company description";
+        }
+
+        if (!data.planId) {
+            newErrors.planId = "Please choose plan";
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setErrors(initialData);
+        setProcessing(true);
+
+        try {
+            const formData = new FormData();
+            formData.append("companyName", data.companyName);
+            formData.append("description", data.description);
+            formData.append("planId", data.planId);
+            let result;
+            if (edit) {
+                result = await editCompany(company?.id, formData);
+            } else {
+                result = await createNewCompany(formData);
+            }
+            if (result?.errors) {
+                const updatedErrors = {};
+                const newErrors = result.errors;
+                Object.keys(newErrors).forEach((key) => {
+                    updatedErrors[key] = newErrors[key][0];
+                });
+                setErrors(updatedErrors);
+            }
+            if (result?.success) {
+                toast.success(result?.message);
+            } else {
+                toast.error(result?.message);
+            }
+            setErrors(initialData);
+            setData(initialData);
+            setOpen(false);
+            if (onSuccess) {
+                onSuccess();
+            }
+        } catch (err) {
+        } finally {
+            setProcessing(false);
         }
     };
+
     return (
         <Modal
             open={open}
@@ -84,10 +126,18 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                         className="mt-1 block w-full"
                         autoComplete="companyName"
                         isFocused={true}
-                        onChange={(e) => setData("companyName", e.target.value)}
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                companyName: e.target.value,
+                            }))
+                        }
                     />
 
-                    <InputError message={errors.companyName} className="mt-2" />
+                    <InputError
+                        message={errors?.companyName}
+                        className="mt-2"
+                    />
                 </div>
 
                 <div className="mt-4">
@@ -102,9 +152,17 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                         value={data.description}
                         className="mt-1 block w-full"
                         autoComplete="description"
-                        onChange={(e) => setData("description", e.target.value)}
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                description: e.target.value,
+                            }))
+                        }
                     />
-                    <InputError message={errors.description} className="mt-2" />
+                    <InputError
+                        message={errors?.description}
+                        className="mt-2"
+                    />
                 </div>
 
                 <div className="mt-4">
@@ -116,7 +174,10 @@ const CreateNewCompany = ({ open, setOpen, edit = false, company = {} }) => {
                         value={data.planId}
                         className="mt-1 block w-full"
                         onChange={(e) =>
-                            setData("planId", e.target.value?.toString())
+                            setData((prev) => ({
+                                ...prev,
+                                planId: e.target.value?.toString(),
+                            }))
                         }
                     >
                         <option disabled value={""}>

@@ -3,10 +3,14 @@ import AdminLayout from "../../Layouts/AdminLayout";
 import CreateNewPlansModal from "../../Components/plans/CreateNewPlansModal";
 import PlanItem from "../../Components/plans/PlanItem";
 import { useTranslation } from "react-i18next";
+import { router } from "@inertiajs/react";
 
 const AdminPlans = ({ auth, plans }) => {
     const { t } = useTranslation();
     const [createNewPlans, setCreateNewPlans] = useState(false);
+    const handleSuccess = () => {
+        router.reload();
+    };
     return (
         <AdminLayout title={"Plans"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
@@ -29,6 +33,7 @@ const AdminPlans = ({ auth, plans }) => {
             <CreateNewPlansModal
                 open={createNewPlans}
                 setOpen={setCreateNewPlans}
+                onSuccess={handleSuccess}
             />
         </AdminLayout>
     );

@@ -23,3 +23,15 @@ DB_PORT=3306
 DB_DATABASE=php-builder
 DB_USERNAME=root
 DB_PASSWORD=root@244739@Sk
+
+
+
+//blocking item
+
+template_creation_limit
+template_submission_limit_per_template
+user_creation_limit
+can_upload_certificate
+
+
+

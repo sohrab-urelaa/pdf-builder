@@ -115,7 +115,7 @@ const CreateNewHeader = ({
             if (result?.success) {
                 toast.success(result?.message);
             } else {
-                toast.message(result?.message);
+                toast.error(result?.message);
             }
             setErrors(initialData);
             setData(initialData);

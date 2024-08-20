@@ -8,9 +8,9 @@ use Inertia\Inertia;
 
 class PlansController extends Controller
 {
- public function store(Request $request)
+    public function store(Request $request)
     {
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -27,21 +27,23 @@ class PlansController extends Controller
 
         $plan = PlansModel::create($validatedData);
 
-         $plans=PlansModel::get();
-        return Inertia::render('Admin/AdminPlans', ["user"=>$current_user,"plan"=>$plan,"plans"=>$plans]);
-       
+        return response()->json([
+            "success" => true,
+            "message" => "Plan Successfully Created",
+            "data" => $plan,
+        ]);
     }
     public function update(Request $request, $id)
     {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $plan = PlansModel::find($id);
 
         if (!$plan) {
-          return Inertia::render('Admin/AdminPlans', [
-            "user"=>$current_user,
-            "errors"=>"No Plan Found",
-           ]);
+            return response()->json([
+                "success" => false,
+                "message" => "Plan Not Found",
+            ]);
         }
 
         $validatedData = $request->validate([
@@ -55,41 +57,42 @@ class PlansController extends Controller
             'currency_symbol' => 'required|string',
         ]);
 
-         if ($validatedData['isDefault']) {
+        if ($validatedData['isDefault']) {
             PlansModel::where('isDefault', true)->update(['isDefault' => false]);
         }
         $plan->update($validatedData);
-         $plans=PlansModel::get();
-        return Inertia::render('Admin/AdminPlans', ["user"=>$current_user,"plan"=>$plan,"plans"=>$plans]);
+        return response()->json([
+            "success" => true,
+            "message" => "Plan Successfully Updated",
+            "data" => $plan,
+        ]);
     }
 
 
     public function destroy($id)
     {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $plan = PlansModel::find($id);
 
         if (!$plan) {
-           return Inertia::render('Admin/AdminPlans', [
-            "user"=>$current_user,
-            "errors"=>"No Plan Found",
-           ]);
+            return response()->json([
+                "success" => false,
+                "message" => "Plan Not Found",
+            ]);
         }
 
         $plan->delete();
-
-   
-         $plans=PlansModel::get();
-         return Inertia::render('Admin/AdminPlans', ["user"=>$current_user,"plan"=>$plan,"plans"=>$plans,"success"=>true]);
+        return response()->json([
+            "success" => true,
+            "message" => "Plan Successfully Deleted",
+            "data" => $plan,
+        ]);
     }
 
     public function getJSONPlans()
     {
         $plans = PlansModel::get();
-        return response(json_encode($plans),200);
-      }
-
-
-
+        return response(json_encode($plans), 200);
+    }
 }

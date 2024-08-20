@@ -13,7 +13,7 @@ class CompanyController extends Controller
 {
     public function store(Request $request)
     {
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $validatedData = $request->validate([
             'companyName' => 'required|string|max:255',
             'description' => 'required|string',
@@ -21,21 +21,24 @@ class CompanyController extends Controller
             // 'ownerId' => 'required|string',
         ]);
         $company = CompanyModel::create($validatedData);
-        $companies=CompanyModel::with("plan")->get();
-        return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"company"=>$company,"companies"=>$companies]);
-       
+
+        return response()->json([
+            "success" => true,
+            "message" => "Company Successfully Created",
+            "data" => $company,
+        ]);
     }
     public function update(Request $request, $id)
     {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $company = CompanyModel::find($id);
 
         if (!$company) {
-          return Inertia::render('Admin/AdminCompany', [
-            "user"=>$current_user,
-            "errors"=>"No Plan Found",
-           ]);
+            return response()->json([
+                "success" => false,
+                "message" => "Company Not Found",
+            ]);
         }
 
         $validatedData = $request->validate([
@@ -45,42 +48,45 @@ class CompanyController extends Controller
             // 'ownerId' => 'required|string',
         ]);
 
-         $company->update($validatedData);
-         $companies=CompanyModel::with("plan")->get();
+        $company->update($validatedData);
 
-        
-    return redirect()->back()->with('success', 'Plan created successfully!');
-        //  return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"company"=>$company,"companies"=>$companies]);
-       
+        return response()->json([
+            "success" => true,
+            "message" => "Company Successfully Update",
+            "data" => $company,
+        ]);
     }
 
 
     public function destroy($id)
     {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $company = CompanyModel::find($id);
 
         if (!$company) {
-           return Inertia::render('Admin/AdminCompany', [
-            "user"=>$current_user,
-            "errors"=>"No Plan Found",
-           ]);
+            return response()->json([
+                "success" => false,
+                "message" => "Company Not Found",
+            ]);
         }
 
         $company->delete();
-         $companies=CompanyModel::with("plan")->get();
-         return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"company"=>$company,"companies"=>$companies,"success"=>true]);
-       
+
+        return response()->json([
+            "success" => true,
+            "message" => "Company Successfully Deleted",
+            "data" => $company,
+        ]);
     }
 
-      public function createCompanyOwner(Request $request)
-     {
+    public function createCompanyOwner(Request $request)
+    {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'company_id' => ['required'],
         ]);
@@ -89,12 +95,15 @@ class CompanyController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'=>"admin"
+            'role' => "admin"
         ]);
-         CompanyModel::where("id",$request->company_id)->update(["ownerId"=>$user["id"]]);
-         $companies=CompanyModel::with("plan")->get();
-         return redirect("/admin/company");
+        CompanyModel::where("id", $request->company_id)->update(["ownerId" => $user["id"]]);
+        return response()->json([
+            "success" => true,
+            "message" => "Company owner successfully created",
+            "data" => $user,
+        ]);
         //  return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"companies"=>$companies,"success"=>true]);
-       
+
     }
 }

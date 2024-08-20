@@ -4,6 +4,8 @@ import CreateNewCompany from "./CreateNewCompany";
 import { router } from "@inertiajs/react";
 import CreateCompanyOwner from "./CreateCompanyOwner";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { deleteCompany } from "../../api/companyApi";
 
 function getRandomNumber() {
     return Math.floor(Math.random() * 3) + 1;
@@ -27,14 +29,19 @@ const CompanyItem = ({ company }) => {
     const [createCompanyOwnerModal, setCreateCompanyOwnerModal] =
         useState(false);
 
-    const handleDelete = () => {
-        router.delete(`/admin/company/${company?.id}`, {
-            onSuccess: (res) => {
-                if (res?.props?.success) {
-                    setDeleteModal(false);
-                }
-            },
-        });
+    const handleDelete = async () => {
+        try {
+            const result = await deleteCompany(company?.id);
+            setDeleteModal(false);
+            if (result?.success) {
+                toast.success(result?.message);
+                router.reload();
+            } else {
+                toast.error(result?.message);
+            }
+        } catch (err) {
+            toast.error("Something wen't wrong!");
+        }
     };
 
     return (
@@ -91,6 +98,9 @@ const CompanyItem = ({ company }) => {
                 setOpen={setEditCompanyModal}
                 edit={true}
                 company={company}
+                onSuccess={() => {
+                    router.reload();
+                }}
             />
             <ActionModal
                 open={deleteModal}
@@ -104,6 +114,9 @@ const CompanyItem = ({ company }) => {
                 open={createCompanyOwnerModal}
                 setOpen={setCreateCompanyOwnerModal}
                 company={company}
+                onSuccess={() => {
+                    router.reload();
+                }}
             />
         </>
     );

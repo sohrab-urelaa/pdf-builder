@@ -3,20 +3,27 @@ import CreateNewPlansModal from "./CreateNewPlansModal";
 import ActionModal from "../utill/ActionModal";
 import { router } from "@inertiajs/react";
 import { useTranslation } from "react-i18next";
+import { deletePlan } from "../../api/planApi";
+import { toast } from "react-toastify";
 
 const PlanItem = ({ plan }) => {
     const { t } = useTranslation();
     const [editPlanModal, setEditPlanModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
-    const handleDelete = () => {
-        router.delete(`/admin/plans/${plan?.id}`, {
-            onSuccess: (res) => {
-                if (res?.props?.success) {
-                    setDeleteModal(false);
-                }
-            },
-        });
+    const handleDelete = async () => {
+        try {
+            const result = await deletePlan(plan?.id);
+            setDeleteModal(false);
+            if (result?.success) {
+                toast.success(result?.message);
+                router.reload();
+            } else {
+                toast.error(result?.message);
+            }
+        } catch (err) {
+            toast.error("Something wen't wrong!");
+        }
     };
 
     return (
@@ -74,6 +81,9 @@ const PlanItem = ({ plan }) => {
                 setOpen={setEditPlanModal}
                 edit={true}
                 plan={plan}
+                onSuccess={() => {
+                    router.reload();
+                }}
             />
             <ActionModal
                 open={deleteModal}

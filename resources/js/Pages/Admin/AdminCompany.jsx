@@ -9,6 +9,9 @@ import { useTranslation } from "react-i18next";
 const AdminCompany = ({ auth, companies }) => {
     const [createNewCompany, setCreateNewCompany] = useState(false);
     const { t } = useTranslation();
+    const handleSuccess = () => {
+        router.reload();
+    };
     return (
         <AdminLayout title={"Company"} user={auth?.user}>
             <div className="max-w-7xl mx-auto sm:px-2">
@@ -63,6 +66,7 @@ const AdminCompany = ({ auth, companies }) => {
             <CreateNewCompany
                 open={createNewCompany}
                 setOpen={setCreateNewCompany}
+                onSuccess={handleSuccess}
             />
         </AdminLayout>
     );

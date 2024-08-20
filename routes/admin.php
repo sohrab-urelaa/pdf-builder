@@ -39,12 +39,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     //<=================PLAN ROUTES START ===================>
     Route::post('/admin/plans', [PlansController::class, 'store'])->name('plans.create');
-    Route::put('/admin/plans/{id}', [PlansController::class, 'update']);
+    Route::post('/admin/plans-update/{id}', [PlansController::class, 'update']);
     Route::delete('/admin/plans/{id}', [PlansController::class, 'destroy'])->name('plans.destroy');
     Route::get('/admin/plans/json', [PlansController::class, 'getJSONPlans']);
     //<=================COMPANY ROUTES START ===================>
     Route::post('/admin/company', [CompanyController::class, 'store'])->name('company.create');
-    Route::put('/admin/company/{id}', [CompanyController::class, 'update']);
+    Route::post('/admin/company-update/{id}', [CompanyController::class, 'update']);
     Route::delete('/admin/company/{id}', [CompanyController::class, 'destroy'])->name('company.destroy');
     Route::post('/admin/company-owner', [CompanyController::class, 'createCompanyOwner'])->name('company.createOwner');
 
