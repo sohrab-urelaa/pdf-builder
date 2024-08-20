@@ -38,6 +38,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
     const logoLink = window.SITE_SETTINGS?.site_logo;
     const siteName = window.SITE_SETTINGS?.site_name;
     const navItems = window.HEADER_LIST || [];
+    console.log("Headers", navItems);
     return (
         <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-2 md:px-4">
             <div className="max-w-6xl m-auto flex justify-between items-center">
@@ -115,33 +116,40 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                         >
                                             <li className="w-full">
                                                 {navItem?.sub_options?.map(
-                                                    (subNav) => (
-                                                        <Link
-                                                            className="text-normal"
-                                                            rel="noopener noreferrer nofollow"
-                                                            data-role="app-link"
-                                                            href={subNav.link}
-                                                        >
-                                                            <img
-                                                                src={
-                                                                    subNav.image
-                                                                }
-                                                                className="w-[50px] h-[50px]"
-                                                            />
-                                                            <div>
-                                                                <span className="font-bold">
-                                                                    {
-                                                                        subNav.title
+                                                    (subNav) => {
+                                                        const link =
+                                                            subNav?.has_dynamic_html
+                                                                ? `/external-sub/${subNav.id}`
+                                                                : subNav?.link;
+                                                        return (
+                                                            <Link
+                                                                className="text-normal"
+                                                                rel="noopener noreferrer nofollow"
+                                                                data-role="app-link"
+                                                                href={link}
+                                                                target="_blank"
+                                                            >
+                                                                <img
+                                                                    src={
+                                                                        subNav.image
                                                                     }
-                                                                </span>
-                                                                <p className="font-medium">
-                                                                    {
-                                                                        subNav.description
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </Link>
-                                                    )
+                                                                    className="w-[50px] h-[50px]"
+                                                                />
+                                                                <div>
+                                                                    <span className="font-bold">
+                                                                        {
+                                                                            subNav.title
+                                                                        }
+                                                                    </span>
+                                                                    <p className="font-medium">
+                                                                        {
+                                                                            subNav.description
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                            </Link>
+                                                        );
+                                                    }
                                                 )}
                                             </li>
                                         </ul>
@@ -149,12 +157,12 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                 </div>
                             );
                         } else {
+                            const link = navItem?.has_dynamic_html
+                                ? `/external-main/${navItem.id}`
+                                : navItem?.link;
                             return (
                                 <div className="flex">
-                                    <Link
-                                        className="font-medium"
-                                        href={navItem?.link}
-                                    >
+                                    <Link className="font-medium" href={link}>
                                         {navItem?.name}
                                     </Link>
                                 </div>

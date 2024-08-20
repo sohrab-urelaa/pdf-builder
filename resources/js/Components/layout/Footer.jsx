@@ -1,7 +1,5 @@
 import { Link } from "@inertiajs/react";
 import ApplicationLogo from "../ApplicationLogo";
-import { useEffect, useState } from "react";
-import { getSiteNavs } from "../../api/userApi";
 
 const footerItems = [
     {
@@ -141,6 +139,8 @@ const Footer = () => {
 
     const footers = window.FOOTER_LIST || [];
 
+    console.log("Footers", footers);
+
     return (
         <footer className="px-4 mx-0 md:mx-2 md:px-2 mt-10">
             <div className="border-t border-base-300 flex py-8 mx-auto flex-col md:flex-row gap-8 md:gap-16 max-w-6xl">
@@ -169,16 +169,21 @@ const Footer = () => {
                         {footers?.map((footerItem) => (
                             <div key={footerItem.id}>
                                 <p className="text-sm md:text-xs font-extralilightght uppercase mb-4 text-neutral-400">
-                                    {footerItem.title}
+                                    {footerItem.name}
                                 </p>
                                 <ul className="space-y-2 text-neutral-600 text-md md:text-sm">
-                                    {footerItem.sub_navs.map((item) => (
-                                        <li key={item.id}>
-                                            <a href={item.link} target="_blank">
-                                                {item.title}
-                                            </a>
-                                        </li>
-                                    ))}
+                                    {footerItem?.sub_options?.map((item) => {
+                                        const link = item?.has_dynamic_html
+                                            ? `/external-sub/${item.id}`
+                                            : item?.link;
+                                        return (
+                                            <li key={item.id}>
+                                                <a href={link} target="_blank">
+                                                    {item.title}
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </div>
                         ))}

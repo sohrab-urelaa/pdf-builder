@@ -91,15 +91,26 @@ class AdminViewController extends Controller
 
     function getFooterSettingsPage()
     {
+
         $current_user = auth()->user();
-        $footers = FooterModel::with('subNavs')->get();
+        $data = HeaderItem::where('nav_type', 'footer')->get();
         return Inertia::render(
-            'Admin/SiteSettings/FooterSettings',
+            'Admin/SiteSettings/AdminHeaderSetings',
             [
                 "user" => $current_user,
-                "footers" => $footers
+                "data" => $data,
+                "nav_type" => "footer"
             ]
         );
+        // $current_user = auth()->user();
+        // $footers = FooterModel::with('subNavs')->get();
+        // return Inertia::render(
+        //     'Admin/SiteSettings/FooterSettings',
+        //     [
+        //         "user" => $current_user,
+        //         "footers" => $footers
+        //     ]
+        // );
     }
 
     function getGeneralSettingsPage()
@@ -240,12 +251,13 @@ class AdminViewController extends Controller
     function getHeaderPage()
     {
         $current_user = auth()->user();
-        $data = HeaderItem::get();
+        $data = HeaderItem::where('nav_type', 'header')->get();
         return Inertia::render(
             'Admin/SiteSettings/AdminHeaderSetings',
             [
                 "user" => $current_user,
-                "data" => $data
+                "data" => $data,
+                "nav_type" => "header"
             ]
         );
     }

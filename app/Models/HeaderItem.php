@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HeaderItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'subModules', 'link', "public"];
+    protected $fillable = ['name', 'subModules', 'link', "public", "has_dynamic_html", "dynamic_html", 'nav_type'];
     protected $table = 'header_items';
 
     public function subOptions()

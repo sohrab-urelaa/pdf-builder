@@ -7,6 +7,7 @@ use App\Models\Font;
 use App\Models\FooterModel;
 use App\Models\GeneralSetting;
 use App\Models\HeaderItem;
+use App\Models\HeaderSubItem;
 use App\Models\SupportedLanguage;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -49,15 +50,64 @@ Route::get('/site-settings', function () {
         "font" => $font
     ]);
 });
+Route::get('/external-main/{id}', function ($id) {
+    $data = HeaderItem::find($id);
+    return Inertia::render('ExternalPage', [
+        'menuItem' => $data
+    ]);
+});
+Route::get('/external-sub/{id}', function ($id) {
+    $data = HeaderSubItem::find($id);
+    return Inertia::render('ExternalPage', [
+        'menuItem' => $data
+    ]);
+});
 Route::get('/site-navs', function () {
-    $footers = FooterModel::with('subNavs')->get();
+    $footers = [];
     $headers = [];
     $current_user = auth()->user();
 
     if ($current_user) {
-        $headers = HeaderItem::whereIn('public', ['private', 'both'])->with("subOptions")->get();
+        $headers = HeaderItem::select('id', 'name', 'subModules', 'link', 'public', 'has_dynamic_html')
+            ->whereIn('public', ['private', 'both'])
+            ->where('nav_type', 'header')
+            ->with([
+                'subOptions' => function ($query) {
+                    $query->select('id', 'created_at', 'nav_item_id', 'image', "title", "description", 'link', 'has_dynamic_html');
+                },
+            ])
+            ->get();
+        //fetch footers
+        $footers = HeaderItem::select('id', 'name', 'subModules', 'link', 'public', 'has_dynamic_html')
+            ->whereIn('public', ['private', 'both'])
+            ->where('nav_type', 'footer')
+            ->with([
+                'subOptions' => function ($query) {
+                    $query->select('id', 'created_at', 'nav_item_id', 'image', "title", "description", 'link', 'has_dynamic_html');
+                },
+            ])
+            ->get();
     } else {
-        $headers = HeaderItem::whereIn('public', ['public', 'both'])->with("subOptions")->get();
+        $headers = HeaderItem::select('id', 'name', 'subModules', 'link', 'public', 'has_dynamic_html')
+            ->whereIn('public', ['public', 'both'])
+            ->where('nav_type', 'header')
+            ->with([
+                'subOptions' => function ($query) {
+                    $query->select('id', 'created_at', 'nav_item_id', 'image', "title", "description", 'link', 'has_dynamic_html');
+                },
+            ])
+            ->get();
+
+        //fetch footers
+        $footers = HeaderItem::select('id', 'name', 'subModules', 'link', 'public', 'has_dynamic_html')
+            ->whereIn('public', ['private', 'both'])
+            ->where('nav_type', 'footer')
+            ->with([
+                'subOptions' => function ($query) {
+                    $query->select('id', 'created_at', 'nav_item_id', 'image', "title", "description", 'link', 'has_dynamic_html');
+                },
+            ])
+            ->get();
     }
     return response()->json([
         "footers" => $footers,

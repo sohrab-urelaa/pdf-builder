@@ -14,6 +14,8 @@ const initialData = {
     link: "",
     public: "",
     subModules: false,
+    has_dynamic_html: false,
+    dynamic_html: "",
 };
 
 const CreateNewHeader = ({
@@ -22,16 +24,34 @@ const CreateNewHeader = ({
     onSuccess,
     edit = false,
     header = {},
+    nav_type = "header",
 }) => {
+    const isHeader = nav_type === "header";
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [processing, setProcessing] = useState(false);
     const { t } = useTranslation();
 
     useEffect(() => {
+        setData((prev) => {
+            return {
+                ...prev,
+                subModules: nav_type === "footer",
+            };
+        });
+        return () => {
+            setData(initialData);
+        };
+    }, [nav_type]);
+    useEffect(() => {
         if (header?.id) {
             const isSubModuele = header?.subModules === 1;
-            setData({ ...header, subModules: isSubModuele });
+            const hasDynamicHTML = header?.has_dynamic_html === 1;
+            setData((prev) => ({
+                ...header,
+                subModules: isSubModuele,
+                has_dynamic_html: hasDynamicHTML,
+            }));
         }
     }, [header, edit]);
 
@@ -40,7 +60,9 @@ const CreateNewHeader = ({
         const newErrors = {};
 
         if (!data.name?.trim()) {
-            newErrors.name = "Please enter header name";
+            newErrors.name = `Please enter ${
+                isHeader ? "header " : "footer "
+            } name`;
         }
 
         if (!data.public?.trim()) {
@@ -48,7 +70,12 @@ const CreateNewHeader = ({
         }
 
         if (!data.link?.trim() && !data.subModules) {
-            newErrors.link = "Please enter header link";
+            newErrors.link = `Please enter  ${
+                isHeader ? "header " : "footer "
+            } link`;
+        }
+        if (!data.dynamic_html?.trim() && data.dynamic_html) {
+            newErrors.dynamic_html = "Please enter HTML for this route";
         }
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -59,11 +86,18 @@ const CreateNewHeader = ({
         setProcessing(true);
 
         try {
+            const isSubModules = isHeader ? data.subModules.toString() : "true";
             const formData = new FormData();
             formData.append("name", data.name);
             formData.append("link", data.link);
             formData.append("public", data.public);
-            formData.append("subModules", data.subModules.toString());
+            formData.append("subModules", isSubModules);
+            formData.append(
+                "has_dynamic_html",
+                data.has_dynamic_html.toString()
+            );
+            formData.append("dynamic_html", data.dynamic_html);
+            formData.append("nav_type", nav_type);
             let result;
             if (edit) {
                 result = await updateHeader(header?.id, formData);
@@ -92,12 +126,22 @@ const CreateNewHeader = ({
             setProcessing(false);
         }
     };
-
     return (
         <Modal
+            onClose={() => {
+                setData(initialData);
+            }}
             open={open}
             setOpen={setOpen}
-            title={edit ? t("edit_header") : t("create_header")}
+            title={
+                edit
+                    ? isHeader
+                        ? t("edit_header")
+                        : t("edit_footer")
+                    : isHeader
+                    ? t("create_header")
+                    : t("create_new_footer")
+            }
         >
             <form onSubmit={submit}>
                 <div>
@@ -164,24 +208,78 @@ const CreateNewHeader = ({
 
                     <InputError message={errors.public} className="mt-2" />
                 </div>
-                <div className="mt-4 flex items-center">
-                    <input
-                        id="isActiveCert"
-                        type="checkbox"
-                        checked={data.subModules}
-                        value={data.subModules}
-                        className="checkbox"
-                        onChange={(e) =>
-                            setData((prev) => ({
-                                ...prev,
-                                subModules: e.target.checked,
-                            }))
-                        }
-                    />
-                    <label className="ml-2" htmlFor="isActiveCert">
-                        {t("has_sub_modules")}
-                    </label>
-                </div>
+                {isHeader && (
+                    <div className="mt-4 flex items-center">
+                        <input
+                            id="isActiveCert"
+                            type="checkbox"
+                            checked={data.subModules}
+                            value={data.subModules}
+                            className="checkbox"
+                            onChange={(e) => {
+                                const checked = e.target.checked;
+                                setData((prev) => ({
+                                    ...prev,
+                                    subModules: e.target.checked,
+                                    has_dynamic_html: checked
+                                        ? false
+                                        : prev.has_dynamic_html,
+                                }));
+                            }}
+                        />
+                        <label className="ml-2" htmlFor="isActiveCert">
+                            {t("has_sub_modules")}
+                        </label>
+                    </div>
+                )}
+
+                {!data.subModules && isHeader && (
+                    <div className="mt-4 flex items-center">
+                        <input
+                            id="has_dynamic_html"
+                            type="checkbox"
+                            checked={data.has_dynamic_html}
+                            value={data.has_dynamic_html}
+                            className="checkbox"
+                            onChange={(e) =>
+                                setData((prev) => ({
+                                    ...prev,
+                                    has_dynamic_html: e.target.checked,
+                                }))
+                            }
+                        />
+                        <label className="ml-2" htmlFor="has_dynamic_html">
+                            {t("has_dynamic_html")}
+                        </label>
+                    </div>
+                )}
+
+                {data.has_dynamic_html && isHeader && (
+                    <div className="mt-4">
+                        <InputLabel
+                            htmlFor="dynamic_html"
+                            value={t("html_for_link")}
+                        />
+
+                        <TextInput
+                            id="dynamic_html"
+                            name="dynamic_html"
+                            value={data.dynamic_html}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData((prev) => ({
+                                    ...prev,
+                                    dynamic_html: e.target.value,
+                                }))
+                            }
+                        />
+
+                        <InputError
+                            message={errors.dynamic_html}
+                            className="mt-2"
+                        />
+                    </div>
+                )}
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>

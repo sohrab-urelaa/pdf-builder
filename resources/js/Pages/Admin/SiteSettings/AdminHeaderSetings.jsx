@@ -12,7 +12,7 @@ import {
 } from "../../../api/headerApi";
 import CreateNewSubHeader from "../../../Components/admin/CreateNewSubHeader";
 import { flushSync } from "react-dom";
-const AdminHeaderSettings = ({ auth, data }) => {
+const AdminHeaderSettings = ({ auth, data, nav_type }) => {
     const [t] = useTranslation();
     const [createHeaderModal, setCreateHeaderModal] = useState(false);
     const [selectedHeader, setSelectedHeader] = useState(null);
@@ -91,16 +91,22 @@ const AdminHeaderSettings = ({ auth, data }) => {
         }
     }, [selectedHeader]);
 
+    const isHeader = nav_type === "header";
+
     return (
         <AdminLayout user={auth?.user} title={t("header_settings")}>
             <div className="w-full ">
                 <div className="flex items-center justify-between">
-                    <p className="text-4xl font-bold">{t("headers")}</p>
+                    <p className="text-4xl font-bold">
+                        {isHeader ? t("headers") : t("footers")}
+                    </p>
                     <button
                         onClick={() => setCreateHeaderModal(true)}
                         className="btn btn-neutral"
                     >
-                        {t("create_new_header")}
+                        {isHeader
+                            ? t("create_new_header")
+                            : t("create_new_footer")}
                     </button>
                 </div>
                 <div className="flex gap-3 mt-4">
@@ -122,9 +128,13 @@ const AdminHeaderSettings = ({ auth, data }) => {
                                 </h5>
                                 <p>
                                     {header?.subModules === 1
-                                        ? "Has Sub Header: Yes"
+                                        ? "Has Sub Nav: Yes"
                                         : header?.link}
                                 </p>
+                                {t("has_dynamic_html")}:{" "}
+                                {header?.has_dynamic_html === 1
+                                    ? t("yes")
+                                    : t("no")}
                                 <div className="flex items-center gap-2 mt-2">
                                     <button
                                         onClick={(e) => {
@@ -154,7 +164,10 @@ const AdminHeaderSettings = ({ auth, data }) => {
                         <div className="flex-[1]">
                             <div className="flex items-center justify-between">
                                 <h1 className="font-bold text-xl text-base-content">
-                                    {t("sub_header_for")} {selectedHeader?.name}
+                                    {isHeader
+                                        ? t("sub_header_for")
+                                        : t("sub_footer_for")}{" "}
+                                    {selectedHeader?.name}
                                 </h1>
                                 <div className="flex flex-wrap gap-2 items-center">
                                     <button
@@ -181,7 +194,15 @@ const AdminHeaderSettings = ({ auth, data }) => {
                                         <h5 className="font-bold text-xl text-base-content">
                                             {subHeader?.title}
                                         </h5>
-                                        <p>Link: {subHeader?.link}</p>
+                                        <p>
+                                            {t("link")}: {subHeader?.link}
+                                        </p>
+                                        <p>
+                                            {t("has_dynamic_html")}:{" "}
+                                            {subHeader?.has_dynamic_html === 1
+                                                ? t("yes")
+                                                : t("no")}
+                                        </p>
                                         <div className="flex items-center gap-2 mt-2">
                                             <button
                                                 onClick={(e) => {
@@ -221,6 +242,7 @@ const AdminHeaderSettings = ({ auth, data }) => {
                 open={createHeaderModal}
                 setOpen={setCreateHeaderModal}
                 onSuccess={handleSuccess}
+                nav_type={nav_type}
             />
             <CreateNewHeader
                 key={"edit_header"}
@@ -229,12 +251,14 @@ const AdminHeaderSettings = ({ auth, data }) => {
                 onSuccess={handleSuccess}
                 edit={true}
                 header={actionSelectedHeader}
+                nav_type={nav_type}
             />
             <CreateNewSubHeader
                 open={createSubHeaderModal}
                 setOpen={setCreateSubHeaderModal}
                 onSuccess={handleSubHeaderSuccess}
                 headerId={selectedHeader?.id}
+                isHeader={isHeader}
             />
             <CreateNewSubHeader
                 key={"edit_sub_header"}
@@ -244,6 +268,7 @@ const AdminHeaderSettings = ({ auth, data }) => {
                 headerId={selectedHeader?.id}
                 edit={true}
                 subHeader={selectedSubHeader}
+                isHeader={isHeader}
             />
             <ActionModal
                 open={deleteModal}
@@ -253,10 +278,10 @@ const AdminHeaderSettings = ({ auth, data }) => {
                     setDeleteModal(false);
                     setActionSelectedHeader(null);
                 }}
-                title={t("delete_header")}
-                description={`${t("delete_header_message")} (${
-                    actionSelectedHeader?.name
-                })`}
+                title={t(isHeader ? "delete_header" : "delete_footer")}
+                description={`${t(
+                    isHeader ? "delete_header_message" : "delete_footer_message"
+                )} (${actionSelectedHeader?.name})`}
             />
             <ActionModal
                 key={"delte_sub_header"}
@@ -267,10 +292,12 @@ const AdminHeaderSettings = ({ auth, data }) => {
                     setDeleteSubHeaderModal(false);
                     setSelectedSubHeader(null);
                 }}
-                title={t("delete_sub_header")}
-                description={`${t("delete_sub_header_message")} (${
-                    selectedSubHeader?.name
-                })`}
+                title={t(isHeader ? "delete_sub_header" : "delete_sub_footer")}
+                description={`${t(
+                    isHeader
+                        ? "delete_sub_header_message"
+                        : "delete_sub_footer_message"
+                )} (${selectedSubHeader?.title})`}
             />
         </AdminLayout>
     );
