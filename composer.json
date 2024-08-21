@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "myfatoorah/laravel-package": "^2.2",
         "setasign/fpdf": "*",
+        "srmklive/paypal": "~3.0",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

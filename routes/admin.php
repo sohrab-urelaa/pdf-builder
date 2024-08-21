@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPaypalController;
 use App\Http\Controllers\AdminViewController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
@@ -14,7 +15,7 @@ use App\Models\PaymentGetwaysForCountries;
 use Illuminate\Support\Facades\Route;
 
 //admin view routes
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'super_admin'])->group(function () {
     Route::get('/admin/home', [AdminViewController::class, 'home'])->name('admin.home');
     Route::get('/admin/plans', [AdminViewController::class, 'getPlansPage'])->name('admin.plans');
     Route::get('/admin/company', [AdminViewController::class, 'getCompanyPage'])->name('admin.company');
@@ -33,10 +34,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/country', [AdminViewController::class, 'getCountryPage'])->name('admin.countryPage');
     Route::get('/admin/payment-getway/my-fatoorah', [AdminViewController::class, 'getMyFatoorahPage'])->name('admin.myFatoorah');
+    Route::get('/admin/payment-getway/paypal', [AdminViewController::class, 'getPaypalConfigPage'])->name('admin.paypalConfig');
     Route::get('/admin/payment-getway/home', [AdminViewController::class, 'getPaymentGetwayPage'])->name('admin.paymentGetwayPage');
 });
 //admin post routes
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'super_admin'])->group(function () {
     //<=================PLAN ROUTES START ===================>
     Route::post('/admin/plans', [PlansController::class, 'store'])->name('plans.create');
     Route::post('/admin/plans-update/{id}', [PlansController::class, 'update']);
@@ -82,7 +84,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/my-fatoorah-update/{id}', [MyFatoorahAdminController::class, 'update'])->name('myFatoorah.update');
     Route::delete('/admin/my-fatoorah/{id}', [MyFatoorahAdminController::class, 'delete'])->name('myFatoorah.destroy');
 
-    //<================My Fatoorah Crud api=======================>
+    //<================PAYPAL Crud api=======================>
+    Route::post('/admin/paypal', [AdminPaypalController::class, 'store'])->name('paypal.create');
+    Route::post('/admin/paypal-update/{id}', [AdminPaypalController::class, 'update'])->name('paypal.update');
+    Route::delete('/admin/paypal/{id}', [AdminPaypalController::class, 'delete'])->name('paypal.destroy');
+
+    //<================COUNTRY Crud api=======================>
     Route::get('/admin/country-json', [CountryController::class, 'index'])->name('country.index');
     Route::post('/admin/country', [CountryController::class, 'store'])->name('country.create');
     Route::post('/admin/country-update/{id}', [CountryController::class, 'update'])->name('country.update');

@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +16,14 @@ class EnsureUserIsAdmin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-     public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->role === 'admin') {
+        $user = auth()->user();
+        if (auth()->check() && $user->role === User::ADMIN_USER_TYPE) {
             return $next($request);
         }
-
-        return redirect('/')->with('error', 'You do not have access to this resource.');
+        $redirect_route =
+            RouteServiceProvider::get_redirect_route($user);
+        return redirect($redirect_route)->with('error', 'You do not have access to this resource.');
     }
 }

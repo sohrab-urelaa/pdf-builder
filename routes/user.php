@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Models\SubscriptionModel;
@@ -47,4 +48,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
             );
         }
     )->name("payment.error");
+
+
+
+
+    Route::get('/process-transaction/{id}', [PayPalController::class, 'processTransaction'])->name('processTransaction');
+    Route::get('success-transaction', [PayPalController::class, 'successTransaction'])->name('successTransaction');
+    Route::get('cancel-transaction', [PayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
 });

@@ -36,3 +36,8 @@ can_config_email_template
 
 
 
+
+paypal config 
+
+client_id=ASCYKpzz7YiLBPCYnlMEix5h5Lp3yW42hNmNz5yyTvBC3eXfsEZczLSNhJlgmKRcmAKoHySB2G3MDuJd
+client_secret=EDEXa_-0hSAKRpiLX1D-kG7A3GDKC0sR9SMyFAXN8-3PhFrJIqNOqLnxKYcS73Ee3e0HFZCG2pOwK4-0

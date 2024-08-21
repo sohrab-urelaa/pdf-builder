@@ -7,7 +7,7 @@ use App\Http\Controllers\UserSettingsViewController;
 use Illuminate\Support\Facades\Route;
 
 //user settings view routes
-Route::middleware(['auth','admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/settings/plans', [UserSettingsViewController::class, 'getUserSettingsPlan'])->name('users.plan');
     Route::get('/settings/users', [UserSettingsViewController::class, 'getUsersSettingsPage'])->name('users.plan');
     Route::get('/settings/signatures', [UserSettingsViewController::class, 'getSigneturePage'])->name('users.sign');
@@ -25,6 +25,4 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::post('/settings/update-certificate/{id}', [SSlCertificateController::class, 'update'])->name('certificate.update');
     Route::post('/settings/verify-pdf', [SubmitTemplateController::class, 'verifyTemplate'])->name('pdf.verify');
     Route::delete('/settings/certificate/{id}', [SSlCertificateController::class, 'deleteCertificate'])->name('certificate.delete');
-
-
 });

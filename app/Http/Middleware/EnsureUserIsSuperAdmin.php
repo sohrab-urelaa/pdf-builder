@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsUser
+class EnsureUserIsSuperAdmin
 {
   /**
    * Handle an incoming request.
@@ -19,12 +19,13 @@ class EnsureUserIsUser
    */
   public function handle(Request $request, Closure $next)
   {
+
     $user = auth()->user();
-    if (auth()->check() && $user->role === User::USER_USER_TYPE) {
+    if (auth()->check() && $user->role === User::SUPER_ADMIN_USER_TYPE) {
       return $next($request);
     }
-    $redirect_route
-      = RouteServiceProvider::get_redirect_route($user);
+    $redirect_route =
+      RouteServiceProvider::get_redirect_route($user);
     return redirect($redirect_route)->with('error', 'You do not have access to this resource.');
   }
 }

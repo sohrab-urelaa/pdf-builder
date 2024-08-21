@@ -17,7 +17,7 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
         const bodyData = {
             plan_id: plan.id,
             billing_cycle: isYearly ? "yearly" : "monthly",
-            payment_method: "Bkash",
+            payment_method: "My Fatoorah",
         };
         try {
             setCreatedSubscriptions(null);
@@ -38,19 +38,8 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
     };
 
     const setAutoNavigation = (subscription) => {
-        window.location.href = `/myfatoorah/checkout?oid=${subscription.id}`;
-        // setNavigationTimeout(5);
-        // currentInterval.current = setInterval(() => {
-        //     setNavigationTimeout((prev) => {
-        //         if (prev == 0) {
-        //             clearInterval(currentInterval.current);
-        //             handleNaviageToMembershipPage();
-        //             return 0;
-        //         } else {
-        //             return prev - 1;
-        //         }
-        //     });
-        // }, 1000);
+        // window.location.href = `/myfatoorah/checkout?oid=${subscription.id}`;
+        window.location.href = `/process-transaction/${subscription.id}`;
     };
 
     const handleNaviageToMembershipPage = () => {

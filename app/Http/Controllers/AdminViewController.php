@@ -12,6 +12,7 @@ use App\Models\GeneralSetting;
 use App\Models\HeaderItem;
 use App\Models\MyFatoorah;
 use App\Models\PaymentGetwaysForCountries;
+use App\Models\PayPal;
 use App\Models\PdfTemplate;
 use App\Models\PlansModel;
 use App\Models\SslCertificateModal;
@@ -282,6 +283,18 @@ class AdminViewController extends Controller
             [
                 "user" => $current_user,
                 "data" => $font
+            ]
+        );
+    }
+    function getPaypalConfigPage()
+    {
+        $current_user = auth()->user();
+        $data = PayPal::paginate();
+        return Inertia::render(
+            'Admin/PaymentGetway/AdminPaypalSettings',
+            [
+                "user" => $current_user,
+                "data" => $data
             ]
         );
     }

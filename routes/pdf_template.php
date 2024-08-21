@@ -4,10 +4,11 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\SubmitTemplateController;
 use App\Http\Controllers\TemplateController;
 use App\Models\PdfTemplate;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'authGard:user,admin'])->group(function () {
     Route::get('/pdf-templates', [TemplateController::class, 'index'])->name('template.index');
     Route::get('/submitted-templates/{templateId}', [TemplateController::class, 'getSubmittedTemplates'])->name('submitted-templates');
     Route::post('/pdf-templates', [TemplateController::class, 'store'])->name('template.store');

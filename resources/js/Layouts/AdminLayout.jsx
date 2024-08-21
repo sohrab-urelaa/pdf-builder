@@ -148,6 +148,11 @@ const navItemList = [
                 title: "My Fatoorah",
                 link: "/admin/payment-getway/my-fatoorah",
             },
+            {
+                id: 153,
+                title: "Paypal",
+                link: "/admin/payment-getway/paypal",
+            },
         ],
     },
     {
@@ -207,7 +212,7 @@ const AdminLayout = ({ children, user, title }) => {
                         type="checkbox"
                         className="drawer-toggle"
                     />
-                    <div className="drawer-content bg-base-100 shadow">
+                    <div className="drawer-content bg-base-100 rounded-md shadow">
                         <div className="p-4">{children}</div>
                     </div>
                     <div className="drawer-side mr-3">
@@ -216,7 +221,7 @@ const AdminLayout = ({ children, user, title }) => {
                             aria-label="close sidebar"
                             className="drawer-overlay"
                         ></label>
-                        <ul className="menu bg-base-100 text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
+                        <ul className="menu bg-base-100 rounded-md text-base-content min-h-[calc(100%-65px)] mt-[65px] lg:mt-0 lg:min-h-full  w-80 p-4">
                             <li>
                                 {navItems.map((navItem) => {
                                     if (navItem.subModules) {
