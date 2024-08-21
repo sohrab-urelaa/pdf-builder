@@ -3,9 +3,40 @@ import CreateUserModal from "../../Components/user/CreateUserModal";
 import { useState } from "react";
 import Pagination from "../../Components/utill/Pagination";
 import { useTranslation } from "react-i18next";
+import { deleteUser } from "../../api/userApi";
+import { toast } from "react-toastify";
+import { router } from "@inertiajs/react";
+import ActionModal from "../../Components/utill/ActionModal";
 const UserListSettings = ({ auth, users }) => {
     const { t } = useTranslation();
     const [createUserModal, setCreateUserModal] = useState(false);
+    const [editModal, setEditModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const handleSuccess = () => {
+        router.reload();
+    };
+    const handleDeleteUser = async () => {
+        try {
+            setDeleteLoading(true);
+            const res = await deleteUser(selectedUser?.id);
+            if (res?.success) {
+                toast.success(res?.message);
+                setDeleteModal(false);
+                setSelectedUser(null);
+                handleSuccess();
+            } else {
+                toast.error(res?.message);
+            }
+        } catch (err) {
+            toast.error("Soemthing went' wrong please try again later!");
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
@@ -40,8 +71,23 @@ const UserListSettings = ({ auth, users }) => {
                                     </span>
                                 </td>
                                 <td class="flex items-center space-x-2 justify-end">
-                                    <button class="btn btn-outline btn-xs">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedUser(user);
+                                            setEditModal(true);
+                                        }}
+                                        class="btn btn-outline btn-xs"
+                                    >
                                         {t("edit")}
+                                    </button>{" "}
+                                    <button
+                                        onClick={() => {
+                                            setSelectedUser(user);
+                                            setDeleteModal(true);
+                                        }}
+                                        class="btn btn-outline btn-xs"
+                                    >
+                                        {t("delete")}
                                     </button>{" "}
                                 </td>
                             </tr>
@@ -54,6 +100,33 @@ const UserListSettings = ({ auth, users }) => {
             <CreateUserModal
                 open={createUserModal}
                 setOpen={setCreateUserModal}
+                onSuccess={handleSuccess}
+            />
+            <CreateUserModal
+                key={"edit_user_modal"}
+                open={editModal}
+                setOpen={(open) => {
+                    setSelectedUser(null);
+                    setEditModal(open);
+                }}
+                onSuccess={handleSuccess}
+                edit={true}
+                user={selectedUser}
+            />
+
+            <ActionModal
+                key={"delete_user_modal"}
+                open={deleteModal}
+                setOpen={setDeleteModal}
+                onAction={handleDeleteUser}
+                onCancel={() => {
+                    setSelectedUser(null);
+                    setDeleteModal(false);
+                }}
+                title={t("delete_user")}
+                description={`${t("delete_user_message")} (${
+                    selectedUser?.name
+                })`}
             />
         </UserSettingsLayout>
     );

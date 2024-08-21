@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PlanHistoryController;
 use App\Http\Helpers\EmailTemplateProviders;
 use App\Mail\CustomMailTemplate;
 use App\Models\CompanyModel;
@@ -37,7 +38,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'companyName' => 'required|string|max:255',
             'description' => 'required|string',
@@ -51,24 +52,24 @@ class RegisteredUserController extends Controller
 
         $defaultPlan = PlansModel::where('isDefault', true)->first();
         $company = CompanyModel::create([
-            "companyName"=> $request->companyName,
-            "description"=> $request->description,
-            "ownerId"=> $user["id"],
-            "planId"=> $defaultPlan["id"],
+            "companyName" => $request->companyName,
+            "description" => $request->description,
+            "ownerId" => $user["id"],
+            "planId" => $defaultPlan["id"],
         ]);
-
+        PlanHistoryController::create_new_plan_history($user, $defaultPlan);
         //trigger register user email
-        
-         $template=EmailTemplateProviders::registration_success_template($user);
-         if($template){
+
+        $template = EmailTemplateProviders::registration_success_template($user);
+        if ($template) {
             CustomMailTemplate::send_email($template);
-         }
+        }
+
 
         event(new Registered($user));
 
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
-    }  
-   
+    }
 }

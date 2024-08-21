@@ -107,7 +107,6 @@ const ESignature = ({ auth, data }) => {
                     open={editModal}
                     setOpen={setEditModal}
                     onSuccess={handleSuccess}
-                    userType="admin"
                 />
 
                 <ActionModal

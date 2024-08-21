@@ -1,4 +1,3 @@
-import { useForm } from "@inertiajs/react";
 import InputError from "../InputError";
 import InputLabel from "../InputLabel";
 import TextInput from "../TextInput";
@@ -8,18 +7,31 @@ import Modal from "../utill/Modal";
 import { router } from "@inertiajs/react";
 
 import { defaultTemplate } from "./PdfDesigner";
+import { createNewTemplate } from "../../api/templateApi";
+import { toast } from "react-toastify";
 
-const CreateTemplateModal = ({ open, setOpen }) => {
-    const [data, setData] = useState({
-        title: "",
-        description: "",
-    });
+const initialData = {
+    title: "",
+    description: "",
+};
+const CreateTemplateModal = ({ open, setOpen, onSuccess, clonedTemplate }) => {
+    const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState({
         title: "",
         description: "",
     });
     const [processing, setProcessing] = useState(false);
-    const submit = (e) => {
+
+    useEffect(() => {
+        if (clonedTemplate?.id) {
+            setData({
+                title: clonedTemplate?.title,
+                description: clonedTemplate?.description,
+            });
+        }
+    }, [clonedTemplate]);
+
+    const submit = async (e) => {
         e.preventDefault();
 
         const newErrors = {};
@@ -44,15 +56,37 @@ const CreateTemplateModal = ({ open, setOpen }) => {
             title: data.title,
             description: data.description,
         };
-        router.post("/pdf-templates", data2, {
-            onSuccess: (res) => {
-                if (res?.props?.template?.id) {
-                    router.replace(
-                        `/template-builder/${res?.props?.template?.id}`
-                    );
+
+        if (clonedTemplate?.id) {
+            data2.clone_template_id = clonedTemplate?.id;
+        }
+
+        try {
+            let result = await createNewTemplate(data2);
+
+            if (result?.errors) {
+                const updatedErrors = {};
+                const newErrors = result.errors;
+                Object.keys(newErrors).forEach((key) => {
+                    updatedErrors[key] = newErrors[key][0];
+                });
+                setErrors(updatedErrors);
+            }
+            if (result?.success) {
+                toast.success(result?.message);
+                setOpen(false);
+                setData(initialData);
+                setErrors(initialData);
+                if (onSuccess) {
+                    onSuccess(result?.data);
                 }
-            },
-        });
+            } else {
+                toast.error(result?.message);
+            }
+        } catch (err) {
+        } finally {
+            setProcessing(false);
+        }
     };
     return (
         <Modal open={open} setOpen={setOpen} title="Create New Template">

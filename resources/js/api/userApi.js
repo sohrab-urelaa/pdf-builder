@@ -59,3 +59,29 @@ export const getSiteNavs = async () => {
         return err?.response?.data;
     }
 };
+
+export const createNewUser = async (bodyData) => {
+    try {
+        const data = await axios.post("/users", bodyData);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
+export const updateExistingUser = async (id, bodyData) => {
+    try {
+        const data = await axios.post(`/users-update/${id}`, bodyData);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
+
+export const deleteUser = async (id) => {
+    try {
+        const data = await axios.delete(`/users/${id}`);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

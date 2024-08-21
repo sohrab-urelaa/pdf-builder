@@ -20,6 +20,11 @@ class PlansController extends Controller
             'isDefault' => 'required|boolean',
             'currency' => 'required|string',
             'currency_symbol' => 'required|string',
+            'template_creation_limit' => 'required|integer',
+            'template_submission_limit_per_template' => 'required|integer',
+            'user_creation_limit' => 'required|integer',
+            'can_upload_certificate' => 'required|boolean',
+            'can_config_email_template' => 'required|boolean',
         ]);
         if ($validatedData['isDefault']) {
             PlansModel::where('isDefault', true)->update(['isDefault' => false]);
@@ -55,6 +60,11 @@ class PlansController extends Controller
             'isDefault' => 'required|boolean',
             'currency' => 'required|string',
             'currency_symbol' => 'required|string',
+            'template_creation_limit' => 'required|integer',
+            'template_submission_limit_per_template' => 'required|integer',
+            'user_creation_limit' => 'required|integer',
+            'can_upload_certificate' => 'required|boolean',
+            'can_config_email_template' => 'required|boolean',
         ]);
 
         if ($validatedData['isDefault']) {

@@ -1,4 +1,3 @@
-import { useForm } from "@inertiajs/react";
 import InputError from "../InputError";
 import InputLabel from "../InputLabel";
 import TextInput from "../TextInput";
@@ -82,7 +81,7 @@ const CreateNewSignature = ({
             if (result?.success) {
                 toast.success(result?.message);
             } else {
-                toast.message(result?.message);
+                toast.error(result?.message);
             }
             setErrors(initialData);
             setData(initialData);

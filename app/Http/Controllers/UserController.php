@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-     public function index()
+    public function index()
     {
         if (auth()->check()) {
-            $current_user=auth()->user();
+            $current_user = auth()->user();
             // $users = User::where('role', '!=', 'admin')->get();
             $users = User::get();
             return Inertia::render('Users', [
@@ -26,34 +26,120 @@ class UserController extends Controller
         return response()->json(['message' => 'Not authenticated'], 401);
     }
 
-     public function createUser(Request $request)
-     {
+    public function createUser(Request $request)
+    {
 
-        $current_user=auth()->user();
+        $current_user = auth()->user();
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        //check user creation limit 
+        $result = PlanHistoryController::has_user_creation_limit($current_user);
+        if (!$result["has_limit"]) {
+            return response()->json([
+                "success" => false,
+                "message" => "User creation limit has been reached",
+            ]);
+        }
+
+        //update limit
+        $result["plan_history"]->user_creation_count = $result["next_limit"];
+        $result["plan_history"]->save();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'=>"user",
-            "parent_admin"=>$current_user['id']
+            'role' => User::USER_USER_TYPE,
+            "parent_admin" => $current_user['id']
         ]);
-        redirect("/settings/users");
+        return response()->json([
+            "success" => true,
+            "message" => "User successfully created",
+            "data" => $user
+        ]);
     }
+    public function updateUser(Request $request, $id)
+    {
+
+        $current_user = auth()->user();
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255',
+            'password' => 'nullable|string',
+        ]);
+
+        $prev_user = User::find($id);
+        if (!$prev_user) {
+            return response()->json([
+                "success" => false,
+                "message" => "User not found",
+            ]);
+        }
+
+        //check any other user has same email or not
+        if ($prev_user["email"] !== $validated["email"]) {
+            $exists = User::where('email', $validated["email"])
+                ->where('id', '!=', $id)
+                ->exists();
+            if ($exists) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Email already exists",
+                ]);
+            }
+        }
+
+
+
+        $prev_user->name = $validated["name"];
+        $prev_user->email = $validated["email"];
+        if ($validated["password"]) {
+            $prev_user->password =
+                Hash::make($validated["password"]);
+        }
+        $prev_user->save();
+
+        return response()->json([
+            "success" => true,
+            "message" => "User successfully updated",
+            "data" => $prev_user
+        ]);
+    }
+
+    public function destroyUser(Request $request, $id)
+    {
+
+        $prev_user = User::find($id);
+        if (!$prev_user) {
+            return response()->json([
+                "success" => false,
+                "message" => "User not found",
+            ]);
+        }
+
+        $prev_user->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "User successfully deleted",
+            "data" => $prev_user
+        ]);
+    }
+
+
     public function getRegisterUser()
     {
         return Inertia::render('Auth/RegisterUser');
     }
-     public function registerUser(LoginRequest $request)
-     {
+    public function registerUser(LoginRequest $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -61,7 +147,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'=>"user"
+            'role' => "user"
         ]);
 
         // http://127.0.0.1:8000/submit-templates/13

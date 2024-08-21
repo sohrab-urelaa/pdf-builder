@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { router } from "@inertiajs/react";
+import { updatePdfTemplate } from "../../api/templateApi";
+import { toast } from "react-toastify";
 export const defaultTemplate = {
-    acceptFileTypes:
-        "image/*, application/pdf, .docx, .doc, .xlsx, .xls, .odt, .rtf",
+    acceptFileTypes: "application/pdf",
     currencies: "",
     withLogo: true,
     withConditions: false,
@@ -31,6 +32,7 @@ export const defaultTemplate = {
 const Builder = ({ template: dbTemplate }) => {
     const [data, setData] = useState(defaultTemplate.template);
     const [isLoaded, setIsLoaded] = useState(false);
+    const apiRef = useRef(null);
     useEffect(() => {
         const template_string = dbTemplate?.template_json;
         if (template_string) {
@@ -43,34 +45,49 @@ const Builder = ({ template: dbTemplate }) => {
     }, [dbTemplate]);
 
     useEffect(() => {
-        document.addEventListener("DOCUMENT_SAVE_RECEIVED", ({ detail }) => {
+        const handleCustomEvent = ({ detail }) => {
             if (detail.type === "ON_DOCUMENT_RECEIVE") {
                 if (detail?.data) {
                     const jsonData = JSON.stringify(detail.data);
                     onSaveTemplate(jsonData);
                 }
             }
-        });
+        };
+        document.addEventListener("DOCUMENT_SAVE_RECEIVED", handleCustomEvent);
+
+        return () => {
+            document.removeEventListener(
+                "DOCUMENT_SAVE_RECEIVED",
+                handleCustomEvent
+            );
+        };
     }, []);
 
     const onSaveTemplate = async (templateStr) => {
         if (templateStr) {
-            const pdf_link = "demo.pdf";
-            const data = {
-                template_json: templateStr,
-                title: dbTemplate?.title,
-                description: dbTemplate?.description,
-                templated_pdf_link: dbTemplate?.templated_pdf_link,
-                id: dbTemplate?.id,
-            };
-            router.put(`/pdf-templates/${dbTemplate?.id}`, data, {
-                onSuccess: (res) => {
-                    console.log("Response", res);
-                    if (res?.props?.template?.id) {
-                        // router.replace("/dashboard");
-                    }
-                },
-            });
+            if (apiRef.current) {
+                clearTimeout(apiRef.current);
+            }
+
+            apiRef.current = setTimeout(() => {
+                updateTemplate(templateStr);
+            }, 200);
+        }
+    };
+    const updateTemplate = async (templateStr) => {
+        const data = {
+            template_json: templateStr,
+            title: dbTemplate?.title,
+            description: dbTemplate?.description,
+            templated_pdf_link: dbTemplate?.templated_pdf_link,
+            id: dbTemplate?.id,
+        };
+        const result = await updatePdfTemplate(dbTemplate?.id, data);
+        if (result?.success) {
+            toast.success(result?.message);
+            router.replace("/dashboard");
+        } else {
+            toast.error(result?.message);
         }
     };
 

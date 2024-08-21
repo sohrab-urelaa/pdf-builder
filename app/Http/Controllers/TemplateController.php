@@ -6,6 +6,7 @@ use App\Mail\TemplateSubmitted;
 use App\Models\PdfTemplate;
 use App\Models\SubmittedTemplate;
 use App\Models\User;
+use App\Models\UserPlanHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -67,69 +68,125 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                "description" => "required",
-                "templated_pdf_link" => "required",
-                "title" => "required",
+            $current_user = auth()->user();
+            $validated = $request->validate([
+                "description" => "required|string",
+                "templated_pdf_link" => "required|string",
+                "template_json" => "required|string",
+                "title" => "required|string",
+                "clone_template_id" => "nullable|integer",
             ]);
-            $current_user = auth()->user();
-            $current_user_id = $current_user["id"];
-            $bodyContent = json_decode($request->getContent(), true);
-            $new_pdf = [
-                'user_id' => $current_user_id,
-                "template_json" => $bodyContent["template_json"],
-                "templated_pdf_link" => $bodyContent["templated_pdf_link"],
-                "title" => $bodyContent["title"],
-                "description" => $bodyContent["description"],
-            ];
-            $created_template = PdfTemplate::create($new_pdf);
-            $current_user = auth()->user();
 
-            return Inertia::render('TemplateBuilder', ["user" => $current_user, "template" => $created_template]);
+            //validate template creation limit
+
+            $result = PlanHistoryController::has_template_creation_limit($current_user);
+            if (!$result["has_limit"]) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Template creation limit has been reached",
+                ]);
+            }
+
+            $validated["user_id"]
+                = $current_user["id"];
+
+            $cloneTemplateId = $validated['clone_template_id'] ?? null;
+
+            if ($cloneTemplateId) {
+                $cloned_template = PdfTemplate::find($validated["clone_template_id"]);
+                if ($cloned_template) {
+                    $validated["template_json"] = $cloned_template["template_json"];
+                }
+            }
+
+            $created_template = PdfTemplate::create($validated);
+            //update creation count
+
+            $result["plan_history"]->template_creation_count = $result["next_limit"];
+            $result["plan_history"]->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "Template successfully created",
+                "data" => $created_template,
+            ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return to_route(
-                'template.index',
-                [
-                    'message' => 'Task not created'
-                ]
-            );
+            return response()->json([
+                "success" => false,
+                "message" => "verification failed",
+                "errors" => $e->errors(),
+            ]);
         }
     }
 
     public function update(Request $request, $id)
     {
         try {
-            $request->validate([
-                "templated_pdf_link" => "required",
-                "title" => "required",
+            $validated = $request->validate([
+                "description" => "nullable|string",
+                "templated_pdf_link" => "nullable|string",
+                "template_json" => "required|string",
+                "title" => "nullable|string",
             ]);
+            $pdf_template = PdfTemplate::find($id);
 
-            $current_user = auth()->user();
-            $bodyContent = json_decode($request->getContent(), true);
-            // $id=$bodyContent["id"];
-            // Find the existing PDF template by ID
-            $pdfTemplate = PdfTemplate::find($id);
+            if (!$pdf_template) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Template not found",
+                ]);
+            }
 
-            // Ensure the current user is authorized to update the template
-            // if ($pdfTemplate->user_id !== $current_user->id) {
-            //     return response()->json(['message' => 'Unauthorized'], 403);
-            // }
 
-            // Update the template details
-            $pdfTemplate->template_json = $bodyContent["template_json"];
-            $pdfTemplate->templated_pdf_link = $bodyContent["templated_pdf_link"];
-            $pdfTemplate->title = $bodyContent["title"];
-            $pdfTemplate->description = $bodyContent["description"] ?? $pdfTemplate["description"];
-
-            // Save the updated template
-            $pdfTemplate->save();
-            return to_route('template.index');
+            $updated_template = $pdf_template->update($validated);
+            return response()->json([
+                "success" => true,
+                "message" => "Template saved successfully.",
+                "data" => $updated_template,
+            ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::info("Data", ["Error" => $e]);
-            return response()->json(['message' => 'An error occurred', 'error' => $e, "body" => json_decode($request->getContent(), true)], 500);
+            return response()->json([
+                "success" => false,
+                "message" => "verification failed",
+                "errors" => $e->errors(),
+            ]);
         } catch (\Exception $e) {
-            Log::info("Data", ["Error" => $e]);
-            return response()->json(['message' => 'An error occurred'], 500);
+            return response()->json([
+                "success" => false,
+                "message" => "Some error has occurred, please try again later.",
+            ]);
+        }
+    }
+    public function delete(Request $request, $id)
+    {
+        try {
+            $pdf_template = PdfTemplate::find($id);
+
+            if (!$pdf_template) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Template not found",
+                ]);
+            }
+
+            SubmittedTemplate::where('template_id', $id)->delete();
+            $updated_template = $pdf_template->delete();
+            return response()->json([
+                "success" => true,
+                "message" => "Template deleted successfully.",
+                "data" => $updated_template,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "verification failed",
+                "errors" => $e->errors(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Some error has occurred, please try again later.",
+            ]);
         }
     }
 
@@ -228,32 +285,5 @@ class TemplateController extends Controller
                 ]
             );
         }
-    }
-
-
-
-
-
-
-    // Update the specified task
-    // public function update(Request $request, Task $task)
-    // {
-    //     $validatedData = $request->validate([
-    //         'title' => 'required|max:255',
-    //         'description' => 'nullable',
-    //     ]);
-
-    //     $task->update($validatedData);
-
-    //     return to_route('tasks.index');
-    // }
-
-    // Remove the specified task
-    public function destroy($templateId)
-    {
-        PdfTemplate::where("id", $templateId)->delete();
-        return to_route('template.index', [
-            'message' => 'Task deleted successfully'
-        ]);
     }
 }

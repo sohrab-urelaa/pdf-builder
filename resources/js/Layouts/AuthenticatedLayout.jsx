@@ -7,7 +7,12 @@ export default function Authenticated({ user, header, children, headerTitle }) {
     return (
         <div className="min-h-screen">
             <PublicNavbar user={user} />
-            <main>{children}</main>
+            <main className="bg-base-100 max-w-7xl mx-auto sm:px-6 lg:px-8 px-4 py-7 rounded-md mt-3">
+                {children}
+                <br />
+                <br />
+                <br />
+            </main>
             <Footer />
 
             <ToastContainer theme="dark" />

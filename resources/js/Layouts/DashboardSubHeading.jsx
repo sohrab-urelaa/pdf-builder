@@ -3,12 +3,16 @@ import { menu1Img, menu2Img } from "../../assets/assets";
 import { MdOutlineAdd } from "react-icons/md";
 
 import NavLink from "@/Components/NavLink";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import CreateTemplateModal from "../Components/home/CreateTemplateModal";
 import { useState } from "react";
 
 const DashboardSubHeading = ({ title }) => {
     const [createTemplateModal, setCreateTemplateModal] = useState(false);
+
+    const handleSuccess = (data) => {
+        router.replace(`/template-builder/${data?.id}`);
+    };
 
     return (
         <div className="mt-2 flex items-center justify-between">
@@ -101,6 +105,7 @@ const DashboardSubHeading = ({ title }) => {
                 {/* </Link> */}
             </div>
             <CreateTemplateModal
+                onSuccess={handleSuccess}
                 open={createTemplateModal}
                 setOpen={setCreateTemplateModal}
             />

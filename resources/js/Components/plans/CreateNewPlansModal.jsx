@@ -1,4 +1,3 @@
-import { router, useForm } from "@inertiajs/react";
 import InputError from "../InputError";
 import InputLabel from "../InputLabel";
 import TextInput from "../TextInput";
@@ -20,6 +19,11 @@ const initialData = {
     currency_symbol: "",
     isDefault: false,
     currency_id: "",
+    template_creation_limit: "",
+    template_submission_limit_per_template: "",
+    user_creation_limit: "",
+    can_upload_certificate: false,
+    can_config_email_template: false,
 };
 
 const CreateNewPlansModal = ({
@@ -31,7 +35,6 @@ const CreateNewPlansModal = ({
 }) => {
     const { t } = useTranslation();
     const [currency_list, setCurrencyList] = useState(currency_lists);
-    // const { data, setData, post, processing, errors, reset, put } = useForm();
 
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
@@ -42,6 +45,10 @@ const CreateNewPlansModal = ({
             setData({
                 ...plan,
                 isDefault: Boolean(plan.isDefault),
+                can_upload_certificate: Boolean(plan.can_upload_certificate),
+                can_config_email_template: Boolean(
+                    plan.can_config_email_template
+                ),
             });
         }
     }, [plan]);
@@ -71,14 +78,14 @@ const CreateNewPlansModal = ({
             }
             if (result?.success) {
                 toast.success(result?.message);
+                setOpen(false);
+                setData(initialData);
+                setErrors(initialData);
+                if (onSuccess) {
+                    onSuccess();
+                }
             } else {
                 toast.error(result?.message);
-            }
-            setErrors(initialData);
-            setData(initialData);
-            setOpen(false);
-            if (onSuccess) {
-                onSuccess();
             }
         } catch (err) {
         } finally {
@@ -144,32 +151,6 @@ const CreateNewPlansModal = ({
                         }
                     />
                     <InputError message={errors.description} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="number_of_document"
-                        value={t("number_of_template")}
-                    />
-
-                    <TextInput
-                        id="number_of_document"
-                        type="number"
-                        name="number_of_document"
-                        value={data.number_of_document}
-                        className="mt-1 block w-full"
-                        onChange={(e) =>
-                            setData((prev) => ({
-                                ...prev,
-                                number_of_document: e.target.value,
-                            }))
-                        }
-                    />
-
-                    <InputError
-                        message={errors.number_of_document}
-                        className="mt-2"
-                    />
                 </div>
 
                 <div className="mt-4">
@@ -244,11 +225,129 @@ const CreateNewPlansModal = ({
 
                     <InputError message={errors.currency} className="mt-2" />
                 </div>
+                <div className="mt-4">
+                    <InputLabel
+                        htmlFor="number_of_document"
+                        value={t("template_creation_limit")}
+                    />
+
+                    <TextInput
+                        id="number_of_document"
+                        type="number"
+                        name="number_of_document"
+                        value={data.number_of_document}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                number_of_document: e.target.value,
+                                template_creation_limit: e.target.value,
+                            }))
+                        }
+                    />
+
+                    <InputError
+                        message={errors.number_of_document}
+                        className="mt-2"
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel
+                        htmlFor="template_submission_limit_per_template"
+                        value={t("template_submission_limit_per_template")}
+                    />
+
+                    <TextInput
+                        id="template_submission_limit_per_template"
+                        type="number"
+                        name="template_submission_limit_per_template"
+                        value={data.template_submission_limit_per_template}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                template_submission_limit_per_template:
+                                    e.target.value,
+                            }))
+                        }
+                    />
+
+                    <InputError
+                        message={errors.template_submission_limit_per_template}
+                        className="mt-2"
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel
+                        htmlFor="user_creation_limit"
+                        value={t("user_creation_limit")}
+                    />
+
+                    <TextInput
+                        id="user_creation_limit"
+                        type="number"
+                        name="user_creation_limit"
+                        value={data.user_creation_limit}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                user_creation_limit: e.target.value,
+                            }))
+                        }
+                    />
+
+                    <InputError
+                        message={errors.user_creation_limit}
+                        className="mt-2"
+                    />
+                </div>
+
+                <div className="mt-4 flex items-center">
+                    <input
+                        id="can_upload_certificate"
+                        type="checkbox"
+                        value={data.can_upload_certificate}
+                        className="checkbox"
+                        checked={data.can_upload_certificate}
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                can_upload_certificate: e.target.checked,
+                            }))
+                        }
+                    />
+                    <label className="ml-2" htmlFor="can_upload_certificate">
+                        {t("can_upload_certificate")}
+                    </label>
+                </div>
+
+                <div className="mt-4 flex items-center">
+                    <input
+                        id="can_config_email_template"
+                        type="checkbox"
+                        value={data.can_config_email_template}
+                        className="checkbox"
+                        checked={data.can_config_email_template}
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                can_config_email_template: e.target.checked,
+                            }))
+                        }
+                    />
+                    <label className="ml-2" htmlFor="can_config_email_template">
+                        {t("can_config_email_template")}
+                    </label>
+                </div>
                 <div className="mt-4 flex items-center">
                     <input
                         id="isDefaultPlan"
                         type="checkbox"
                         value={data.isDefault}
+                        checked={data.isDefault}
                         className="checkbox"
                         onChange={(e) =>
                             setData((prev) => ({

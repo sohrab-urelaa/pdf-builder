@@ -176,7 +176,9 @@ class MyFatoorahController extends Controller
                 $is_subscription_done = true;
             }
             if ($is_subscription_done) {
+                $company = CompanyModel::where('ownerId', $user["id"])->with("plan")->with("owner")->first();
                 SubscriptionModel::where("user_id", $user["id"])->update(["is_active" => false]);
+                PlanHistoryController::create_new_plan_history($company["owner"], $company["plan"]);
             }
             SubscriptionModel::where('id', $order_id)->update([
                 'payment_status' => $invoice_status,

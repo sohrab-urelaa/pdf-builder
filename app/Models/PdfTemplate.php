@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PdfTemplate extends Model
 {
-    protected $fillable = ['template_json',"user_id","templated_pdf_link","title"];
+    protected $fillable = ['template_json', "user_id", "templated_pdf_link", "title", "submission_count", "description"];
     use HasFactory;
 
     protected $table = 'pdf_template';

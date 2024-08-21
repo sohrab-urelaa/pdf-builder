@@ -139,8 +139,6 @@ const Footer = () => {
 
     const footers = window.FOOTER_LIST || [];
 
-    console.log("Footers", footers);
-
     return (
         <footer className="px-4 mx-0 md:mx-2 md:px-2 mt-10">
             <div className="border-t border-base-300 flex py-8 mx-auto flex-col md:flex-row gap-8 md:gap-16 max-w-6xl">

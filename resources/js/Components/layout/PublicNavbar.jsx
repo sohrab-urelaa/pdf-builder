@@ -38,9 +38,8 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
     const logoLink = window.SITE_SETTINGS?.site_logo;
     const siteName = window.SITE_SETTINGS?.site_name;
     const navItems = window.HEADER_LIST || [];
-    console.log("Headers", navItems);
     return (
-        <nav className="sticky z-10 top-0 bg-base-100 bg-opacity-95 py-2 px-2 md:px-4">
+        <nav className="sticky z-10 top-0 bg-base-100  bg-opacity-95 py-2 px-2 md:px-4">
             <div className="max-w-6xl m-auto flex justify-between items-center">
                 <div className="flex items-center w-1/4 gap-1">
                     {enableMenuButton && (
@@ -129,12 +128,12 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                                                 href={link}
                                                                 target="_blank"
                                                             >
-                                                                <img
+                                                                {/* <img
                                                                     src={
                                                                         subNav.image
                                                                     }
                                                                     className="w-[50px] h-[50px]"
-                                                                />
+                                                                /> */}
                                                                 <div>
                                                                     <span className="font-bold">
                                                                         {
@@ -321,6 +320,12 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                 )}{" "}
                             </li>
                             <li>
+                                <ThemeSwitcher />
+                                <Link href="/settings/plans">
+                                    <button className="btn btn-ghost text-xl">
+                                        Settings
+                                    </button>
+                                </Link>
                                 {navItems.map((navItem) => {
                                     if (navItem.subModules) {
                                         return (
@@ -329,24 +334,41 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                                     {navItem?.name}
                                                 </summary>
                                                 <ul>
-                                                    {navItem?.subOptions?.map(
-                                                        (subItem) => (
-                                                            <li>
-                                                                <Link
-                                                                    className="text-lg mr-6"
-                                                                    href={
-                                                                        subItem.link
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        subItem?.title
-                                                                    }
-                                                                </Link>
-                                                            </li>
-                                                        )
+                                                    {navItem?.sub_options?.map(
+                                                        (subItem) => {
+                                                            const link =
+                                                                subItem?.has_dynamic_html
+                                                                    ? `/external-sub/${subItem.id}`
+                                                                    : subItem?.link;
+                                                            return (
+                                                                <li>
+                                                                    <Link
+                                                                        className="text-lg mr-6"
+                                                                        href={
+                                                                            link
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            subItem?.title
+                                                                        }
+                                                                    </Link>
+                                                                </li>
+                                                            );
+                                                        }
                                                     )}
                                                 </ul>
                                             </>
+                                        );
+                                    } else {
+                                        const link = navItem?.has_dynamic_html
+                                            ? `/external-main/${navItem.id}`
+                                            : navItem?.link;
+                                        return (
+                                            <Link href={link}>
+                                                <div className="text-lg">
+                                                    {navItem?.name}
+                                                </div>
+                                            </Link>
                                         );
                                     }
                                 })}

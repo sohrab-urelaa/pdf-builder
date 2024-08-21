@@ -1,4 +1,3 @@
-import { useForm } from "@inertiajs/react";
 import InputError from "../InputError";
 import InputLabel from "../InputLabel";
 import TextInput from "../TextInput";
@@ -17,14 +16,6 @@ const initialData = {
 };
 
 const CreateCompanyOwner = ({ open, setOpen, company, onSuccess }) => {
-    // const { data, setData, post, processing, errors, reset } = useForm({
-    //     name: "",
-    //     email: "",
-    //     password: "",
-    //     password_confirmation: "",
-    //     company_id: "",
-    // });
-
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [processing, setProcessing] = useState(false);

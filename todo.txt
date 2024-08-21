@@ -32,6 +32,7 @@ template_creation_limit
 template_submission_limit_per_template
 user_creation_limit
 can_upload_certificate
+can_config_email_template
 
 
 
