@@ -15,7 +15,7 @@ class EmailTemplatesController extends Controller
 {
     public function getEmailTemplatesView()
     {
-        $email_templates = EmailTemplate::get();
+        $email_templates = EmailTemplate::where("owner", EmailTemplate::ADMIN_OWNER)->get();
         return Inertia::render('Admin/EmailTemplates/EmailTemplates', [
             "email_templates" => $email_templates
         ]);
