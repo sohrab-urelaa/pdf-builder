@@ -21,6 +21,8 @@ class User extends Authenticatable
         'password',
         'role',
         'parent_admin',
+        "country",
+        "timezone"
     ];
 
     /**
@@ -52,5 +54,24 @@ class User extends Authenticatable
     public function pdfTemplate()
     {
         return $this->hasMany(PdfTemplate::class);
+    }
+
+    public static function get_main_user_id($user)
+    {
+        $user_type = $user['role'];
+        $user_id = $user["id"];
+
+        if ($user_type === User::USER_USER_TYPE) {
+            $user_id = $user["parent_admin"];
+        }
+        return $user_id;
+    }
+    public static function is_user_or_admin($user)
+    {
+        $user_type = $user['role'];
+        if ($user_type === User::USER_USER_TYPE || $user_type === User::ADMIN_USER_TYPE) {
+            return true;
+        }
+        return false;
     }
 }

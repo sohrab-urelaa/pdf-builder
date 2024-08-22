@@ -7,6 +7,7 @@ import { deleteUser } from "../../api/userApi";
 import { toast } from "react-toastify";
 import { router } from "@inertiajs/react";
 import ActionModal from "../../Components/utill/ActionModal";
+import FeatureSupportAlert from "../../Components/user/FeatureSupportAlert";
 const UserListSettings = ({ auth, users }) => {
     const { t } = useTranslation();
     const [createUserModal, setCreateUserModal] = useState(false);
@@ -50,12 +51,15 @@ const UserListSettings = ({ auth, users }) => {
                     </button>
                 </div>
             </div>
+            <FeatureSupportAlert check_for="user" />
             <div class="overflow-x-auto">
                 <table class="table w-full table-lg rounded-b-none overflow-hidden">
                     <thead class="bg-base-200">
                         <tr class="text-base-content uppercase">
                             <th>{t("name")}</th>
                             <th>{t("email")}</th>
+                            <th>{t("country")}</th>
+                            <th>{t("timezone")}</th>
                             <th>{t("role")}</th>
                             <th class="text-right" width="1px"></th>
                         </tr>
@@ -65,6 +69,8 @@ const UserListSettings = ({ auth, users }) => {
                             <tr key={user.id} scope="row">
                                 <td>{user?.name}</td>
                                 <td>{user?.email}</td>
+                                <td>{user?.country}</td>
+                                <td>{user?.timezone}</td>
                                 <td>
                                     <span class="badge badge-info badge-outline">
                                         {user?.role}

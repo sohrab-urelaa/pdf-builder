@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
+import { Select } from "../../Components/Select";
+import useLocatioin from "../../hooks/useLocation";
 
 export default function Register() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
@@ -14,7 +18,10 @@ export default function Register() {
         password_confirmation: "",
         companyName: "",
         description: "",
+        country: "",
+        timezone: "",
     });
+    const { countryList, timeZoneList } = useLocatioin();
 
     useEffect(() => {
         return () => {
@@ -27,7 +34,6 @@ export default function Register() {
 
         post(route("register"));
     };
-
     return (
         <GuestLayout>
             <Head title="Register" />
@@ -96,6 +102,53 @@ export default function Register() {
 
                     <InputError message={errors.description} className="mt-2" />
                 </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="country" value={t("country")} />
+                    <Select
+                        id="country"
+                        name="country"
+                        value={data.country}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData("country", e.target.value)}
+                    >
+                        {countryList?.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
+                {data.country && (
+                    <div className="mt-4">
+                        <InputLabel htmlFor="timezone" value={t("timezone")} />
+                        <Select
+                            id="timezone"
+                            name="timezone"
+                            value={data.timezone}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData("timezone", e.target.value)
+                            }
+                        >
+                            <option value={""}>Select Timezone</option>
+                            {timeZoneList[data.country]?.timeZones?.map(
+                                (timezone) => (
+                                    <option key={timezone} value={timezone}>
+                                        {timezone}
+                                    </option>
+                                )
+                            )}
+                        </Select>
+
+                        <InputError
+                            message={errors.timezone}
+                            className="mt-2"
+                        />
+                    </div>
+                )}
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />

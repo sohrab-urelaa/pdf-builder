@@ -4,6 +4,7 @@ import Dropdown from "../Dropdown";
 import ResponsiveNavLink from "../ResponsiveNavLink";
 import ThemeSwitcher from "../utill/ThemeSwither";
 import { useState } from "react";
+import UpgradeButton from "../user/UpgradeButton";
 // const navItems = [
 //     {
 //         id: 1,
@@ -173,6 +174,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                     {user ? (
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <ThemeSwitcher />
+                            <UpgradeButton />
                             <Link href="/settings/plans">
                                 <button className="btn btn-ghost text-xl">
                                     Settings

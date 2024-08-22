@@ -14,6 +14,7 @@ import CreateTemplateModal from "../Components/home/CreateTemplateModal";
 import ActionModal from "../Components/utill/ActionModal";
 import { toast } from "react-toastify";
 import { deleteTemplate } from "../api/templateApi";
+import FeatureSupportAlert from "../Components/user/FeatureSupportAlert";
 export default function Dashboard({ auth, templates }) {
     const { t } = useTranslation();
 
@@ -58,7 +59,7 @@ export default function Dashboard({ auth, templates }) {
             <Head title={t("dashboard")} />
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <DashboardSubHeading title={t("templates")} />
-
+                <FeatureSupportAlert check_for="template" />
                 <div className="flex items-center gap-4 flex-wrap mt-4">
                     {templates.map((item) => (
                         <div className="basis-[300px] grow bg-base-200 p-6 rounded-lg">

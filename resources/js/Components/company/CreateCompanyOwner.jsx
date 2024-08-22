@@ -6,6 +6,9 @@ import PrimaryButton from "../PrimaryButton";
 import Modal from "../utill/Modal";
 import { assignOwnerIntoCompany } from "../../api/companyApi";
 import { toast } from "react-toastify";
+import useLocatioin from "../../hooks/useLocation";
+import { useTranslation } from "react-i18next";
+import { Select } from "../Select";
 
 const initialData = {
     name: "",
@@ -13,12 +16,16 @@ const initialData = {
     password: "",
     password_confirmation: "",
     company_id: "",
+    country: "",
+    timezone: "",
 };
 
 const CreateCompanyOwner = ({ open, setOpen, company, onSuccess }) => {
+    const { t } = useTranslation();
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [processing, setProcessing] = useState(false);
+    const { countryList, timeZoneList } = useLocatioin();
 
     useEffect(() => {
         setData((prev) => ({
@@ -76,14 +83,14 @@ const CreateCompanyOwner = ({ open, setOpen, company, onSuccess }) => {
             }
             if (result?.success) {
                 toast.success(result?.message);
+                setErrors(initialData);
+                setData(initialData);
+                setOpen(false);
+                if (onSuccess) {
+                    onSuccess();
+                }
             } else {
                 toast.error(result?.message);
-            }
-            setErrors(initialData);
-            setData(initialData);
-            setOpen(false);
-            if (onSuccess) {
-                onSuccess();
             }
         } catch (err) {
         } finally {
@@ -135,6 +142,61 @@ const CreateCompanyOwner = ({ open, setOpen, company, onSuccess }) => {
 
                     <InputError message={errors?.email} className="mt-2" />
                 </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="country" value={t("country")} />
+                    <Select
+                        id="country"
+                        name="country"
+                        value={data.country}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                country: e.target.value,
+                            }))
+                        }
+                    >
+                        {countryList?.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
+                {data.country && (
+                    <div className="mt-4">
+                        <InputLabel htmlFor="timezone" value={t("timezone")} />
+                        <Select
+                            id="timezone"
+                            name="timezone"
+                            value={data.timezone}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData((prev) => ({
+                                    ...prev,
+                                    timezone: e.target.value,
+                                }))
+                            }
+                        >
+                            <option value={""}>Select Timezone</option>
+                            {timeZoneList[data.country]?.timeZones?.map(
+                                (timezone) => (
+                                    <option key={timezone} value={timezone}>
+                                        {timezone}
+                                    </option>
+                                )
+                            )}
+                        </Select>
+
+                        <InputError
+                            message={errors.timezone}
+                            className="mt-2"
+                        />
+                    </div>
+                )}
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />

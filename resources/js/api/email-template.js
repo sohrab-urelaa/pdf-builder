@@ -19,3 +19,24 @@ export const sendBulkEmail = async (bodyData) => {
         return err?.response?.data;
     }
 };
+
+export const createUserMailTemplate = async (id, bodyData) => {
+    try {
+        const data = await axios.post(
+            `/settings/email-templates/${id}`,
+            bodyData
+        );
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
+
+export const deleteUserEmailTemplate = async (id) => {
+    try {
+        const data = await axios.delete(`/settings/email-templates/${id}`);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

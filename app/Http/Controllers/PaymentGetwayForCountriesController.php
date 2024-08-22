@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentGetwaysForCountries;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PaymentGetwayForCountriesController extends Controller
@@ -87,5 +88,29 @@ class PaymentGetwayForCountriesController extends Controller
                 "errors" => $e->errors(),
             ]);
         }
+    }
+
+    function fetCurrentUserAvailablePaymentGetway(Request $request,)
+    {
+        $current_user = auth()->user();
+        $main_user_id = User::get_main_user_id($current_user);
+
+        $main_country = $current_user["country"];
+
+        if ($current_user["id"] != $main_user_id) {
+            $fetch_user = User::find($main_user_id);
+            $main_country = $fetch_user["country"];
+        }
+
+
+        $getway_item = PaymentGetwaysForCountries::where("country_name", $main_country)
+            ->first();
+
+
+        return response()->json([
+            "success" => true,
+            "message" => "User Available Getway List",
+            "data" => $getway_item["getway_list"],
+        ]);
     }
 }

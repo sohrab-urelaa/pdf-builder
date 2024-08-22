@@ -117,8 +117,9 @@ class SubmitTemplateController extends Controller
             $created_template = SubmittedTemplate::create($new_pdf_template);
             $template->save();
             $created_template['location'] = $validated['location'];
-            // $this->sendMail($created_template, $template);
-
+            Log::info("SENDING MAIL START");
+            $this->sendMail($created_template, $template);
+            Log::info("SENDING MAIL END");
             return response()->json([
                 "success" => true,
                 "message" => "Template successfully submitted",
@@ -245,11 +246,14 @@ class SubmitTemplateController extends Controller
 
     private function sendMail($submitted_template, $template)
     {
+
         $mail_template = EmailTemplateProviders::template_submitted_template_for_author($submitted_template, $template);
+        Log::info("RECEIVED FIRST TEMPLATE");
         if ($mail_template) {
             CustomMailTemplate::send_email($mail_template);
         }
         $submitter_template = EmailTemplateProviders::template_submitted_template_for_submitter($submitted_template, $template);
+        Log::info("RECEIVED SECOND TEMPLATE");
         if ($submitter_template) {
             CustomMailTemplate::send_email($submitter_template);
         }

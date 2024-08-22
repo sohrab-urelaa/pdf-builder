@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import UserSettingsLayout from "../../Layouts/UserSettingsLayout";
-import UserUpgradePlanItem from "../../Components/plans/UserUpgradePlanItem";
 import { upgradeMembership } from "../../api/userApi";
 import { router } from "@inertiajs/react";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
-const PayForPlan = ({ auth, plan, isYearly }) => {
+const PayForPlan = ({ auth, plan, isYearly, payment_getway_list = [] }) => {
     const paymentAmount = isYearly ? plan?.yearly_price : plan?.monthly_price;
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -12,8 +13,8 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
     const [error, setError] = useState("");
     const [navigationTimeout, setNavigationTimeout] = useState(30);
     const currentInterval = useRef(null);
-
-    const handleUpgradeMembership = async () => {
+    const { t } = useTranslation();
+    const handleUpgradeMembership = async (getway_name) => {
         const bodyData = {
             plan_id: plan.id,
             billing_cycle: isYearly ? "yearly" : "monthly",
@@ -26,7 +27,7 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
             if (result?.data?.subscription) {
                 setCreatedSubscriptions(result?.data?.subscription);
                 setIsSuccess(true);
-                setAutoNavigation(result?.data?.subscription);
+                setAutoNavigation(result?.data?.subscription, getway_name);
                 setError("");
             } else {
                 setError("Something wen't wrong!! Please try again leter.");
@@ -37,9 +38,14 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
         }
     };
 
-    const setAutoNavigation = (subscription) => {
-        // window.location.href = `/myfatoorah/checkout?oid=${subscription.id}`;
-        window.location.href = `/process-transaction/${subscription.id}`;
+    const setAutoNavigation = (subscription, getway_name) => {
+        if (getway_name === "Paypal") {
+            window.location.href = `/process-transaction/${subscription.id}`;
+        } else if (getway_name === "My Fatoorah") {
+            window.location.href = `/myfatoorah/checkout?oid=${subscription.id}`;
+        } else {
+            toast.error("Unsupported payment getway!");
+        }
     };
 
     const handleNaviageToMembershipPage = () => {
@@ -51,7 +57,6 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
             router.replace("/settings/plans");
         }
     };
-
     return (
         <UserSettingsLayout user={auth?.user}>
             <div className="flex-grow mx-auto">
@@ -103,12 +108,12 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
                             </span>
                         </p>
                         <br />
-                        <button
+                        {/* <button
                             onClick={handleNaviageToMembershipPage}
                             className="btn btn-neutral text-xl"
                         >
                             Navigate To Payment Page
-                        </button>
+                        </button> */}
                     </div>
                 )}
 
@@ -119,21 +124,43 @@ const PayForPlan = ({ auth, plan, isYearly }) => {
                                 <span className="text-secondary text-5xl font-extrabold">
                                     {plan?.title}
                                 </span>
-                                <button
-                                    disabled={isLoading || isSuccess}
-                                    onClick={handleUpgradeMembership}
-                                    className="btn btn-outline text-xl"
-                                >
-                                    {!isLoading ? (
-                                        <>
-                                            Pay {plan?.currency_symbol}
-                                            {paymentAmount} {plan?.currency} For{" "}
-                                            {isYearly ? "/year" : "/month"}
-                                        </>
-                                    ) : (
-                                        "Upgrading.."
+                                <div className="flex flex-col gap-3">
+                                    {!payment_getway_list?.length && (
+                                        <button>
+                                            {t("no_getway_configured")}
+                                        </button>
                                     )}
-                                </button>
+                                    {payment_getway_list?.map((getway_item) => {
+                                        return (
+                                            <button
+                                                disabled={
+                                                    isLoading || isSuccess
+                                                }
+                                                onClick={() =>
+                                                    handleUpgradeMembership(
+                                                        getway_item
+                                                    )
+                                                }
+                                                className="btn btn-outline text-xl"
+                                            >
+                                                {!isLoading ? (
+                                                    <>
+                                                        Pay{" "}
+                                                        {plan?.currency_symbol}
+                                                        {paymentAmount}{" "}
+                                                        {plan?.currency} For{" "}
+                                                        {isYearly
+                                                            ? "/year"
+                                                            : "/month"}{" "}
+                                                        Using {getway_item}
+                                                    </>
+                                                ) : (
+                                                    "Upgrading.."
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             <p>{plan?.description}</p>

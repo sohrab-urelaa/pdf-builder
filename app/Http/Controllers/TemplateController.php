@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\EmailTemplateProviders;
+use App\Mail\CustomMailTemplate;
 use App\Mail\TemplateSubmitted;
 use App\Models\PdfTemplate;
 use App\Models\SubmittedTemplate;
@@ -144,6 +146,64 @@ class TemplateController extends Controller
                 "message" => "Template saved successfully.",
                 "data" => $updated_template,
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "verification failed",
+                "errors" => $e->errors(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Some error has occurred, please try again later.",
+            ]);
+        }
+    }
+    public function sendInvitaions(Request $request, $id)
+    {
+        try {
+            $current_user = auth()->user();
+            $validated = $request->validate([
+                'receivers' => 'required|string',
+            ]);
+            $pdf_template = PdfTemplate::find($id);
+
+            if (!$pdf_template) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Template not found",
+                ]);
+            }
+
+
+            // Parse the email string into an array
+            $recipients = array_map('trim', explode(',', $validated['receivers']));
+
+            // Validate each email address
+            foreach ($recipients as $recipient) {
+                if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+                    return response()->json([
+                        'errors' => [
+                            "receivers" => ["Invalid email address provided-" . $recipient]
+                        ],
+                        "success" => false,
+                        "message" => "Validation failed"
+                    ], 400);
+                }
+            }
+            $mail_template = EmailTemplateProviders::template_invitation_mail($pdf_template, $recipients, $current_user);
+            if (!$mail_template) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Invitaion mail currently deactivated."
+                ], 400);
+            }
+
+            CustomMailTemplate::send_email($mail_template);
+            return response()->json([
+                "success" => true,
+                "message" => "Invitaion Sent Successfully."
+            ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 "success" => false,

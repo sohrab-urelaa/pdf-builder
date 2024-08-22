@@ -7,6 +7,7 @@ import ActionModal from "../../Components/utill/ActionModal";
 import { deleteCertificate } from "../../api/userApi";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import FeatureSupportAlert from "../../Components/user/FeatureSupportAlert";
 const ESignature = ({ auth, data }) => {
     const [createSignatureModal, setCreateSignatureModal] = useState(false);
     const [selectedSignature, setSelectedSignature] = useState(null);
@@ -47,6 +48,7 @@ const ESignature = ({ auth, data }) => {
                     </button>
                 </div>
             </div>
+            <FeatureSupportAlert check_for="certificate" />
             <div class="overflow-x-auto">
                 <table class="table w-full table-lg rounded-b-none overflow-hidden">
                     <thead class="bg-base-200">

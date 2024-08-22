@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PlanHistoryController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Helpers\EmailTemplateProviders;
 use App\Mail\CustomMailTemplate;
 use App\Models\CompanyModel;
@@ -42,12 +43,16 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'companyName' => 'required|string|max:255',
             'description' => 'required|string',
+            'country' => 'required|string',
+            'timezone' => 'required|string',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'country' => $request->country,
+            'timezone' => $request->timezone,
         ]);
 
         $defaultPlan = PlansModel::where('isDefault', true)->first();
@@ -58,6 +63,7 @@ class RegisteredUserController extends Controller
             "planId" => $defaultPlan["id"],
         ]);
         PlanHistoryController::create_new_plan_history($user, $defaultPlan);
+        SubscriptionController::create_new_subscription($user["id"], $company["id"], $defaultPlan, "monthly");
         //trigger register user email
 
         $template = EmailTemplateProviders::registration_success_template($user);

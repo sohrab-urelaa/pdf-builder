@@ -7,12 +7,16 @@ import Modal from "../utill/Modal";
 import { useTranslation } from "react-i18next";
 import { createNewUser, updateExistingUser } from "../../api/userApi";
 import { toast } from "react-toastify";
+import useLocatioin from "../../hooks/useLocation";
+import { Select } from "../Select";
 
 const initialData = {
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
+    country: "",
+    timezone: "",
 };
 const CreateUserModal = ({
     open,
@@ -28,6 +32,7 @@ const CreateUserModal = ({
     const [data, setData] = useState(initialData);
     const [errors, setErrors] = useState(initialData);
     const [processing, setProcessing] = useState(false);
+    const { countryList, timeZoneList } = useLocatioin();
 
     useEffect(() => {
         if (edit && user) {
@@ -35,6 +40,8 @@ const CreateUserModal = ({
                 ...prev,
                 email: user.email,
                 name: user.name,
+                country: user?.country,
+                timezone: user?.timezone,
             }));
         }
     }, [user]);
@@ -124,6 +131,60 @@ const CreateUserModal = ({
 
                     <InputError message={errors?.email} className="mt-2" />
                 </div>
+                <div className="mt-4">
+                    <InputLabel htmlFor="country" value={t("country")} />
+                    <Select
+                        id="country"
+                        name="country"
+                        value={data.country}
+                        className="mt-1 block w-full"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                country: e.target.value,
+                            }))
+                        }
+                    >
+                        {countryList?.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
+                {data.country && (
+                    <div className="mt-4">
+                        <InputLabel htmlFor="timezone" value={t("timezone")} />
+                        <Select
+                            id="timezone"
+                            name="timezone"
+                            value={data.timezone}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData((prev) => ({
+                                    ...prev,
+                                    timezone: e.target.value,
+                                }))
+                            }
+                        >
+                            <option value={""}>Select Timezone</option>
+                            {timeZoneList[data.country]?.timeZones?.map(
+                                (timezone) => (
+                                    <option key={timezone} value={timezone}>
+                                        {timezone}
+                                    </option>
+                                )
+                            )}
+                        </Select>
+
+                        <InputError
+                            message={errors.timezone}
+                            className="mt-2"
+                        />
+                    </div>
+                )}
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value={t("password")} />

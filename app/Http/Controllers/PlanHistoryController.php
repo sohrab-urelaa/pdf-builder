@@ -3,12 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyModel;
+use App\Models\SubscriptionModel;
 use App\Models\User;
 use App\Models\UserPlanHistory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PlanHistoryController extends Controller
 {
+
+    public function getCurrentUserPlanSupportHistory()
+    {
+
+        $current_user = auth()->user();
+
+        $user_id = User::get_main_user_id($current_user);
+
+        $company = CompanyModel::where(["ownerId" => $user_id])->with("plan")->first();
+        $subscription = SubscriptionModel::where([
+            "company_id" => $company["id"],
+            "is_active" => true,
+        ])->first();
+
+        if ($subscription) {
+            $endDate = Carbon::parse($subscription->end_date);
+            $daysLeft = $endDate->diffInDays(Carbon::now());
+            $subscription["daysLeft"] = $daysLeft;
+        }
+
+        $plan_history = UserPlanHistory::where('user_id', $user_id)
+            ->where('is_active', 1)
+            ->first();
+
+        $plan_history["current_plan_days_left"] = $subscription["daysLeft"];
+        $plan_history["is_default_plan"] = $company["plan"]['isDefault'];
+        return response()->json([
+            "success" => true,
+            "message" => "Plan History Fetched",
+            "data" => $plan_history
+        ]);
+    }
+
+    static function can_change_email_template($user)
+    {
+        $user_type = $user['role'];
+        $user_id = $user["id"];
+
+        if ($user_type === User::USER_USER_TYPE) {
+            $user_id = $user["parent_admin"];
+        }
+
+        $plan_history = UserPlanHistory::where('user_id', $user_id)
+            ->where('is_active', 1)
+            ->first();
+
+        $can_config_email_template = $plan_history["can_config_email_template"];
+        $has_permission = false;
+        if ($can_config_email_template === 1) {
+            $has_permission = true;
+        }
+        return $has_permission;
+    }
 
     static function can_upload_certificate($user)
     {

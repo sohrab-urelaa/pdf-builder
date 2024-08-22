@@ -23,3 +23,15 @@ export const deleteTemplate = async (id) => {
         return err?.response?.data;
     }
 };
+
+export const sendTemplateInvitaions = async (id, bodyData) => {
+    try {
+        const data = await axios.post(
+            `/pdf-templates/send-invitations/${id}`,
+            bodyData
+        );
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

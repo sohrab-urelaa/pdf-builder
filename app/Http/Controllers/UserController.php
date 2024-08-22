@@ -30,10 +30,13 @@ class UserController extends Controller
     {
 
         $current_user = auth()->user();
+        $main_user_id = User::get_main_user_id($current_user);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'country' => 'required|string',
+            'timezone' => 'required|string',
         ]);
 
         //check user creation limit 
@@ -54,7 +57,9 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => User::USER_USER_TYPE,
-            "parent_admin" => $current_user['id']
+            "parent_admin" => $main_user_id,
+            "country" => $request->country,
+            "timezone" => $request->timezone,
         ]);
         return response()->json([
             "success" => true,
@@ -70,6 +75,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255',
             'password' => 'nullable|string',
+            'country' => 'required|string',
+            'timezone' => 'required|string',
         ]);
 
         $prev_user = User::find($id);
@@ -97,6 +104,8 @@ class UserController extends Controller
 
         $prev_user->name = $validated["name"];
         $prev_user->email = $validated["email"];
+        $prev_user->country = $validated["country"];
+        $prev_user->timezone = $validated["timezone"];
         if ($validated["password"]) {
             $prev_user->password =
                 Hash::make($validated["password"]);

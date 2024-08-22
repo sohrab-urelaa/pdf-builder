@@ -33,3 +33,12 @@ export const getJSONPlans = async () => {
         return err?.response?.data;
     }
 };
+
+export const getCurrentUserPlans = async () => {
+    try {
+        const data = await axios.get(`/settings/current-plan`);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

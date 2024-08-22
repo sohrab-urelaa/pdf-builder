@@ -6,12 +6,19 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineDownload } from "react-icons/ai";
 import formatDateString from "../lib/date-formate";
 import { MdDeleteOutline } from "react-icons/md";
+import DashboardSubHeading from "../Layouts/DashboardSubHeading";
+import { useTranslation } from "react-i18next";
+import EmptySubmission from "../Components/home/EmptySubmission";
+import { useState } from "react";
+import SendInvitaionModal from "../Components/home/SendInvitaionModal";
 
 export default function SubmittedTemplates({
     auth,
     submitted_templates,
     template,
 }) {
+    const { t } = useTranslation();
+    const [invitationModal, setInvitaionModal] = useState(false);
     const downloadPdf = async (submitted_template) => {
         try {
             const name = `${submitted_template?.parent_template?.title}-${submitted_template?.submitted_user_name}`;
@@ -43,6 +50,7 @@ export default function SubmittedTemplates({
         }
     };
 
+    const handleSuccess = () => {};
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -55,13 +63,44 @@ export default function SubmittedTemplates({
             <Head title="Submitted Templates" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <h1 className="flex text-secondary-content font-bold items-center gap-2 text-2xl mb-3">
-                        <span>
-                            <IoDocumentTextOutline color="text-base-content" />
-                        </span>
-                        {template?.title}
-                    </h1>
+                    <DashboardSubHeading title={t("all_submissions")} />
+
+                    <div className="mt-3  flex items-center gap-2 justify-between flex-wrap">
+                        <h1 className="flex text-secondary-content font-bold items-center gap-2 text-2xl mb-3">
+                            <span>
+                                <IoDocumentTextOutline color="text-base-content" />
+                            </span>
+                            {template?.title}
+                        </h1>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => {
+                                    setInvitaionModal(true);
+                                }}
+                                className="btn btn-outline btn-neutral btn-md rounded-md mt-4"
+                            >
+                                {t("send_to_receipents")}
+                            </button>
+                            <a
+                                target="_blank"
+                                href={`/submit-templates/${template?.id}`}
+                                className="btn btn-neutral btn-md rounded-md mt-4"
+                            >
+                                {t("sign_it_yourself")}
+                            </a>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col gap-4 mt-4">
+                        {!submitted_templates?.length && (
+                            <EmptySubmission
+                                template={template}
+                                onSendInvitations={() => {
+                                    setInvitaionModal(true);
+                                }}
+                            />
+                        )}
+
                         {submitted_templates.map((item) => (
                             <div className="bg-base-200 p-6 rounded-lg">
                                 <div className="flex justify-between gap-2">
@@ -91,10 +130,7 @@ export default function SubmittedTemplates({
                                             <span>
                                                 <CiCalendar color="text-base-content" />
                                             </span>
-                                            {formatDateString(
-                                                item?.parent_template
-                                                    ?.created_at
-                                            )}
+                                            {formatDateString(item?.created_at)}
                                         </p>
                                     </div>
                                     <div className="flex">
@@ -133,6 +169,12 @@ export default function SubmittedTemplates({
                     </div>
                 </div>
             </div>
+            <SendInvitaionModal
+                open={invitationModal}
+                setOpen={setInvitaionModal}
+                onSuccess={handleSuccess}
+                templateId={template?.id}
+            />
         </AuthenticatedLayout>
     );
 }

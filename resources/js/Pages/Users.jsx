@@ -5,7 +5,6 @@ import { useState } from "react";
 
 export default function Users({ auth, users }) {
     const [createUserModal, setCreateUserModal] = useState(false);
-    console.log("Users", users);
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Users" />

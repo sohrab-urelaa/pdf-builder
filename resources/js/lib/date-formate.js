@@ -11,8 +11,7 @@ function formatDateString(dateString) {
     const formattedTime = new Intl.DateTimeFormat("en-US", optionsTime).format(
         date
     );
-
-    return `${formattedDate} At ${formattedTime}`;
+    return `${date.getDate()} ${formattedDate} At ${formattedTime}`;
 }
 
 export default formatDateString;

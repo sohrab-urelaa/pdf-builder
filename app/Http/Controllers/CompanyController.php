@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyModel;
 use App\Models\PlansModel;
+use App\Models\SubscriptionModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ class CompanyController extends Controller
             "data" => $company,
         ]);
     }
+
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -59,6 +61,7 @@ class CompanyController extends Controller
             if ($current_plan_id != $prev_plan_id) {
                 $new_plan = PlansModel::find($current_plan_id);
                 PlanHistoryController::create_new_plan_history($company["owner"], $new_plan);
+                SubscriptionController::create_new_subscription($company["ownerId"], $company["id"], $new_plan, "yearly");
             }
         }
 
@@ -101,6 +104,8 @@ class CompanyController extends Controller
         $current_user = auth()->user();
         $request->validate([
             'name' => 'required|string|max:255',
+            'country' => 'required|string',
+            'timezone' => 'required|string',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'company_id' => ['required'],
@@ -109,6 +114,8 @@ class CompanyController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'country' => $request->country,
+            'timezone' => $request->timezone,
             'password' => Hash::make($request->password),
             'role' => "admin"
         ]);
@@ -119,12 +126,12 @@ class CompanyController extends Controller
         $plan_id = $updated_company["planId"];
         $company_plan = PlansModel::find($plan_id);
         PlanHistoryController::create_new_plan_history($user, $company_plan);
+        SubscriptionController::create_new_subscription($user["id"], $request->company_id, $company_plan, "yearly");
+
         return response()->json([
             "success" => true,
             "message" => "Company owner successfully created",
             "data" => $user,
         ]);
-        //  return Inertia::render('Admin/AdminCompany', ["user"=>$current_user,"companies"=>$companies,"success"=>true]);
-
     }
 }

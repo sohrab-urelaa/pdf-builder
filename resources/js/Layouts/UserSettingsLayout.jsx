@@ -35,6 +35,12 @@ const navItems = [
         link: "/settings/signatures",
     },
     {
+        id: 7,
+        name: "Email Templates",
+        subModules: false,
+        link: "/settings/email-templates",
+    },
+    {
         id: 6,
         name: "Verify Signature",
         subModules: false,

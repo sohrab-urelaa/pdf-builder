@@ -5,6 +5,9 @@ import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
+import { useTransition } from "react";
+import useLocatioin from "../../../hooks/useLocation";
+import { Select } from "../../../Components/Select";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -17,7 +20,10 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
+            country: user.country,
+            timezone: user.timezone,
         });
+    const { countryList, timeZoneList } = useLocatioin();
 
     const submit = (e) => {
         e.preventDefault();
@@ -65,10 +71,58 @@ export default function UpdateProfileInformation({
                         onChange={(e) => setData("email", e.target.value)}
                         required
                         autoComplete="username"
+                        readOnly={true}
                     />
 
                     <InputError className="mt-2" message={errors.email} />
                 </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="country" value={t("country")} />
+                    <Select
+                        id="country"
+                        name="country"
+                        value={data.country}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData("country", e.target.value)}
+                    >
+                        {countryList?.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </Select>
+
+                    <InputError message={errors.country} className="mt-2" />
+                </div>
+                {data.country && (
+                    <div className="mt-4">
+                        <InputLabel htmlFor="timezone" value={t("timezone")} />
+                        <Select
+                            id="timezone"
+                            name="timezone"
+                            value={data.timezone}
+                            className="mt-1 block w-full"
+                            onChange={(e) =>
+                                setData("timezone", e.target.value)
+                            }
+                        >
+                            <option value={""}>Select Timezone</option>
+                            {timeZoneList[data.country]?.timeZones?.map(
+                                (timezone) => (
+                                    <option key={timezone} value={timezone}>
+                                        {timezone}
+                                    </option>
+                                )
+                            )}
+                        </Select>
+
+                        <InputError
+                            message={errors.timezone}
+                            className="mt-2"
+                        />
+                    </div>
+                )}
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
