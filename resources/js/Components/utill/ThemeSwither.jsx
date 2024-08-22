@@ -21,7 +21,7 @@ const ThemeSwitcher = () => {
             <input
                 type="checkbox"
                 className="theme-controller invisible"
-                value="mindcatch"
+                value={isDark}
                 onChange={handleThemeChange}
                 checked={isDark}
             />
