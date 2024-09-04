@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportedLanguageController;
@@ -51,13 +52,14 @@ Route::get('/site-settings', function () {
     ]);
 });
 Route::get('/external-main/{id}', function ($id) {
-    $data = HeaderItem::find($id);
+    $data = HeaderItem::where("link", $id)->first();
     return Inertia::render('ExternalPage', [
         'menuItem' => $data
     ]);
 });
 Route::get('/external-sub/{id}', function ($id) {
-    $data = HeaderSubItem::find($id);
+    $data =
+        HeaderSubItem::where("link", $id)->first();
     return Inertia::render('ExternalPage', [
         'menuItem' => $data
     ]);
@@ -114,6 +116,11 @@ Route::get('/site-navs', function () {
         "headers" => $headers
     ]);
 });
+
+Route::get("/contact", function () {
+    return Inertia::render('ContactUs');
+});
+Route::post("/contact", [ContactUsController::class, 'store']);
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/user.php';

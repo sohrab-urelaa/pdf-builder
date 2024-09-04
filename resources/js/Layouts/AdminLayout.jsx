@@ -128,6 +128,12 @@ const navItemList = [
         link: "/admin/language",
     },
     {
+        id: 17,
+        name: "Contact-us",
+        subModules: false,
+        link: "/admin/contact-us",
+    },
+    {
         id: 14,
         name: "Certificates",
         subModules: false,

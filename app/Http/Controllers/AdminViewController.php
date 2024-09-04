@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\TemplateSubmitted;
 use App\Models\CompanyModel;
+use App\Models\ContactUs;
 use App\Models\Country;
 use App\Models\Font;
 use App\Models\FooterModel;
@@ -81,6 +82,12 @@ class AdminViewController extends Controller
         $current_user = auth()->user();
         $plans = PlansModel::get();
         return Inertia::render('Admin/AdminPlans', ["user" => $current_user, "plans" => $plans]);
+    }
+    function getContactUsPage()
+    {
+        $current_user = auth()->user();
+        $data = ContactUs::paginate(7);
+        return Inertia::render('Admin/AdminContactUs', ["user" => $current_user, "data" => $data]);
     }
     function getCompanyPage()
     {

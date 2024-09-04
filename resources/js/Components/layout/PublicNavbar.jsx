@@ -119,7 +119,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                                                     (subNav) => {
                                                         const link =
                                                             subNav?.has_dynamic_html
-                                                                ? `/external-sub/${subNav.id}`
+                                                                ? `/external-sub/${subNav.link}`
                                                                 : subNav?.link;
                                                         return (
                                                             <Link
@@ -158,7 +158,7 @@ const PublicNavbar = ({ user, enableMenuButton = false }) => {
                             );
                         } else {
                             const link = navItem?.has_dynamic_html
-                                ? `/external-main/${navItem.id}`
+                                ? `/external-main/${navItem.link}`
                                 : navItem?.link;
                             return (
                                 <div className="flex">

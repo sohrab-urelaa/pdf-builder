@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminPaypalController;
 use App\Http\Controllers\AdminViewController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FontController;
 use App\Http\Controllers\GeneralSettingsController;
@@ -36,6 +37,7 @@ Route::middleware(['auth', 'super_admin'])->group(function () {
     Route::get('/admin/payment-getway/my-fatoorah', [AdminViewController::class, 'getMyFatoorahPage'])->name('admin.myFatoorah');
     Route::get('/admin/payment-getway/paypal', [AdminViewController::class, 'getPaypalConfigPage'])->name('admin.paypalConfig');
     Route::get('/admin/payment-getway/home', [AdminViewController::class, 'getPaymentGetwayPage'])->name('admin.paymentGetwayPage');
+    Route::get('/admin/contact-us', [AdminViewController::class, 'getContactUsPage'])->name('admin.contactUs');
 });
 //admin post routes
 Route::middleware(['auth', 'super_admin'])->group(function () {
@@ -99,4 +101,6 @@ Route::middleware(['auth', 'super_admin'])->group(function () {
     Route::post('/admin/payment-getway', [PaymentGetwayForCountriesController::class, 'store'])->name('paymentGetway.create');
     Route::post('/admin/payment-getway-update/{id}', [PaymentGetwayForCountriesController::class, 'update'])->name('paymentGetway.update');
     Route::delete('/admin/payment-getway/{id}', [PaymentGetwayForCountriesController::class, 'delete'])->name('paymentGetway.destroy');
+    //<===================contact us api===================>
+    Route::delete('/admin/contact-us/{id}', [ContactUsController::class, 'delete'])->name('contactUs.destroy');
 });
