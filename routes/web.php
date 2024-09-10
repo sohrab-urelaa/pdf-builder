@@ -10,7 +10,9 @@ use App\Models\GeneralSetting;
 use App\Models\HeaderItem;
 use App\Models\HeaderSubItem;
 use App\Models\SupportedLanguage;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,6 +28,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    $user = User::first();
+    Log::info("USER_LIST_HERE", ["user" => $user]);
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),

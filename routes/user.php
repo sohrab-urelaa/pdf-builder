@@ -3,6 +3,7 @@
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserVerificationController;
 use App\Models\SubscriptionModel;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -55,4 +56,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/process-transaction/{id}', [PayPalController::class, 'processTransaction'])->name('processTransaction');
     Route::get('success-transaction', [PayPalController::class, 'successTransaction'])->name('successTransaction');
     Route::get('cancel-transaction', [PayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/users/send-verification-code', [UserVerificationController::class, 'send_verification_code']);
+    Route::post('/users/verify-account', [UserVerificationController::class, 'verify_account']);
 });

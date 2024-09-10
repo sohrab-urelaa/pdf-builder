@@ -1,0 +1,4 @@
+DB_NAME=urelaa_docusign_pdf_builder
+pass=[_viJxY^33Mn
+
+DB_USER=urelaa_docusign_pdf_user

@@ -34,10 +34,17 @@ class EmailTemplatesSeeder extends Seeder
         //     "status"=>EmailTemplate::STATUS_ACTIVE
         // ]);   
 
+        // EmailTemplate::create([
+        //     'name' => EmailTemplateMarkers::TEMPLATE_INVITATION_MAIL,
+        //     'subject' => 'You have been invitated to submit a template',
+        //     'body' => 'You have invited to submit a pdf template',
+        //     "status" => EmailTemplate::STATUS_ACTIVE
+        // ]); 
+
         EmailTemplate::create([
-            'name' => EmailTemplateMarkers::TEMPLATE_INVITATION_MAIL,
-            'subject' => 'You have been invitated to submit a template',
-            'body' => 'You have invited to submit a pdf template',
+            'name' => EmailTemplateMarkers::ACCOUNT_VERIFICATION_MAIL,
+            'subject' => 'Verify Your Account',
+            'body' => 'Your Veirification Code is this one , please use this to verify your account',
             "status" => EmailTemplate::STATUS_ACTIVE
         ]);
     }

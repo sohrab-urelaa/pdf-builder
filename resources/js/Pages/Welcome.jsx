@@ -8,7 +8,7 @@ import PublicNavbar from "../Components/layout/PublicNavbar";
 import ESigning from "../Components/welcome/ESigning";
 import Footer from "../Components/layout/Footer";
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
-    const homePageContent = window.SITE_SETTINGS.home_page;
+    const homePageContent = window.SITE_SETTINGS?.home_page || "";
     return (
         <div>
             <PublicNavbar user={auth?.user} />
@@ -16,13 +16,13 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                 <div
                     dangerouslySetInnerHTML={{ __html: homePageContent }}
                 ></div>
-                <Head title="Welcome" />
+                {/* <Head title="Welcome" />
                 <Hero user={auth?.user} />
                 <Video />
                 <ESigning />
 
                 <AskedQuestion />
-                <GetStarted />
+                <GetStarted /> */}
                 <Footer />
             </div>
         </div>

@@ -3,6 +3,7 @@ import PublicNavbar from "../Components/layout/PublicNavbar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AccountVerificationModal from "../Components/utill/AccountVerificationModal";
 export default function Authenticated({ user, header, children, headerTitle }) {
     return (
         <div className="min-h-screen">
@@ -13,6 +14,7 @@ export default function Authenticated({ user, header, children, headerTitle }) {
                 <br />
                 <br />
             </main>
+            <AccountVerificationModal user={user} />
             <Footer />
 
             <ToastContainer theme="dark" />

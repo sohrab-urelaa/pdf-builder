@@ -9,6 +9,8 @@ class EmailTemplateMarkers
     const TEMPLATE_SUBMITTED_CONFIRMATION_MAIL_FOR_AUTHOR = "Template Submitted Confirmation Mail for Author";
     const TEMPLATE_SUBMITTED_CONFIRMATION_MAIL_FOR_SUBMITTER = "Template Submitted Confirmation Mail for Submitter";
     const TEMPLATE_INVITATION_MAIL = "Template Invitation Mail";
+    const ACCOUNT_VERIFICATION_MAIL = "Account Verification Mail";
+    const INVOICE_MAIL_TEMPLATE = "Invoice Mail Template";
 
     public static function getAvailableMarkers($name)
     {
@@ -20,6 +22,8 @@ class EmailTemplateMarkers
             return self::templateSubmittedConfirmationMarkersForSubmitter();
         } else if ($name === self::TEMPLATE_INVITATION_MAIL) {
             return self::templateInvitationMarkers();
+        } else if ($name === self::ACCOUNT_VERIFICATION_MAIL) {
+            return self::accountVerificationMarkers();
         } else {
             return self::globalMarkers();
         }
@@ -104,6 +108,24 @@ class EmailTemplateMarkers
             "TEMPLATE_AUTHOR_NAME",
             "TEMPLATE_AUTHOR_EMAIL",
             "TEMPLATE_SUBMISSION_LINK",
+        ];
+        $merged_array = [];
+        if ($merge) {
+            $merged_array = array_merge($global_markers, $registration_markers);
+        } else {
+            $merged_array = $registration_markers;
+        }
+
+        return $merged_array;
+    }
+    public static function accountVerificationMarkers($merge = true)
+    {
+        $global_markers = self::globalMarkers();
+        $registration_markers = [
+            "VERIFICATION_CODE",
+            "USER_NICK_NAME",
+            "USER_EMAIL",
+            "USER_FULL_NAME"
         ];
         $merged_array = [];
         if ($merge) {

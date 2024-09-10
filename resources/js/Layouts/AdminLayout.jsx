@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { appLogoImg } from "../../assets/assets";
 import ApplicationLogo from "../Components/ApplicationLogo";
 import AdminNavbar from "../Components/admin/AdminNavbar";
@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
+import AccountVerificationModal from "../Components/utill/AccountVerificationModal";
 
 const navItemList = [
     {
@@ -286,6 +287,7 @@ const AdminLayout = ({ children, user, title }) => {
                     </div>
                 </div>
             </div>
+            <AccountVerificationModal user={user} />
             <ToastContainer theme="dark" />
         </>
     );

@@ -3,6 +3,7 @@ import { Link } from "@inertiajs/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PublicNavbar from "../Components/layout/PublicNavbar";
+import AccountVerificationModal from "../Components/utill/AccountVerificationModal";
 const navItems = [
     {
         id: 1,
@@ -119,6 +120,7 @@ const UserSettingsLayout = ({ children, user, title }) => {
                     </div>
                 </div>
             </div>
+            <AccountVerificationModal user={user} />
 
             <ToastContainer theme="dark" />
         </>

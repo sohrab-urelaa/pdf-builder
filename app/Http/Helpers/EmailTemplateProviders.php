@@ -30,6 +30,27 @@ class EmailTemplateProviders
             "email" => $user["email"]
         ];
     }
+    public static function account_verification_mail_template($user, $code)
+    {
+        $template = EmailTemplate::where([
+            "name" => EmailTemplateMarkers::ACCOUNT_VERIFICATION_MAIL,
+        ])->first();
+        if ($template['status'] === EmailTemplate::STATUS_INACTIVE) {
+            return false;
+        }
+        //parse the template and fillup with proper data
+
+        $email_template_body = $template["body"];
+        $markers_data = EmailTemplatesMarkersData::account_verification_markers_data($user, $code);
+        $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
+        $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
+
+        return [
+            "body" => $filled_template,
+            "subject" => $parsed_subject,
+            "email" => $user["email"]
+        ];
+    }
 
     public static function template_submitted_template_for_author($submitted_template, $pdf_template)
     {

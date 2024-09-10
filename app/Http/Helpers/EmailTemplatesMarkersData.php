@@ -36,6 +36,24 @@ class EmailTemplatesMarkersData
     return array_merge($global_data, $new_array);
   }
 
+  public static function account_verification_markers_data($user, $code)
+  {
+    $global_data = self::global_markers_data();
+
+    $registration_marker_keys = EmailTemplateMarkers::accountVerificationMarkers(false);
+    $new_array = array_fill_keys($registration_marker_keys, "");
+
+    $user_full_name = $user["name"];
+    $user_email = $user["email"];
+
+    $new_array["USER_NICK_NAME"] = substr($user_full_name, 0, 2);
+    $new_array["USER_EMAIL"] = $user_email;
+    $new_array["USER_FULL_NAME"] = $user_full_name;
+    $new_array["VERIFICATION_CODE"] = $code;
+
+    return array_merge($global_data, $new_array);
+  }
+
   public static function template_submitted_for_author_markers_data($submitted_template, $template)
   {
     $global_data = self::global_markers_data();

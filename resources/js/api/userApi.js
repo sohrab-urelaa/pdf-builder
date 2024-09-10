@@ -85,3 +85,20 @@ export const deleteUser = async (id) => {
         return err?.response?.data;
     }
 };
+
+export const sendVerificationCode = async () => {
+    try {
+        const data = await axios.post(`/users/send-verification-code`);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
+export const verifyAccount = async (body) => {
+    try {
+        const data = await axios.post(`/users/verify-account`, body);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};
