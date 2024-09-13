@@ -33,3 +33,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/settings/email-templates/{id}', [EmailTemplatesController::class, 'deleteUserTemplate'])->name('userMailTemplate.delete');
     Route::get('/settings/current-plan', [PlanHistoryController::class, 'getCurrentUserPlanSupportHistory'])->name('user.getCurrentPlan');
 });
+
+Route::middleware(['auth', 'super_admin'])->group(function () {
+    Route::post('/settings/certificate', [SSlCertificateController::class, 'store'])->name('certificate.adminUpload');
+    Route::post('/settings/update-certificate/{id}', [SSlCertificateController::class, 'update'])->name('certificate.adminUpdate');
+    Route::delete('/settings/certificate/{id}', [SSlCertificateController::class, 'deleteCertificate'])->name('certificate.delete');
+});
