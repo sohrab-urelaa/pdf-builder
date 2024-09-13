@@ -11,6 +11,9 @@ class EmailTemplateMarkers
     const TEMPLATE_INVITATION_MAIL = "Template Invitation Mail";
     const ACCOUNT_VERIFICATION_MAIL = "Account Verification Mail";
     const INVOICE_MAIL_TEMPLATE = "Invoice Mail Template";
+    const PLAN_UPGRADE_SUCCESSFULL_MAIL = "Plan Upgrade Successfull Mail Template";
+    const PLAN_UPGRADE_NOTIFIENG_MAIL = "Free User Plan Upgrade Mail";
+    const PAID_USER_PLAN_EXTENSION_MAIL = "Paid User Plan Extension Mail";
 
     public static function getAvailableMarkers($name)
     {
@@ -24,6 +27,12 @@ class EmailTemplateMarkers
             return self::templateInvitationMarkers();
         } else if ($name === self::ACCOUNT_VERIFICATION_MAIL) {
             return self::accountVerificationMarkers();
+        } else if ($name === self::PLAN_UPGRADE_SUCCESSFULL_MAIL) {
+            return self::planUpgradeMarkers();
+        } else if ($name === self::PLAN_UPGRADE_NOTIFIENG_MAIL) {
+            return self::planUpgradeNotifiengMarkers();
+        } else if ($name === self::PAID_USER_PLAN_EXTENSION_MAIL) {
+            return self::paidUserPlanExtensionMarkers();
         } else {
             return self::globalMarkers();
         }
@@ -126,6 +135,61 @@ class EmailTemplateMarkers
             "USER_NICK_NAME",
             "USER_EMAIL",
             "USER_FULL_NAME"
+        ];
+        $merged_array = [];
+        if ($merge) {
+            $merged_array = array_merge($global_markers, $registration_markers);
+        } else {
+            $merged_array = $registration_markers;
+        }
+
+        return $merged_array;
+    }
+    public static function planUpgradeMarkers($merge = true)
+    {
+        $global_markers = self::globalMarkers();
+        $registration_markers = [
+            "USER_NICK_NAME",
+            "USER_EMAIL",
+            "USER_FULL_NAME",
+            "PLAN_NAME",
+            "SUBSCRIPTION_AMOUNT"
+        ];
+        $merged_array = [];
+        if ($merge) {
+            $merged_array = array_merge($global_markers, $registration_markers);
+        } else {
+            $merged_array = $registration_markers;
+        }
+
+        return $merged_array;
+    }
+    public static function planUpgradeNotifiengMarkers($merge = true)
+    {
+        $global_markers = self::globalMarkers();
+        $registration_markers = [
+            "USER_NICK_NAME",
+            "USER_EMAIL",
+            "USER_FULL_NAME",
+            "COMPANY_NAME",
+        ];
+        $merged_array = [];
+        if ($merge) {
+            $merged_array = array_merge($global_markers, $registration_markers);
+        } else {
+            $merged_array = $registration_markers;
+        }
+
+        return $merged_array;
+    }
+    public static function paidUserPlanExtensionMarkers($merge = true)
+    {
+        $global_markers = self::globalMarkers();
+        $registration_markers = [
+            "USER_NICK_NAME",
+            "USER_EMAIL",
+            "USER_FULL_NAME",
+            "COMPANY_NAME",
         ];
         $merged_array = [];
         if ($merge) {

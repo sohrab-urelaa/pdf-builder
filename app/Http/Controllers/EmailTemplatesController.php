@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\EmailTemplateMarkers;
 use App\Http\Helpers\EmailTemplateProviders;
 use App\Mail\CustomMailTemplate;
+use App\Models\AutomationMailTimings;
 use App\Models\EmailTemplate;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,6 +14,14 @@ use Inertia\Inertia;
 
 class EmailTemplatesController extends Controller
 {
+    public function getAutomaionMailConfigView()
+    {
+        $data = AutomationMailTimings::first();
+        return Inertia::render('Admin/EmailTemplates/AutomationMailConfig', [
+            "mail_config" => $data
+        ]);
+    }
+
     public function getEmailTemplatesView()
     {
         $email_templates = EmailTemplate::where("owner", EmailTemplate::ADMIN_OWNER)->get();

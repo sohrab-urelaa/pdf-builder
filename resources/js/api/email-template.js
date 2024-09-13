@@ -40,3 +40,12 @@ export const deleteUserEmailTemplate = async (id) => {
         return err?.response?.data;
     }
 };
+
+export const setMailAutomationConfig = async (body) => {
+    try {
+        const data = await axios.post(`/admin/mail-automation-config/`, body);
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

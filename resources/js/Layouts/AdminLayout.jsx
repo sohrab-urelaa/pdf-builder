@@ -119,6 +119,11 @@ const navItemList = [
                 title: "Bulk Emailing",
                 link: "/admin/bulk-emailing",
             },
+            {
+                id: 883,
+                title: "Mail Automation Config",
+                link: "/admin/mail-config",
+            },
         ],
     },
 

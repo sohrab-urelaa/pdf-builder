@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminPaypalController;
 use App\Http\Controllers\AdminViewController;
+use App\Http\Controllers\AutomationMailController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CountryController;

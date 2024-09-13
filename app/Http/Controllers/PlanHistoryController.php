@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\EmailTemplateProviders;
+use App\Mail\CustomMailTemplate;
 use App\Models\CompanyModel;
+use App\Models\PlansModel;
 use App\Models\SubscriptionModel;
 use App\Models\User;
 use App\Models\UserPlanHistory;
@@ -140,18 +143,49 @@ class PlanHistoryController extends Controller
 
     static function create_new_plan_history($user, $plan)
     {
-        UserPlanHistory::where("user_id", $user["id"])->update(["is_active" => false]);
+        $prevPlan = UserPlanHistory::where("user_id", $user["id"])
+            ->where("is_active", true)
+            ->first();
+
+        $default_plan = PlansModel::where("isDefault", true)->first();
+
+
+        $template_creation_count = $plan["template_creation_limit"];
+        $user_creation_count = $plan["user_creation_limit"];
+        $can_upload_certificate = $plan["can_upload_certificate"];
+        $can_config_email_template = $plan["can_config_email_template"];
+
+
+
+        if ($prevPlan && $prevPlan["plan_id"] !== $default_plan["id"]) {
+            $template_creation_count
+                = $template_creation_count + $prevPlan["template_creation_count"];
+            $user_creation_count
+                = $user_creation_count + $prevPlan["user_creation_count"];
+        }
+        if ($prevPlan) {
+            $prevPlan->update(["is_active" => false]);
+        }
         $new_plan_history = [
             "user_id" => $user["id"],
             "plan_id" => $plan["id"],
-            "template_creation_count" => $plan["template_creation_limit"],
-            "user_creation_count" => $plan["user_creation_limit"],
-            "can_upload_certificate" => $plan["can_upload_certificate"],
-            "can_config_email_template" => $plan["can_config_email_template"],
+            "template_creation_count" => $template_creation_count,
+            "user_creation_count" => $user_creation_count,
+            "can_upload_certificate" => $can_upload_certificate,
+            "can_config_email_template" => $can_config_email_template,
             "is_active" => true,
         ];
         $created_history = UserPlanHistory::create($new_plan_history);
+        self::sendPlanUpgradeMail($user, $plan);
         return $created_history;
+    }
+
+    static function sendPlanUpgradeMail($user, $plan)
+    {
+        $mail_template = EmailTemplateProviders::plan_upgrade_successfull_template($user, $plan);
+        if ($mail_template) {
+            CustomMailTemplate::send_email($mail_template);
+        }
     }
     static function getSubmissionLimitCountForCompany($user)
     {

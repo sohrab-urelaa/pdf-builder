@@ -51,6 +51,60 @@ class EmailTemplateProviders
             "email" => $user["email"]
         ];
     }
+    public static function plan_upgrade_successfull_template($user, $plan)
+    {
+        $template = EmailTemplate::where([
+            "name" => EmailTemplateMarkers::PLAN_UPGRADE_SUCCESSFULL_MAIL,
+        ])->first();
+        if ($template['status'] === EmailTemplate::STATUS_INACTIVE) {
+            return false;
+        }
+        //parse the template and fillup with proper data
+
+        $email_template_body = $template["body"];
+        $markers_data = EmailTemplatesMarkersData::plan_upgrade_success_template_date($user, $plan);
+        $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
+        $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
+
+        return [
+            "body" => $filled_template,
+            "subject" => $parsed_subject,
+            "email" => $user["email"]
+        ];
+    }
+
+    public static function plan_upgrade_notifieng_mail_template($company, $template)
+    {
+
+        //parse the template and fillup with proper data
+
+        $email_template_body = $template["body"];
+        $markers_data = EmailTemplatesMarkersData::plan_upgrade_notifieng_template_date($company);
+        $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
+        $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
+
+        return [
+            "body" => $filled_template,
+            "subject" => $parsed_subject,
+            "email" => $company["owner"]["email"]
+        ];
+    }
+    public static function paid_user_plan_extension_template($subscription, $template)
+    {
+
+        //parse the template and fillup with proper data
+
+        $email_template_body = $template["body"];
+        $markers_data = EmailTemplatesMarkersData::paid_user_plan_extension_template_data($subscription);
+        $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
+        $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
+
+        return [
+            "body" => $filled_template,
+            "subject" => $parsed_subject,
+            "email" => $subscription["user"]["email"]
+        ];
+    }
 
     public static function template_submitted_template_for_author($submitted_template, $pdf_template)
     {
@@ -120,6 +174,7 @@ class EmailTemplateProviders
 
         return $template;
     }
+
 
     public static function template_invitation_mail($pdf_template, $receivers, $current_user)
     {

@@ -41,10 +41,31 @@ class EmailTemplatesSeeder extends Seeder
         //     "status" => EmailTemplate::STATUS_ACTIVE
         // ]); 
 
+        // EmailTemplate::create([
+        //     'name' => EmailTemplateMarkers::ACCOUNT_VERIFICATION_MAIL,
+        //     'subject' => 'Verify Your Account',
+        //     'body' => 'Your Veirification Code is this one , please use this to verify your account',
+        //     "status" => EmailTemplate::STATUS_ACTIVE
+        // ]); 
+
+        // EmailTemplate::create([
+        //     'name' => EmailTemplateMarkers::PLAN_UPGRADE_SUCCESSFULL_MAIL,
+        //     'subject' => 'Your Plan Successfully Upgraded',
+        //     'body' => 'Plan got upgraded {{USER_NICK_NAME}}',
+        //     "status" => EmailTemplate::STATUS_ACTIVE
+        // ]);
+
+        // EmailTemplate::create([
+        //     'name' => EmailTemplateMarkers::PLAN_UPGRADE_NOTIFIENG_MAIL,
+        //     'subject' => 'Your FREE pLAN WILL EXPIRED SOON ',
+        //     'body' => '{{USER_NICK_NAME}} YOUR FREE PLAN WILL EXPIRED SOON PLEASE UPGRADE YOUR PLAN',
+        //     "status" => EmailTemplate::STATUS_ACTIVE
+        // ]);
+
         EmailTemplate::create([
-            'name' => EmailTemplateMarkers::ACCOUNT_VERIFICATION_MAIL,
-            'subject' => 'Verify Your Account',
-            'body' => 'Your Veirification Code is this one , please use this to verify your account',
+            'name' => EmailTemplateMarkers::PAID_USER_PLAN_EXTENSION_MAIL,
+            'subject' => 'Your  pLAN WILL EXPIRED SOON ',
+            'body' => '{{USER_NICK_NAME}} YOUR PLAN WILL EXPIRED SOON PLEASE UPGRADE YOUR PLAN',
             "status" => EmailTemplate::STATUS_ACTIVE
         ]);
     }

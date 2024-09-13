@@ -35,6 +35,60 @@ class EmailTemplatesMarkersData
 
     return array_merge($global_data, $new_array);
   }
+  public static function plan_upgrade_success_template_date($user, $plan)
+  {
+    $global_data = self::global_markers_data();
+
+    $registration_marker_keys = EmailTemplateMarkers::planUpgradeMarkers(false);
+    $new_array = array_fill_keys($registration_marker_keys, "");
+
+    $user_full_name = $user["name"];
+    $user_email = $user["email"];
+
+    $plan_name = $plan["title"];
+
+    $new_array["USER_NICK_NAME"] = substr($user_full_name, 0, 2);
+    $new_array["USER_EMAIL"] = $user_email;
+    $new_array["USER_FULL_NAME"] = $user_full_name;
+    $new_array["PLAN_NAME"] = $plan_name;
+
+    return array_merge($global_data, $new_array);
+  }
+  public static function plan_upgrade_notifieng_template_date($company)
+  {
+    $global_data = self::global_markers_data();
+
+    $registration_marker_keys = EmailTemplateMarkers::planUpgradeNotifiengMarkers(false);
+    $new_array = array_fill_keys($registration_marker_keys, "");
+    $user = $company["owner"];
+    $user_full_name = $user["name"];
+    $user_email = $user["email"];
+
+    $company_name = $company["companyName"];
+
+    $new_array["USER_NICK_NAME"] = substr($user_full_name, 0, 2);
+    $new_array["USER_EMAIL"] = $user_email;
+    $new_array["USER_FULL_NAME"] = $user_full_name;
+    $new_array["COMPANY_NAME"] = $company_name;
+    return array_merge($global_data, $new_array);
+  }
+  public static function paid_user_plan_extension_template_data($subscription)
+  {
+    $global_data = self::global_markers_data();
+
+    $registration_marker_keys = EmailTemplateMarkers::planUpgradeNotifiengMarkers(false);
+    $new_array = array_fill_keys($registration_marker_keys, "");
+    $user = $subscription["user"];
+    $user_full_name = $user["name"];
+    $user_email = $user["email"];
+
+
+    $new_array["USER_NICK_NAME"] = substr($user_full_name, 0, 2);
+    $new_array["USER_EMAIL"] = $user_email;
+    $new_array["USER_FULL_NAME"] = $user_full_name;
+    $new_array["COMPANY_NAME"] = "";
+    return array_merge($global_data, $new_array);
+  }
 
   public static function account_verification_markers_data($user, $code)
   {

@@ -291,5 +291,14 @@
     "user_feature_not_support_alert": "Your current plan don't support this feature or limit has been reached",
     "upgrade_plan": "Upgrade Plan",
     "timezone": "Timezone",
-    "no_getway_configured": " No Payment Getway Configured For Your Country"
+    "no_getway_configured": " No Payment Getway Configured For Your Country",
+    "contact_us": "Contact Us",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "message": "Message",
+    "verify_account": "Verify Account",
+    "verification_code": "Verification Code",
+    "mail_automation_config": "Mail Automation Config",
+    "plan_upgrade_time_interval": "Plan Upgrade Notifieng Mail Intervel (hours)",
+    "plan_extension_time_interval": "Plan Extension Notifieng Mail Intervel (hours)"
 }
