@@ -449,8 +449,8 @@ export default {
             this.$nextTick(() => {
                 import("qr-creator").then(({ default: Qr }) => {
                     if (this.$refs.qrCanvas) {
-                        const demoLink = `http://192.168.0.103:8000/qr-submit?fielduuid=${this.field.uuid}`;
-                        const linkRef = `${document.location.origin}/qr-submit/`;
+                        // const demoLink = `http://192.168.0.103:8000/qr-submit?fielduuid=${this.field.uuid}`;
+                        const demoLink = `${document.location.origin}/qr-submit/?fielduuid=${this.field.uuid}`;
                         Qr.render(
                             {
                                 text: demoLink,

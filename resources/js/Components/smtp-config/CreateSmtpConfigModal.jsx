@@ -8,15 +8,15 @@ import { createSmtpConfig, updateSmtpConfig } from "../../api/smtp-config";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 const initalData = {
-    mail_driver: "asdf",
-    mail_host: "asdf",
-    mail_port: "asdf",
-    mail_username: "asdf",
-    mail_password: "asdf",
-    mail_encryption: "asdf",
-    mail_from_address: "asdf",
-    mail_from_name: "asdf",
-    status: "inactive",
+    mail_driver: "",
+    mail_host: "",
+    mail_port: "",
+    mail_username: "",
+    mail_password: "",
+    mail_encryption: "",
+    mail_from_address: "",
+    mail_from_name: "",
+    status: "",
 };
 const CreateSmtpConfigModal = ({
     open,
@@ -110,6 +110,9 @@ const CreateSmtpConfigModal = ({
         >
             <form onSubmit={submit}>
                 {Object.keys(initalData).map((inputItemKey) => {
+                    if (inputItemKey === "status") {
+                        return null;
+                    }
                     const value = data[inputItemKey];
                     const error = errors[inputItemKey];
                     // const label = inputItemKey
@@ -122,7 +125,6 @@ const CreateSmtpConfigModal = ({
                     //     .join(" ");
                     const label = t(`${inputItemKey}`);
                     const id = inputItemKey;
-
                     return (
                         <div className="mt-4">
                             <InputLabel htmlFor={id} value={label} />
@@ -143,6 +145,28 @@ const CreateSmtpConfigModal = ({
                         </div>
                     );
                 })}
+
+                <div className="mt-4 flex items-center">
+                    <input
+                        id="isActiveSmtpConfig"
+                        type="checkbox"
+                        checked={data.status === "active"}
+                        defaultChecked={data.status === "active"}
+                        value={data.status === "active" ? true : false}
+                        className="checkbox"
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                status: e.target.checked
+                                    ? "active"
+                                    : "inactive",
+                            }))
+                        }
+                    />
+                    <label className="ml-2" htmlFor="isActiveCert">
+                        {t("active")}
+                    </label>
+                </div>
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ms-4" disabled={processing}>
                         {edit ? t("update_config") : t("create_config")}

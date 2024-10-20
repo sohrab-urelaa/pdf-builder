@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { createNewHeader, updateHeader } from "../../api/headerApi";
 import { Select } from "../Select";
+import TextArea from "../TextArea";
 const initialData = {
     name: "",
     link: "",
@@ -260,7 +261,7 @@ const CreateNewHeader = ({
                             value={t("html_for_link")}
                         />
 
-                        <TextInput
+                        <TextArea
                             id="dynamic_html"
                             name="dynamic_html"
                             value={data.dynamic_html}
@@ -271,6 +272,7 @@ const CreateNewHeader = ({
                                     dynamic_html: e.target.value,
                                 }))
                             }
+                            rows={5}
                         />
 
                         <InputError

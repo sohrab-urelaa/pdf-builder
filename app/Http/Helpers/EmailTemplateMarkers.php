@@ -33,6 +33,8 @@ class EmailTemplateMarkers
             return self::planUpgradeNotifiengMarkers();
         } else if ($name === self::PAID_USER_PLAN_EXTENSION_MAIL) {
             return self::paidUserPlanExtensionMarkers();
+        } else if ($name === self::INVOICE_MAIL_TEMPLATE) {
+            return self::invoiceMailMarkers();
         } else {
             return self::globalMarkers();
         }
@@ -154,6 +156,34 @@ class EmailTemplateMarkers
             "USER_FULL_NAME",
             "PLAN_NAME",
             "SUBSCRIPTION_AMOUNT"
+        ];
+        $merged_array = [];
+        if ($merge) {
+            $merged_array = array_merge($global_markers, $registration_markers);
+        } else {
+            $merged_array = $registration_markers;
+        }
+
+        return $merged_array;
+    }
+    public static function invoiceMailMarkers($merge = true)
+    {
+        $global_markers = self::globalMarkers();
+        $registration_markers = [
+            "USER_NICK_NAME",
+            "USER_EMAIL",
+            "USER_FULL_NAME",
+            "INVOICE_NUMBER",
+            "INVOICE_DATE",
+            "INVOICE_DUE_DATE",
+            "INVOICE_AMOUNT",
+            "INVOICE_CURRENCY",
+            "INVOICE_PAYMENT_STATUS",
+            "INVOICE_PAYMENT_DATE",
+            "INVOICE_PAYMENT_METHOD",
+            "INVOICE_PAYMENT_REFERENCE",
+            "INVOICE_PAYMENT_AMOUNT",
+            "PLAN_NAME"
         ];
         $merged_array = [];
         if ($merge) {

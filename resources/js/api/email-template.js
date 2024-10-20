@@ -49,3 +49,14 @@ export const setMailAutomationConfig = async (body) => {
         return err?.response?.data;
     }
 };
+
+export const getSubscriptionEmailTemplate = async (subscriptionId) => {
+    try {
+        const data = await axios.get(
+            `/invoice-email-templates/${subscriptionId}`
+        );
+        return data.data;
+    } catch (err) {
+        return err?.response?.data;
+    }
+};

@@ -72,6 +72,40 @@ class EmailTemplatesMarkersData
     $new_array["COMPANY_NAME"] = $company_name;
     return array_merge($global_data, $new_array);
   }
+  public static function invoice_mail_template_data($subscription)
+  {
+    $global_data = self::global_markers_data();
+
+    $registration_marker_keys = EmailTemplateMarkers::invoiceMailMarkers(false);
+    $new_array = array_fill_keys($registration_marker_keys, "");
+    $user = $subscription["user"];
+    $user_full_name = $user["name"];
+    $user_email = $user["email"];
+
+    $plan_name = $subscription["plan"]["title"];
+    $subscription_amount = $subscription["amount"];
+    $invoice_number = $subscription["invoice_id"];
+    $invoice_date = $subscription["start_date"];
+    $invoice_due_date = $subscription["end_date"];
+    $invoice_amount = $subscription["amount"];
+    $invoice_currency = $subscription["currency"];
+    $invoice_payment_status = $subscription["payment_status"];
+    $invoice_payment_date = $subscription["start_date"];
+
+    $new_array["USER_NICK_NAME"] = substr($user_full_name, 0, 2);
+    $new_array["USER_EMAIL"] = $user_email;
+    $new_array["USER_FULL_NAME"] = $user_full_name;
+    $new_array["PLAN_NAME"] = $plan_name;
+    $new_array["SUBSCRIPTION_AMOUNT"] = $subscription_amount;
+    $new_array["INVOICE_NUMBER"] = $invoice_number;
+    $new_array["INVOICE_DATE"] = $invoice_date;
+    $new_array["INVOICE_DUE_DATE"] = $invoice_due_date;
+    $new_array["INVOICE_AMOUNT"] = $invoice_amount;
+    $new_array["INVOICE_CURRENCY"] = $invoice_currency;
+    $new_array["INVOICE_PAYMENT_STATUS"] = $invoice_payment_status;
+    $new_array["INVOICE_PAYMENT_DATE"] = $invoice_payment_date;
+    return array_merge($global_data, $new_array);
+  }
   public static function paid_user_plan_extension_template_data($subscription)
   {
     $global_data = self::global_markers_data();

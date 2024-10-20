@@ -28,9 +28,9 @@
             </div>
         </div>
     </div>
-    <div v-if="isContentRendered" class="fixed bottom-0 w-full h-0 z-20">
+    <div v-if="isContentRendered" class="fixed bottom-0 left-0 w-full h-0 z-20">
         <div class="mx-auto" style="max-width: 1000px">
-            <div class="relative md:mx-32">
+            <div class="relative md:mx-10">
                 <slot></slot>
             </div>
         </div>

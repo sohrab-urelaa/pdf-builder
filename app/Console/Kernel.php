@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:automation-mail')->everyMinute();
+        $schedule->command('queue:restart')
+            ->everyFiveMinutes();
     }
 
     /**

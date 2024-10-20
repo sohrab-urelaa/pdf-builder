@@ -145,7 +145,7 @@ const Footer = () => {
                 <div className="flex flex-col order-2 md:order-1 shrink-0">
                     <div className="pt-6 border-t border-base-30 md:pt-0 md:border-t-0">
                         <ApplicationLogo />
-                        <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-4">
+                        <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-4 mt-4">
                             <Link
                                 className="btn btn-md btn-ghost btn-outline normal-case font-medium md:w-52 text-lg"
                                 href="/contact"

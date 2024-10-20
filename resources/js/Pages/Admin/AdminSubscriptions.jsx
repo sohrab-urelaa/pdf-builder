@@ -1,12 +1,25 @@
 import AdminLayout from "../../Layouts/AdminLayout";
 import Pagination from "../../Components/utill/Pagination";
 import { useTranslation } from "react-i18next";
-
+import { toast } from "react-toastify";
+import SubscriptionDownloadModal from "../../Components/utill/SubscriptionDownloadModal";
+import { useState } from "react";
 const AdminSubscriptions = ({ auth, data }) => {
     const { t } = useTranslation();
+    const [openSubscription, setOpenSubscription] = useState(false);
+    const [subscriptionId, setSubscriptionId] = useState(null);
+
+    const handleDownloadInvoice = async (id) => {
+        try {
+            setOpenSubscription(true);
+            setSubscriptionId(id);
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
     return (
         <AdminLayout title={"Company"} user={auth?.user}>
-            <div className="max-w-7xl mx-auto sm:px-2">
+            <div id="element-to-print" className="max-w-7xl mx-auto sm:px-2">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                     <p className="text-4xl font-bold">
                         {t("subscriptions")} ({data?.total})
@@ -56,11 +69,23 @@ const AdminSubscriptions = ({ auth, data }) => {
                                         </button>
                                     </td>
                                     <td>
-                                        <button class="btn btn-outline btn-xs">
-                                            {item?.active
-                                                ? t("active")
-                                                : t("inactive")}
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button class="btn btn-outline btn-xs">
+                                                {item?.active
+                                                    ? t("active")
+                                                    : t("inactive")}
+                                            </button>{" "}
+                                            <button
+                                                onClick={() =>
+                                                    handleDownloadInvoice(
+                                                        item.id
+                                                    )
+                                                }
+                                                class="btn btn-outline btn-xs"
+                                            >
+                                                Download Invoice
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -70,7 +95,11 @@ const AdminSubscriptions = ({ auth, data }) => {
                 <br />
                 <Pagination links={data?.links} />
             </div>
-
+            <SubscriptionDownloadModal
+                subscriptionId={subscriptionId}
+                open={openSubscription}
+                setOpen={setOpenSubscription}
+            />
             <br />
         </AdminLayout>
     );

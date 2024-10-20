@@ -21,6 +21,25 @@ class EmailTemplatesController extends Controller
             "mail_config" => $data
         ]);
     }
+    public function getSubscriptionEmailTemplate($subscriptionId)
+    {
+        $template = EmailTemplate::where([
+            "name" => EmailTemplateMarkers::INVOICE_MAIL_TEMPLATE,
+        ])->first();
+        if ($template) {
+            $mail_template = EmailTemplateProviders::invoice_mail_template($subscriptionId, $template);
+            return response()->json([
+                "message" => "Template found",
+                "success" => true,
+                "template" => $mail_template
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Template not found",
+                "success" => false,
+            ]);
+        }
+    }
 
     public function getEmailTemplatesView()
     {

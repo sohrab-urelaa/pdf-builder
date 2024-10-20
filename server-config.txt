@@ -1,3 +1,13 @@
+
+<===========DEPLOYMENT CONFIG==========>
+RUN CMD --> php artisan config:clear
+RUN CMD --> php artisan cache:clear
+RUN CMD --> php artisan view:clear
+
+
+
+
+
 DB_NAME=urelaa_docusign_pdf_builder
 pass=[_viJxY^33Mn
 

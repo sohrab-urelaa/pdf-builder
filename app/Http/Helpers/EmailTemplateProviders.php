@@ -3,6 +3,7 @@
 namespace App\Http\Helpers;
 
 use App\Models\EmailTemplate;
+use App\Models\SubscriptionModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
@@ -96,6 +97,22 @@ class EmailTemplateProviders
 
         $email_template_body = $template["body"];
         $markers_data = EmailTemplatesMarkersData::paid_user_plan_extension_template_data($subscription);
+        $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
+        $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
+
+        return [
+            "body" => $filled_template,
+            "subject" => $parsed_subject,
+            "email" => $subscription["user"]["email"]
+        ];
+    }
+    public static function invoice_mail_template($subscription_id, $template)
+    {
+        $subscription = SubscriptionModel::find($subscription_id)->with("plan")->with("user")->first();
+        //parse the template and fillup with proper data
+
+        $email_template_body = $template["body"];
+        $markers_data = EmailTemplatesMarkersData::invoice_mail_template_data($subscription);
         $filled_template = EmailTemplateMarkers::fill_template($email_template_body, $markers_data);
         $parsed_subject = EmailTemplateMarkers::fill_template($template["subject"], $markers_data);
 

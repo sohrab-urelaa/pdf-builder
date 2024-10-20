@@ -12,6 +12,7 @@ use App\Models\HeaderSubItem;
 use App\Models\SupportedLanguage;
 use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -125,6 +126,22 @@ Route::get("/contact", function () {
     return Inertia::render('ContactUs');
 });
 Route::post("/contact", [ContactUsController::class, 'store']);
+
+Route::get('/symlink1', function () {
+    Artisan::call('storage:link');
+    return response()->json([
+        "message" => "Symlink created successfully",
+    ]);
+});
+
+Route::get('/symlink', function () {
+    $target = $_SERVER['DOCUMENT_ROOT'] . '/storage/app/public';
+    $link = $_SERVER['DOCUMENT_ROOT'] . '/public/storage';
+    symlink($target, $link);
+    return response()->json([
+        "message" => "Symlink created successfully",
+    ]);
+});
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/user.php';

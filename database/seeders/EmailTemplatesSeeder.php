@@ -62,10 +62,17 @@ class EmailTemplatesSeeder extends Seeder
         //     "status" => EmailTemplate::STATUS_ACTIVE
         // ]);
 
+        // EmailTemplate::create([
+        //     'name' => EmailTemplateMarkers::PAID_USER_PLAN_EXTENSION_MAIL,
+        //     'subject' => 'Your  pLAN WILL EXPIRED SOON ',
+        //     'body' => '{{USER_NICK_NAME}} YOUR PLAN WILL EXPIRED SOON PLEASE UPGRADE YOUR PLAN',
+        //     "status" => EmailTemplate::STATUS_ACTIVE
+        // ]);
+
         EmailTemplate::create([
-            'name' => EmailTemplateMarkers::PAID_USER_PLAN_EXTENSION_MAIL,
-            'subject' => 'Your  pLAN WILL EXPIRED SOON ',
-            'body' => '{{USER_NICK_NAME}} YOUR PLAN WILL EXPIRED SOON PLEASE UPGRADE YOUR PLAN',
+            'name' => EmailTemplateMarkers::INVOICE_MAIL_TEMPLATE,
+            'subject' => 'Your Plan successfully Subscribed',
+            'body' => '{{USER_NICK_NAME}} Your Plan successfully Subscribed {{PLAN_NAME}} {{SUBSCRIPTION_AMOUNT}} {{INVOICE_NUMBER}} {{INVOICE_DATE}} {{INVOICE_DUE_DATE}} {{INVOICE_AMOUNT}} {{INVOICE_CURRENCY}} {{INVOICE_PAYMENT_STATUS}} {{INVOICE_PAYMENT_DATE}} {{INVOICE_PAYMENT_METHOD}} {{INVOICE_PAYMENT_REFERENCE}} {{INVOICE_PAYMENT_AMOUNT}}',
             "status" => EmailTemplate::STATUS_ACTIVE
         ]);
     }

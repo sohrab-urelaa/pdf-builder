@@ -552,7 +552,7 @@ export default {
         acceptFileTypes: {
             type: String,
             required: false,
-            default: "image/*, application/pdf",
+            default: "application/pdf",
         },
         baseUrl: {
             type: String,

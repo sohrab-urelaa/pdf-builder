@@ -535,7 +535,7 @@
                             id="submit_form_button"
                             ref="submitButton"
                             type="submit"
-                            class="base-button w-full flex justify-center"
+                            class="btn btn-neutral w-full flex justify-center"
                             :disabled="isButtonDisabled"
                         >
                             <span class="flex">
@@ -543,7 +543,7 @@
                                     v-if="isSubmitting"
                                     class="mr-1 animate-spin"
                                 />
-                                <span> {{ buttonText }} </span
+                                <span> Next </span
                                 ><span
                                     v-if="isSubmitting"
                                     class="w-6 flex justify-start mr-1"
