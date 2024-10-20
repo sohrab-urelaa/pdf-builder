@@ -56,14 +56,10 @@ class TemplateController extends Controller
     }
     public function getQrScannerPage()
     {
-        if (auth()->check()) {
-            $current_user = auth()->user();
-            return Inertia::render('QRSubmitter', [
-                'user' => $current_user
-            ]);
-        }
-
-        return response()->json(['message' => 'Not authenticated'], 401);
+        $current_user = auth()->user();
+        return Inertia::render('QRSubmitter', [
+            'user' => $current_user
+        ]);
     }
 
     // Store a new task
